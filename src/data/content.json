@@ -146,5 +146,28 @@
       { "label": "Privacy Policy", "url": "#" },
       { "label": "Terms of Service", "url": "#" }
     ]
+  },
+  "design": {
+    "title": "The Collection",
+    "subtitle": "Explore our curated selection of museum-quality Indian sculptures, each piece chosen for its artistic merit and spiritual resonance.",
+    "emptyState": {
+      "title": "No items found",
+      "description": "Try adjusting your search or filters to find what you're looking for.",
+      "clearButton": "Clear all filters"
+    },
+    "filters": {
+      "title": "Filters",
+      "clearAll": "Clear all",
+      "categories": {
+        "sculptureType": "Sculpture Type",
+        "roomType": "Room",
+        "style": "Style"
+      }
+    },
+    "supabase": {
+      "url": "YOUR_SUPABASE_URL",
+      "anonKey": "YOUR_SUPABASE_ANON_KEY",
+      "bucketName": "Images"
+    }
   }
 }

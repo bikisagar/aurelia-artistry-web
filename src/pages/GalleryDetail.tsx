@@ -87,7 +87,7 @@ const GalleryDetail = () => {
                             </div>
 
                             <div className="prose prose-lg text-muted-foreground mb-8 leading-relaxed">
-                                <p>{item.description}</p>
+                                <p>{item.fullDescription || item.shortDescription}</p>
                             </div>
 
                             <div className="grid grid-cols-2 gap-6 mb-10 text-sm border-y border-border py-8">

@@ -9,19 +9,26 @@ export interface GalleryItemProps {
         title: string;
         sculptureType: string;
         roomType: string[];
-        googleDriveId: string;
+        googleDriveId?: string;
+        imageUrl?: string; // Direct URL from Supabase storage
         imageAlt: string;
         price?: string;
     };
+    useSupabaseUrl?: boolean;
 }
 
-const GalleryItem = ({ item }: GalleryItemProps) => {
+const GalleryItem = ({ item, useSupabaseUrl = false }: GalleryItemProps) => {
+    // Use direct imageUrl if Supabase mode, otherwise use Google Drive
+    const imageSrc = useSupabaseUrl && item.imageUrl 
+        ? item.imageUrl 
+        : getImageUrl(item.googleDriveId || '', 400);
+
     return (
         <Link to={`/collection/${item.id}`} className="block h-full group">
             <Card className="h-full border-none shadow-md hover:shadow-xl transition-shadow duration-300 rounded-none overflow-hidden bg-white">
                 <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
                     <img
-                        src={getImageUrl(item.googleDriveId, 400)}
+                        src={imageSrc}
                         alt={item.imageAlt}
                         loading="lazy"
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
