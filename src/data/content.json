@@ -1,0 +1,150 @@
+{
+  "site": {
+    "title": "Aurelia Tradisia",
+    "tagline": "Curated Indian Sculptures of Exceptional Merit",
+    "description": "Aurelia Tradisia curates exceptional Indian sculptures in wood, bronze, brass, and marble. Museum-grade craftsmanship for discerning collectors.",
+    "keywords": "Indian sculptures, luxury art, bronze sculptures, wood carvings, marble art, exclusive collection, museum grade",
+    "logo": "@/assets/logo.png",
+    "favicon": "/favicon.ico"
+  },
+  "navigation": [
+    { "label": "Home", "path": "/" },
+    { "label": "About", "path": "/about" },
+    { "label": "Gallery", "path": "/gallery" },
+    { "label": "design", "path": "/collection" },
+    { "label": "Contact", "path": "/contact" }
+  ],
+  "home": {
+    "hero": {
+      "title": "Aurelia Tradisia",
+      "subtitle": "Curated Indian Sculptures of Exceptional Merit",
+      "description": "We specialize in sourcing and curating museum-quality Indian sculptures, each piece representing centuries of artistic tradition and unparalleled craftsmanship.",
+      "cta": "Contact Us to View Our Collection",
+      "background": "@/assets/hero-bg.jpg",
+      "alt": "Elegant Indian sculpture gallery interior with dramatic lighting"
+    },
+    "introduction": {
+      "title": "Where Art Meets Legacy",
+      "content": "For over two decades, Aurelia Tradisia has been the premier destination for collectors seeking authentic Indian sculptures. Our curated collection spans ancient traditions to contemporary masters, each piece authenticated and sourced directly from renowned artisans.",
+      "image": "@/assets/gallery-interior.jpg",
+      "alt": "Luxurious gallery interior showcasing curated Indian sculptures"
+    },
+    "exclusivity": {
+      "title": "Exclusive Access",
+      "description": "Our collection is available by appointment only. We believe exceptional art deserves exceptional presentation, which is why we maintain an exclusive viewing experience for our discerning clientele.",
+      "note": "Contact us to arrange a private viewing of our current collection."
+    }
+  },
+  "about": {
+    "title": "Our Story – Curating India's Finest Sculptures",
+    "hero": {
+      "description": "Founded by Jyotirmoy Barman, Aurelia Tradisia was born from a simple observation: India's most talented artists often create exceptional sculptures but struggle to reach the recognition and compensation they deserve. Inspired to bridge this gap, we began curating high-quality sculptures — from Indian deities to modern art — to bring local masterpieces to a national and global audience."
+    },
+    "founder": {
+      "name": "Jyotirmoy Barman",
+      "title": "Founder & Curator",
+      "description": "Jyotirmoy Barman, founder of Aurelia Tradisia, has always been passionate about Indian art. Seeing the incredible craftsmanship of local artists often overlooked, he decided to create a platform that celebrates their talent and brings their work to discerning collectors worldwide.",
+      "image": "@/assets/founder-photo.jpg",
+      "alt": "Jyotirmoy Barman, founder of Aurelia Tradisia, in his curated gallery space"
+    },
+    "mission": [
+      {
+        "title": "The Inspiration",
+        "description": "India is home to thousands of skilled sculptors producing world-class work. Yet, most artists struggle to reach a wider audience or receive fair compensation. We wanted to change that.",
+        "image": "@/assets/artisan-workshop.jpg",
+        "alt": "Traditional Indian sculptor at work creating intricate bronze sculpture"
+      },
+      {
+        "title": "The Start of Aurelia Tradisia",
+        "description": "We started Aurelia Tradisia to bridge local artistry with national and global collectors. By curating over a thousand exceptional sculptures across categories — Indian deities, modern art, abstract, and various sizes — we give these masterpieces the platform they deserve.",
+        "image": "@/assets/curated-collection.jpg",
+        "alt": "Carefully curated collection of diverse Indian sculptures in elegant display"
+      },
+      {
+        "title": "Our Commitment",
+        "description": "Every piece in our collection is carefully selected for craftsmanship, authenticity, and artistic value. We strive to honor the artist, preserve India's cultural heritage, and offer collectors a truly unique experience.",
+        "image": "@/assets/authentication-process.jpg",
+        "alt": "Expert examination and authentication of traditional Indian sculpture"
+      }
+    ]
+  },
+  "gallery": {
+    "title": "Private Collection",
+    "subtitle": "Exceptional Pieces Await Your Discovery",
+    "notice": {
+      "title": "Exclusive Viewing",
+      "description": "Our curated sculptures are not displayed publicly. Each piece in our collection has been carefully selected for its historical significance, artistic merit, and exceptional craftsmanship.",
+      "cta": "Contact Us for Private Access"
+    },
+    "categories": [
+      {
+        "name": "Ancient Bronzes",
+        "description": "Rare bronze sculptures from classical Indian periods",
+        "placeholder": "/src/assets/bronze-placeholder.jpg",
+        "alt": "Exclusive bronze sculpture collection - contact for viewing"
+      },
+      {
+        "name": "Temple Carvings",
+        "description": "Intricately carved wooden and stone pieces",
+        "placeholder": "/src/assets/temple-placeholder.jpg",
+        "alt": "Sacred temple carvings - private collection access only"
+      },
+      {
+        "name": "Marble Masterpieces",
+        "description": "Exquisite marble sculptures and architectural elements",
+        "placeholder": "/src/assets/marble-placeholder.jpg",
+        "alt": "Rare marble sculptures - exclusive viewing by appointment"
+      },
+      {
+        "name": "Contemporary Works",
+        "description": "Modern interpretations by master artisans",
+        "placeholder": "/src/assets/contemporary-placeholder.jpg",
+        "alt": "Contemporary Indian sculptures - contact for collection access"
+      }
+    ]
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "Begin Your Journey Into Exceptional Art",
+    "description": "We invite you to discover our exclusive collection of Indian sculptures. Please contact us to arrange a private viewing or to discuss specific pieces that may interest you.",
+    "form": {
+      "submissionUrl": "https://script.google.com/macros/s/AKfycbw2U-7C8U6MjLezfkKa2PlFmB7YxNMpAeelhxOb8-pGMrUbxmXjh8dxWxn-PW-HMALohQ/exec",
+      "name": "Full Name",
+      "email": "Email Address",
+      "message": "Message",
+      "reason": {
+        "label": "Reason for Contact",
+        "options": [
+          "Schedule Private Viewing",
+          "Inquiry About Specific Piece",
+          "Collection Consultation",
+          "Authentication Services",
+          "General Information"
+        ]
+      },
+      "submit": "Send Message",
+      "success": "Thank you for your interest. We will contact you within 24 hours to arrange your exclusive viewing.",
+      "error": "We apologize, but there was an error sending your message. Please try again or contact us directly."
+    },
+    "info": {
+      "email": "connect@aureliatradisia.in",
+      "phone": "+91 9678718311",
+      "address": "Guwahat- 781020 , Assam , India",
+      "hours": "By Appointment Only"
+    },
+    "social": [
+      { "platform": "Instagram", "url": "#", "username": "@Aurelia Tradisia" },
+      { "platform": "Facebook", "url": "https://www.facebook.com/people/Aurelia-Tradisia/61579398465150/", "username": "Join Our Facebook Page" },
+      { "platform": "LinkedIn", "url": "https://www.linkedin.com/in/aureliatradisia-ab5b66374", "username": "Join Us On LinkedIn" },
+      { "platform": "WhatsApp", "url": "https://wa.me/+919678718311", "username": "WhatsApp Us" }
+    ]
+  },
+  "footer": {
+    "copyright": "© 2024 Aurelia Tradisia. All rights reserved.",
+    "tagline": "Curating Excellence in Indian Sculptural Art",
+    "legal": [
+      { "label": "Privacy Policy", "url": "#" },
+      { "label": "Terms of Service", "url": "#" }
+    ]
+  }
+}
