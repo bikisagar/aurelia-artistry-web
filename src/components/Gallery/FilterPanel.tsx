@@ -14,29 +14,62 @@ export interface FilterState {
     style: string[];
 }
 
+interface FilterOptions {
+    sculptureType: string[];
+    roomType: string[];
+    style: string[];
+}
+
+interface FilterLabels {
+    sculptureType?: string;
+    roomType?: string;
+    style?: string;
+}
+
 interface FilterPanelProps {
     filters: FilterState;
     onFilterChange: (category: keyof FilterState, value: string) => void;
     onClearFilters: () => void;
     className?: string;
+    filterOptions?: FilterOptions;
+    labels?: FilterLabels;
 }
 
-const FilterPanel = ({ filters, onFilterChange, onClearFilters, className }: FilterPanelProps) => {
+const defaultOptions: FilterOptions = {
+    sculptureType: ["Bronze", "Wood", "Stone", "Brass", "Marble", "Mixed Media", "Metal", "Terracotta"],
+    roomType: ["Living Room", "Entrance", "Hallway", "Office", "Garden", "Meditation Room", "Bedroom", "Dining Room", "Study", "Patio"],
+    style: ["Traditional", "Modern", "Abstract", "Contemporary", "Antique", "Eclectic", "Scandinavian", "Industrial", "Bohemian", "Japanese", "Coastal", "Art Deco", "Mid-Century Modern"]
+};
+
+const defaultLabels: FilterLabels = {
+    sculptureType: "Sculpture Type",
+    roomType: "Room",
+    style: "Style"
+};
+
+const FilterPanel = ({ 
+    filters, 
+    onFilterChange, 
+    onClearFilters, 
+    className,
+    filterOptions = defaultOptions,
+    labels = defaultLabels
+}: FilterPanelProps) => {
     const categories = [
         {
-            id: "sculptureType",
-            label: "Sculpture Type",
-            options: ["Bronze", "Wood", "Stone", "Brass", "Marble", "Mixed Media", "Metal", "Terracotta"]
+            id: "sculptureType" as const,
+            label: labels.sculptureType || defaultLabels.sculptureType,
+            options: filterOptions.sculptureType.length > 0 ? filterOptions.sculptureType : defaultOptions.sculptureType
         },
         {
-            id: "roomType",
-            label: "Room",
-            options: ["Living Room", "Entrance", "Hallway", "Office", "Garden", "Meditation Room", "Bedroom", "Dining Room", "Study", "Patio"]
+            id: "roomType" as const,
+            label: labels.roomType || defaultLabels.roomType,
+            options: filterOptions.roomType.length > 0 ? filterOptions.roomType : defaultOptions.roomType
         },
         {
-            id: "style",
-            label: "Style",
-            options: ["Traditional", "Modern", "Abstract", "Contemporary", "Antique", "Eclectic", "Scandinavian", "Industrial", "Bohemian", "Japanese", "Coastal", "Art Deco", "Mid-Century Modern"]
+            id: "style" as const,
+            label: labels.style || defaultLabels.style,
+            options: filterOptions.style.length > 0 ? filterOptions.style : defaultOptions.style
         }
     ];
 
@@ -67,13 +100,13 @@ const FilterPanel = ({ filters, onFilterChange, onClearFilters, className }: Fil
                         <AccordionContent>
                             <div className="space-y-3 pt-1 pb-4">
                                 {category.options.map((option) => {
-                                    const isChecked = filters[category.id as keyof FilterState].includes(option);
+                                    const isChecked = filters[category.id].includes(option);
                                     return (
                                         <div key={option} className="flex items-center space-x-2">
                                             <Checkbox
                                                 id={`${category.id}-${option}`}
                                                 checked={isChecked}
-                                                onCheckedChange={() => onFilterChange(category.id as keyof FilterState, option)}
+                                                onCheckedChange={() => onFilterChange(category.id, option)}
                                                 className="border-luxury-charcoal/30 data-[state=checked]:bg-luxury-gold data-[state=checked]:border-luxury-gold"
                                             />
                                             <Label
