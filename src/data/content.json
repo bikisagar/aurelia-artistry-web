@@ -165,8 +165,8 @@
       }
     },
     "supabase": {
-      "url": "YOUR_SUPABASE_URL",
-      "anonKey": "YOUR_SUPABASE_ANON_KEY",
+      "url": "https://ytgocurejmzphhsxjgwu.supabase.co",
+      "anonKey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl0Z29jdXJlam16cGhoc3hqZ3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU1NjU0MzIsImV4cCI6MjA4MTE0MTQzMn0.uFmiPFd3NglOB9wYl5sSU5xkGpxbh9bDVVm19ABYuYw",
       "bucketName": "Images"
     }
   }
