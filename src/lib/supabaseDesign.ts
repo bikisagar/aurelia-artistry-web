@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import content from '@/data/content.json';
 
 // Get Supabase config from content.json
@@ -6,10 +6,22 @@ const supabaseUrl = content.design?.supabase?.url || '';
 const supabaseAnonKey = content.design?.supabase?.anonKey || '';
 const bucketName = content.design?.supabase?.bucketName || 'Images';
 
-// Create Supabase client for design page
-export const supabaseDesign = supabaseUrl && supabaseAnonKey 
-  ? createClient(supabaseUrl, supabaseAnonKey)
-  : null;
+// Validate URL is a proper HTTP/HTTPS URL
+const isValidUrl = (url: string): boolean => {
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+  } catch {
+    return false;
+  }
+};
+
+// Create Supabase client for design page only if valid credentials
+let supabaseDesign: SupabaseClient | null = null;
+if (isValidUrl(supabaseUrl) && supabaseAnonKey) {
+  supabaseDesign = createClient(supabaseUrl, supabaseAnonKey);
+}
+export { supabaseDesign };
 
 // Build public URL for storage images
 export const getStorageImageUrl = (imagePath: string): string => {
