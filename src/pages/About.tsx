@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import Header from '@/components/Layout/Header';
 import Footer from '@/components/Layout/Footer';
 import content from '@/data/content.json';
@@ -124,9 +125,9 @@ const About = () => {
           <p className="body-lg mb-6 max-w-2xl mx-auto">
             Discover how our passion for Indian sculptural art can enhance your collection.
           </p>
-          <a href="/contact" className="btn-primary inline-block">
+          <Link to="/contact" className="btn-primary inline-block">
             Contact Our Curators
-          </a>
+          </Link>
         </div>
       </section>
 
