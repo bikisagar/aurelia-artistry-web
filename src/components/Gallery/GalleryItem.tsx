@@ -9,10 +9,12 @@ export interface GalleryItemProps {
         title: string;
         sculptureType: string;
         roomType: string[];
+        style?: string[];
         googleDriveId?: string;
         imageUrl?: string; // Direct URL from Supabase storage
         imageAlt: string;
         price?: string;
+        tags?: string[];
     };
     useSupabaseUrl?: boolean;
 }

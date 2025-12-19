@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import Header from '@/components/Layout/Header';
 import Footer from '@/components/Layout/Footer';
 import GalleryItem from '@/components/Gallery/GalleryItem';
@@ -11,24 +11,7 @@ import { Filter, Loader2 } from 'lucide-react';
 import { useDesignAssets } from '@/hooks/useDesignAssets';
 import content from '@/data/content.json';
 
-// Fallback to demo data if Supabase not configured
-import galleryData from '@/data/interior_design_gallery.json';
-
 const ITEMS_PER_PAGE = 12;
-
-// Unified item type for display
-interface DisplayItem {
-    id: string;
-    title: string;
-    sculptureType: string;
-    roomType: string[];
-    style: string[];
-    googleDriveId: string;
-    imageUrl?: string;
-    imageAlt: string;
-    price?: string;
-    tags: string[];
-}
 
 const InteriorGallery = () => {
     const [searchQuery, setSearchQuery] = useState('');
@@ -43,74 +26,8 @@ const InteriorGallery = () => {
     // Get design page content from content.json
     const designContent = (content as any).design;
 
-    // Use Supabase data hook
-    const { items: supabaseItems, filterOptions, isLoading, search } = useDesignAssets();
-
-    // Check if Supabase is configured
-    const isSupabaseConfigured = designContent?.supabase?.url && 
-        designContent.supabase.url !== 'YOUR_SUPABASE_URL';
-
-    // Transform demo data to unified format
-    const demoItems: DisplayItem[] = useMemo(() => {
-        return galleryData.items.map(item => ({
-            id: item.id,
-            title: item.title,
-            sculptureType: item.sculptureType,
-            roomType: item.roomType,
-            style: item.style,
-            googleDriveId: item.googleDriveId,
-            imageAlt: item.imageAlt,
-            price: item.price,
-            tags: item.tags
-        }));
-    }, []);
-
-    // Transform Supabase data to unified format
-    const supabaseDisplayItems: DisplayItem[] = useMemo(() => {
-        return supabaseItems.map(item => ({
-            id: item.id,
-            title: item.title,
-            sculptureType: item.sculptureType,
-            roomType: item.roomType,
-            style: item.style,
-            googleDriveId: '',
-            imageUrl: item.imageUrl,
-            imageAlt: item.imageAlt,
-            price: item.price,
-            tags: item.tags
-        }));
-    }, [supabaseItems]);
-
-    // Use Supabase data if configured, otherwise fallback to demo data
-    const items: DisplayItem[] = useMemo(() => {
-        if (isSupabaseConfigured && supabaseDisplayItems.length > 0) {
-            return supabaseDisplayItems;
-        }
-        return demoItems;
-    }, [isSupabaseConfigured, supabaseDisplayItems, demoItems]);
-
-    // Dynamic filter options from database or fallback
-    const dynamicFilterOptions = useMemo(() => {
-        if (isSupabaseConfigured && filterOptions) {
-            return {
-                sculptureType: filterOptions.sculptureTypes.length > 0 
-                    ? filterOptions.sculptureTypes 
-                    : ["Bronze", "Wood", "Stone", "Brass", "Marble", "Mixed Media", "Metal", "Terracotta"],
-                roomType: filterOptions.roomTypes.length > 0 
-                    ? filterOptions.roomTypes 
-                    : ["Living Room", "Entrance", "Hallway", "Office", "Garden", "Meditation Room"],
-                style: filterOptions.styles.length > 0 
-                    ? filterOptions.styles 
-                    : ["Traditional", "Modern", "Abstract", "Contemporary", "Antique"]
-            };
-        }
-        // Fallback static options
-        return {
-            sculptureType: ["Bronze", "Wood", "Stone", "Brass", "Marble", "Mixed Media", "Metal", "Terracotta"],
-            roomType: ["Living Room", "Entrance", "Hallway", "Office", "Garden", "Meditation Room", "Bedroom", "Dining Room", "Study", "Patio"],
-            style: ["Traditional", "Modern", "Abstract", "Contemporary", "Antique", "Eclectic", "Scandinavian", "Industrial", "Bohemian", "Japanese", "Coastal", "Art Deco", "Mid-Century Modern"]
-        };
-    }, [isSupabaseConfigured, filterOptions]);
+    // Use Supabase data hook - single source of truth
+    const { items, filterOptions, isLoading, error, search } = useDesignAssets();
 
     // Scroll to top on page change
     useEffect(() => {
@@ -122,48 +39,14 @@ const InteriorGallery = () => {
         setCurrentPage(1);
     }, [searchQuery, filters]);
 
-    // Trigger search when query or filters change (for Supabase mode)
+    // Trigger search when query or filters change
     useEffect(() => {
-        if (isSupabaseConfigured) {
-            search(searchQuery, filters);
-        }
-    }, [searchQuery, filters, isSupabaseConfigured, search]);
-
-    // Client-side filtering for demo mode
-    const filteredItems: DisplayItem[] = useMemo(() => {
-        if (isSupabaseConfigured) {
-            // Data already filtered by Supabase
-            return items;
-        }
-
-        // Demo mode: client-side filtering
-        let result = items;
-
-        if (searchQuery) {
-            const query = searchQuery.toLowerCase();
-            result = result.filter(item => 
-                item.title.toLowerCase().includes(query) ||
-                item.sculptureType.toLowerCase().includes(query) ||
-                (item.tags && item.tags.some(t => t.toLowerCase().includes(query)))
-            );
-        }
-
-        if (filters.sculptureType.length > 0) {
-            result = result.filter(item => filters.sculptureType.includes(item.sculptureType));
-        }
-        if (filters.roomType.length > 0) {
-            result = result.filter(item => item.roomType.some(r => filters.roomType.includes(r)));
-        }
-        if (filters.style.length > 0) {
-            result = result.filter(item => item.style.some(s => filters.style.includes(s)));
-        }
-
-        return result;
-    }, [items, searchQuery, filters, isSupabaseConfigured]);
+        search(searchQuery, filters);
+    }, [searchQuery, filters, search]);
 
     // Pagination Logic
-    const totalPages = Math.ceil(filteredItems.length / ITEMS_PER_PAGE);
-    const currentItems = filteredItems.slice(
+    const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE);
+    const currentItems = items.slice(
         (currentPage - 1) * ITEMS_PER_PAGE,
         currentPage * ITEMS_PER_PAGE
     );
@@ -183,6 +66,12 @@ const InteriorGallery = () => {
         setSearchQuery('');
     };
 
+    // Check if any filters are active
+    const hasActiveFilters = searchQuery || 
+        filters.sculptureType.length > 0 || 
+        filters.roomType.length > 0 || 
+        filters.style.length > 0;
+
     return (
         <div className="min-h-screen bg-background font-sans text-foreground">
             <Header />
@@ -197,6 +86,16 @@ const InteriorGallery = () => {
                         {designContent?.subtitle || 'Explore our curated selection of museum-quality Indian sculptures.'}
                     </p>
                 </div>
+
+                {/* Error State */}
+                {error && (
+                    <div className="text-center py-12 mb-8 bg-destructive/10 rounded-sm border border-destructive/20">
+                        <p className="text-destructive">{error}</p>
+                        <Button onClick={() => search('', { sculptureType: [], roomType: [], style: [] })} variant="outline" className="mt-4">
+                            Try Again
+                        </Button>
+                    </div>
+                )}
 
                 {/* Controls Bar */}
                 <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8 sticky top-20 z-30 bg-background/95 backdrop-blur py-4 border-b border-border/40">
@@ -216,7 +115,11 @@ const InteriorGallery = () => {
                                         filters={filters}
                                         onFilterChange={handleFilterChange}
                                         onClearFilters={clearFilters}
-                                        filterOptions={dynamicFilterOptions}
+                                        filterOptions={{
+                                            sculptureType: filterOptions.sculptureTypes,
+                                            roomType: filterOptions.roomTypes,
+                                            style: filterOptions.styles
+                                        }}
                                         labels={designContent?.filters?.categories}
                                     />
                                 </div>
@@ -230,7 +133,7 @@ const InteriorGallery = () => {
                                     Loading...
                                 </span>
                             ) : (
-                                `Showing ${filteredItems.length} results`
+                                `Showing ${items.length} results`
                             )}
                         </div>
                     </div>
@@ -245,34 +148,58 @@ const InteriorGallery = () => {
                             filters={filters}
                             onFilterChange={handleFilterChange}
                             onClearFilters={clearFilters}
-                            filterOptions={dynamicFilterOptions}
+                            filterOptions={{
+                                sculptureType: filterOptions.sculptureTypes,
+                                roomType: filterOptions.roomTypes,
+                                style: filterOptions.styles
+                            }}
                             labels={designContent?.filters?.categories}
                         />
                     </aside>
 
                     {/* Gallery Grid */}
                     <div className="flex-1 w-full">
-                        {isLoading && isSupabaseConfigured ? (
+                        {isLoading ? (
                             <div className="flex items-center justify-center py-24">
                                 <Loader2 className="h-8 w-8 animate-spin text-luxury-gold" />
                             </div>
                         ) : currentItems.length > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
                                 {currentItems.map(item => (
-                                    <GalleryItem key={item.id} item={item} useSupabaseUrl={isSupabaseConfigured} />
+                                    <GalleryItem 
+                                        key={item.id} 
+                                        item={{
+                                            id: item.id,
+                                            title: item.title,
+                                            sculptureType: item.sculptureType,
+                                            roomType: item.roomType,
+                                            style: item.style,
+                                            googleDriveId: '',
+                                            imageUrl: item.imageUrl,
+                                            imageAlt: item.imageAlt,
+                                            price: item.price,
+                                            tags: item.tags
+                                        }} 
+                                        useSupabaseUrl={true} 
+                                    />
                                 ))}
                             </div>
                         ) : (
                             <div className="text-center py-24 bg-luxury-cream/20 rounded-sm">
                                 <h3 className="heading-md text-luxury-charcoal mb-2">
-                                    {designContent?.emptyState?.title || 'No items found'}
+                                    {designContent?.emptyState?.title || 'No designs found'}
                                 </h3>
                                 <p className="text-muted-foreground mb-6">
-                                    {designContent?.emptyState?.description || 'Try adjusting your search or filters.'}
+                                    {hasActiveFilters 
+                                        ? (designContent?.emptyState?.description || 'Try adjusting your search or filters.')
+                                        : 'No designs are currently available. Check back soon!'
+                                    }
                                 </p>
-                                <Button onClick={clearFilters} variant="outline">
-                                    {designContent?.emptyState?.clearButton || 'Clear all filters'}
-                                </Button>
+                                {hasActiveFilters && (
+                                    <Button onClick={clearFilters} variant="outline">
+                                        {designContent?.emptyState?.clearButton || 'Clear all filters'}
+                                    </Button>
+                                )}
                             </div>
                         )}
 

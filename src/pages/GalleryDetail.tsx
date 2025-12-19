@@ -3,46 +3,120 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import Header from '@/components/Layout/Header';
 import Footer from '@/components/Layout/Footer';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Share2, Mail } from 'lucide-react';
-import { getImageUrl } from '@/lib/googleDrive';
-import galleryData from '@/data/interior_design_gallery.json';
+import { ArrowLeft, Share2, Mail, Loader2 } from 'lucide-react';
 import GalleryItem from '@/components/Gallery/GalleryItem';
+import { supabaseDesign, getStorageImageUrl, DesignAsset, parseDesignAsset, DesignItem } from '@/lib/supabaseDesign';
 
 const GalleryDetail = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
-    const [item, setItem] = useState<typeof galleryData.items[0] | null>(null);
-    const [relatedItems, setRelatedItems] = useState<typeof galleryData.items>([]);
+    const [item, setItem] = useState<DesignItem | null>(null);
+    const [relatedItems, setRelatedItems] = useState<DesignItem[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         window.scrollTo(0, 0);
-        const foundItem = galleryData.items.find(i => i.id === id);
+        
+        const fetchItem = async () => {
+            if (!supabaseDesign || !id) {
+                setError('Unable to load item');
+                setIsLoading(false);
+                return;
+            }
 
-        if (foundItem) {
-            setItem(foundItem);
+            setIsLoading(true);
+            setError(null);
 
-            // Find related items (by type or style, excluding current)
-            const related = galleryData.items
-                .filter(i => i.id !== id && (
-                    i.sculptureType === foundItem.sculptureType ||
-                    i.style.some(s => foundItem.style.includes(s))
-                ))
-                .slice(0, 4);
+            try {
+                // Fetch the specific item
+                const { data, error: fetchError } = await supabaseDesign
+                    .from('design_assets')
+                    .select('*')
+                    .eq('id', id)
+                    .eq('is_active', true)
+                    .maybeSingle();
 
-            setRelatedItems(related);
-        } else {
-            // Redirect to 404 or collection if not found (simple redirect for now)
-            navigate('/collection');
-        }
+                if (fetchError) {
+                    console.error('Error fetching item:', fetchError);
+                    setError('Failed to load item');
+                    setIsLoading(false);
+                    return;
+                }
+
+                if (!data) {
+                    navigate('/collection');
+                    return;
+                }
+
+                const parsedItem = parseDesignAsset(data as DesignAsset);
+                setItem(parsedItem);
+
+                // Fetch related items by style or sculpture type
+                const { data: relatedData } = await supabaseDesign
+                    .from('design_assets')
+                    .select('*')
+                    .eq('is_active', true)
+                    .neq('id', id)
+                    .limit(4);
+
+                if (relatedData) {
+                    // Filter related items by matching style or sculpture type
+                    const parsedRelated = (relatedData as DesignAsset[])
+                        .map(parseDesignAsset)
+                        .filter(r => 
+                            r.sculptureType === parsedItem.sculptureType ||
+                            r.style.some(s => parsedItem.style.includes(s))
+                        )
+                        .slice(0, 4);
+                    
+                    setRelatedItems(parsedRelated);
+                }
+            } catch (err) {
+                console.error('Error:', err);
+                setError('Failed to load item');
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchItem();
     }, [id, navigate]);
-
-    if (!item) return null;
 
     const handleShare = () => {
         navigator.clipboard.writeText(window.location.href);
-        // Could add a toast notification here
         alert("Link copied to clipboard!");
     };
+
+    if (isLoading) {
+        return (
+            <div className="min-h-screen bg-background font-sans">
+                <Header />
+                <main className="pt-32 pb-16 flex items-center justify-center">
+                    <Loader2 className="h-8 w-8 animate-spin text-luxury-gold" />
+                </main>
+                <Footer />
+            </div>
+        );
+    }
+
+    if (error || !item) {
+        return (
+            <div className="min-h-screen bg-background font-sans">
+                <Header />
+                <main className="pt-32 pb-16">
+                    <div className="container mx-auto px-6 text-center">
+                        <h1 className="heading-xl text-luxury-charcoal mb-4">Item Not Found</h1>
+                        <p className="text-muted-foreground mb-8">{error || 'The item you are looking for does not exist.'}</p>
+                        <Button onClick={() => navigate('/collection')}>
+                            Return to Collection
+                        </Button>
+                    </div>
+                </main>
+                <Footer />
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-background font-sans">
@@ -64,9 +138,12 @@ const GalleryDetail = () => {
                             <div className="sticky top-32">
                                 <div className="aspect-[4/3] w-full bg-gray-100 overflow-hidden shadow-lg">
                                     <img
-                                        src={getImageUrl(item.googleDriveId, 1200)}
+                                        src={item.imageUrl}
                                         alt={item.imageAlt}
                                         className="w-full h-full object-cover"
+                                        onError={(e) => {
+                                            (e.target as HTMLImageElement).src = 'https://placehold.co/600x400?text=Image+Unavailable';
+                                        }}
                                     />
                                 </div>
                             </div>
@@ -83,30 +160,30 @@ const GalleryDetail = () => {
                             </h1>
 
                             <div className="text-2xl font-serif text-luxury-charcoal/80 mb-8">
-                                {item.price}
+                                {item.price || 'Inquire'}
                             </div>
 
-                            <div className="prose prose-lg text-muted-foreground mb-8 leading-relaxed">
-                                <p>{item.fullDescription || item.shortDescription}</p>
-                            </div>
+                            {item.description && (
+                                <div className="prose prose-lg text-muted-foreground mb-8 leading-relaxed">
+                                    <p>{item.description}</p>
+                                </div>
+                            )}
 
                             <div className="grid grid-cols-2 gap-6 mb-10 text-sm border-y border-border py-8">
-                                <div>
-                                    <span className="block text-muted-foreground mb-1">Dimensions</span>
-                                    <span className="font-medium text-luxury-charcoal">{item.dimensions}</span>
-                                </div>
                                 <div>
                                     <span className="block text-muted-foreground mb-1">Style</span>
                                     <span className="font-medium text-luxury-charcoal">{item.style.join(', ')}</span>
                                 </div>
                                 <div>
-                                    <span className="block text-muted-foreground mb-1">Date Added</span>
-                                    <span className="font-medium text-luxury-charcoal">{item.publishedDate}</span>
+                                    <span className="block text-muted-foreground mb-1">Room Type</span>
+                                    <span className="font-medium text-luxury-charcoal">{item.roomType.join(', ')}</span>
                                 </div>
-                                <div>
-                                    <span className="block text-muted-foreground mb-1">ID</span>
-                                    <span className="font-medium text-luxury-charcoal uppercase">{item.id.split('-').pop()}</span>
-                                </div>
+                                {item.tags.length > 0 && (
+                                    <div className="col-span-2">
+                                        <span className="block text-muted-foreground mb-1">Tags</span>
+                                        <span className="font-medium text-luxury-charcoal">{item.tags.join(', ')}</span>
+                                    </div>
+                                )}
                             </div>
 
                             <div className="flex flex-col sm:flex-row gap-4">
@@ -129,7 +206,21 @@ const GalleryDetail = () => {
                             <h2 className="heading-md text-3xl text-center mb-12">You May Also Like</h2>
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                                 {relatedItems.map(related => (
-                                    <GalleryItem key={related.id} item={related} />
+                                    <GalleryItem 
+                                        key={related.id} 
+                                        item={{
+                                            id: related.id,
+                                            title: related.title,
+                                            sculptureType: related.sculptureType,
+                                            roomType: related.roomType,
+                                            style: related.style,
+                                            imageUrl: related.imageUrl,
+                                            imageAlt: related.imageAlt,
+                                            price: related.price,
+                                            tags: related.tags
+                                        }}
+                                        useSupabaseUrl={true}
+                                    />
                                 ))}
                             </div>
                         </div>
