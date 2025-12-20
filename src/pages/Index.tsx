@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Eye, Award } from 'lucide-react';
 import Header from '@/components/Layout/Header';
 import Footer from '@/components/Layout/Footer';
+import DesignDiscoverySection from '@/components/Home/DesignDiscoverySection';
 import content from '@/data/content.json';
 import heroImage from '@/assets/hero-bg.jpg';
 import galleryInterior from '@/assets/gallery-interior.jpg';
@@ -152,6 +153,9 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Design Discovery Section */}
+      <DesignDiscoverySection />
 
       {/* Exclusivity Section */}
       <section className="py-16 sm:py-24 bg-luxury-charcoal text-luxury-cream">

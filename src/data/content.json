@@ -29,6 +29,12 @@
       "image": "@/assets/gallery-interior.jpg",
       "alt": "Luxurious gallery interior showcasing curated Indian sculptures"
     },
+    "designDiscovery": {
+      "title": "Design Discovery",
+      "subtitle": "Visualize Sculptural Elegance in Real Spaces",
+      "description": "Explore curated design inspirations where timeless sculptures meet contemporary interiors. Each concept demonstrates how our pieces integrate seamlessly into living spaces, helping you envision the perfect placement and spatial harmony.",
+      "cta": "Check Out All Designs"
+    },
     "exclusivity": {
       "title": "Exclusive Access",
       "description": "Our collection is available by appointment only. We believe exceptional art deserves exceptional presentation, which is why we maintain an exclusive viewing experience for our discerning clientele.",
