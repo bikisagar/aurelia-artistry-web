@@ -5,7 +5,7 @@ import Footer from '@/components/Layout/Footer';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Share2, Mail, Loader2 } from 'lucide-react';
 import GalleryItem from '@/components/Gallery/GalleryItem';
-import { supabaseDesign, getStorageImageUrl, DesignAsset, parseDesignAsset, DesignItem } from '@/lib/supabaseDesign';
+import { getSupabaseClient, getStorageImageUrl, DesignAsset, parseDesignAsset, DesignItem } from '@/lib/supabaseDesign';
 
 const GalleryDetail = () => {
     const { id } = useParams<{ id: string }>();
@@ -19,7 +19,8 @@ const GalleryDetail = () => {
         window.scrollTo(0, 0);
         
         const fetchItem = async () => {
-            if (!supabaseDesign || !id) {
+            const client = getSupabaseClient();
+            if (!client || !id) {
                 setError('Unable to load item');
                 setIsLoading(false);
                 return;
@@ -30,7 +31,7 @@ const GalleryDetail = () => {
 
             try {
                 // Fetch the specific item
-                const { data, error: fetchError } = await supabaseDesign
+                const { data, error: fetchError } = await client
                     .from('design_assets')
                     .select('*')
                     .eq('id', id)
@@ -53,7 +54,7 @@ const GalleryDetail = () => {
                 setItem(parsedItem);
 
                 // Fetch related items by style or sculpture type
-                const { data: relatedData } = await supabaseDesign
+                const { data: relatedData } = await client
                     .from('design_assets')
                     .select('*')
                     .eq('is_active', true)
