@@ -16,12 +16,20 @@ const isValidUrl = (url: string): boolean => {
   }
 };
 
-// Create Supabase client for design page only if valid credentials
-let supabaseDesign: SupabaseClient | null = null;
-if (isValidUrl(supabaseUrl) && supabaseAnonKey) {
-  supabaseDesign = createClient(supabaseUrl, supabaseAnonKey);
-}
-export { supabaseDesign };
+// Lazy-initialize Supabase client to avoid module-level execution issues
+let _supabaseDesign: SupabaseClient | null = null;
+
+export const getSupabaseClient = (): SupabaseClient | null => {
+  if (_supabaseDesign) return _supabaseDesign;
+  
+  if (isValidUrl(supabaseUrl) && supabaseAnonKey) {
+    _supabaseDesign = createClient(supabaseUrl, supabaseAnonKey);
+  }
+  return _supabaseDesign;
+};
+
+// Legacy export for backward compatibility
+export const supabaseDesign = getSupabaseClient;
 
 // Build public URL for storage images
 export const getStorageImageUrl = (imagePath: string): string => {
@@ -88,12 +96,13 @@ export const parseDesignAsset = (asset: DesignAsset): DesignItem => {
 
 // Fetch all active design assets
 export const fetchDesignAssets = async (): Promise<DesignItem[]> => {
-  if (!supabaseDesign) {
+  const client = getSupabaseClient();
+  if (!client) {
     console.warn('Supabase not configured. Please add credentials to content.json');
     return [];
   }
   
-  const { data, error } = await supabaseDesign
+  const { data, error } = await client
     .from('design_assets')
     .select('*')
     .eq('is_active', true)
@@ -113,11 +122,12 @@ export const fetchFilterOptions = async (): Promise<{
   roomTypes: string[];
   styles: string[];
 }> => {
-  if (!supabaseDesign) {
+  const client = getSupabaseClient();
+  if (!client) {
     return { sculptureTypes: [], roomTypes: [], styles: [] };
   }
   
-  const { data, error } = await supabaseDesign
+  const { data, error } = await client
     .from('design_assets')
     .select('style, tags')
     .eq('is_active', true);
@@ -164,11 +174,12 @@ export const searchDesignAssets = async (
     style: string[];
   }
 ): Promise<DesignItem[]> => {
-  if (!supabaseDesign) {
+  const client = getSupabaseClient();
+  if (!client) {
     return [];
   }
   
-  let query = supabaseDesign
+  let query = client
     .from('design_assets')
     .select('*')
     .eq('is_active', true);
