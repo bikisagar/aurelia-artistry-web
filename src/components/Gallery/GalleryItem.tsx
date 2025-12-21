@@ -48,15 +48,19 @@ const GalleryItem = ({ item, useSupabaseUrl = false }: GalleryItemProps) => {
                 </div>
 
                 <CardContent className="p-6">
-                    <div className="text-xs font-medium text-luxury-gold uppercase tracking-wider mb-2">
-                        {item.sculptureType}
-                    </div>
                     <h3 className="heading-md text-xl mb-2 line-clamp-1 group-hover:text-luxury-gold transition-colors">
                         {item.title}
                     </h3>
-                    <p className="text-sm text-muted-foreground line-clamp-1">
-                        {item.room}
-                    </p>
+                    {item.sculptureType && (
+                        <p className="text-xs font-medium text-luxury-gold uppercase tracking-wider mb-1">
+                            {item.sculptureType}
+                        </p>
+                    )}
+                    {item.room && (
+                        <p className="text-sm text-muted-foreground line-clamp-1">
+                            {item.room}
+                        </p>
+                    )}
                 </CardContent>
 
                 {item.price && (
