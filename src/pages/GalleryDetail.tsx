@@ -151,10 +151,6 @@ const GalleryDetail = () => {
                         </div>
 
                         <div className="flex flex-col justify-center">
-                            <div className="mb-2 text-luxury-gold font-medium uppercase tracking-wider text-sm">
-                                {item.sculptureType} • {item.room}
-                            </div>
-
                             <h1 className="heading-xl text-4xl mb-4 text-luxury-charcoal">
                                 {item.title}
                             </h1>
@@ -169,15 +165,26 @@ const GalleryDetail = () => {
                                 </div>
                             )}
 
+                            {/* Metadata section - only show fields with values */}
                             <div className="grid grid-cols-2 gap-6 mb-10 text-sm border-y border-border py-8">
-                                <div>
-                                    <span className="block text-muted-foreground mb-1">Style</span>
-                                    <span className="font-medium text-luxury-charcoal">{item.style}</span>
-                                </div>
-                                <div>
-                                    <span className="block text-muted-foreground mb-1">Room</span>
-                                    <span className="font-medium text-luxury-charcoal">{item.room}</span>
-                                </div>
+                                {item.sculptureType && (
+                                    <div>
+                                        <span className="block text-muted-foreground mb-1">Sculpture Type</span>
+                                        <span className="font-medium text-luxury-charcoal">{item.sculptureType}</span>
+                                    </div>
+                                )}
+                                {item.room && (
+                                    <div>
+                                        <span className="block text-muted-foreground mb-1">Room</span>
+                                        <span className="font-medium text-luxury-charcoal">{item.room}</span>
+                                    </div>
+                                )}
+                                {item.style && (
+                                    <div>
+                                        <span className="block text-muted-foreground mb-1">Style</span>
+                                        <span className="font-medium text-luxury-charcoal">{item.style}</span>
+                                    </div>
+                                )}
                             </div>
 
                             <div className="flex flex-col sm:flex-row gap-4">
