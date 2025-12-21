@@ -67,7 +67,7 @@ const GalleryDetail = () => {
                         .map(parseDesignAsset)
                         .filter(r => 
                             r.sculptureType === parsedItem.sculptureType ||
-                            r.style.some(s => parsedItem.style.includes(s))
+                            r.style === parsedItem.style
                         )
                         .slice(0, 4);
                     
@@ -150,10 +150,9 @@ const GalleryDetail = () => {
                             </div>
                         </div>
 
-                        {/* Right Column: Details */}
                         <div className="flex flex-col justify-center">
                             <div className="mb-2 text-luxury-gold font-medium uppercase tracking-wider text-sm">
-                                {item.sculptureType} • {item.roomType[0]}
+                                {item.sculptureType} • {item.room}
                             </div>
 
                             <h1 className="heading-xl text-4xl mb-4 text-luxury-charcoal">
@@ -173,18 +172,12 @@ const GalleryDetail = () => {
                             <div className="grid grid-cols-2 gap-6 mb-10 text-sm border-y border-border py-8">
                                 <div>
                                     <span className="block text-muted-foreground mb-1">Style</span>
-                                    <span className="font-medium text-luxury-charcoal">{item.style.join(', ')}</span>
+                                    <span className="font-medium text-luxury-charcoal">{item.style}</span>
                                 </div>
                                 <div>
-                                    <span className="block text-muted-foreground mb-1">Room Type</span>
-                                    <span className="font-medium text-luxury-charcoal">{item.roomType.join(', ')}</span>
+                                    <span className="block text-muted-foreground mb-1">Room</span>
+                                    <span className="font-medium text-luxury-charcoal">{item.room}</span>
                                 </div>
-                                {item.tags.length > 0 && (
-                                    <div className="col-span-2">
-                                        <span className="block text-muted-foreground mb-1">Tags</span>
-                                        <span className="font-medium text-luxury-charcoal">{item.tags.join(', ')}</span>
-                                    </div>
-                                )}
                             </div>
 
                             <div className="flex flex-col sm:flex-row gap-4">
@@ -213,12 +206,11 @@ const GalleryDetail = () => {
                                             id: related.id,
                                             title: related.title,
                                             sculptureType: related.sculptureType,
-                                            roomType: related.roomType,
+                                            room: related.room,
                                             style: related.style,
                                             imageUrl: related.imageUrl,
                                             imageAlt: related.imageAlt,
-                                            price: related.price,
-                                            tags: related.tags
+                                            price: related.price
                                         }}
                                         useSupabaseUrl={true}
                                     />

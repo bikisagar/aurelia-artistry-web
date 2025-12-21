@@ -44,16 +44,17 @@ export const getStorageImageUrl = (imagePath: string): string => {
   return `${supabaseUrl}/storage/v1/object/public/${bucketName}/${imagePath}`;
 };
 
-// Types for design assets
+// Types for design assets - matching actual database columns
 export interface DesignAsset {
   id: string;
   image_path: string;
   title: string | null;
   description: string | null;
+  sculpture_type: string | null;
+  room: string | null;
   style: string | null;
-  tags: string | null;
   is_active: boolean;
-  timestamp: string | null;
+  created_at: string | null;
 }
 
 // Mapped type for gallery display
@@ -62,34 +63,24 @@ export interface DesignItem {
   title: string;
   description: string;
   sculptureType: string;
-  roomType: string[];
-  style: string[];
+  room: string;
+  style: string;
   imageUrl: string;
   imageAlt: string;
-  tags: string[];
   price?: string;
 }
 
-// Parse tags string into arrays for filtering
+// Parse database asset to display item
 export const parseDesignAsset = (asset: DesignAsset): DesignItem => {
-  const tags = asset.tags ? asset.tags.split(',').map(t => t.trim()).filter(Boolean) : [];
-  const styles = asset.style ? asset.style.split(',').map(s => s.trim()).filter(Boolean) : [];
-  
-  // Extract sculpture type and room from tags (first tag as sculpture type, rest as rooms)
-  // This is flexible - you can adjust the logic based on your tagging convention
-  const sculptureType = tags[0] || 'Sculpture';
-  const roomType = tags.slice(1).length > 0 ? tags.slice(1) : ['Living Room'];
-  
   return {
     id: asset.id,
     title: asset.title || 'Untitled',
     description: asset.description || '',
-    sculptureType,
-    roomType,
-    style: styles.length > 0 ? styles : ['Traditional'],
+    sculptureType: asset.sculpture_type || '',
+    room: asset.room || '',
+    style: asset.style || '',
     imageUrl: getStorageImageUrl(asset.image_path),
     imageAlt: asset.title || 'Design asset image',
-    tags,
     price: 'Inquire'
   };
 };
@@ -106,7 +97,7 @@ export const fetchDesignAssets = async (): Promise<DesignItem[]> => {
     .from('design_assets')
     .select('*')
     .eq('is_active', true)
-    .order('timestamp', { ascending: false });
+    .order('created_at', { ascending: false });
   
   if (error) {
     console.error('Error fetching design assets:', error);
@@ -116,7 +107,7 @@ export const fetchDesignAssets = async (): Promise<DesignItem[]> => {
   return (data || []).map(parseDesignAsset);
 };
 
-// Fetch distinct filter options from database
+// Fetch distinct filter options from database columns
 export const fetchFilterOptions = async (): Promise<{
   sculptureTypes: string[];
   roomTypes: string[];
@@ -129,7 +120,7 @@ export const fetchFilterOptions = async (): Promise<{
   
   const { data, error } = await client
     .from('design_assets')
-    .select('style, tags')
+    .select('sculpture_type, room, style')
     .eq('is_active', true);
   
   if (error) {
@@ -137,25 +128,14 @@ export const fetchFilterOptions = async (): Promise<{
     return { sculptureTypes: [], roomTypes: [], styles: [] };
   }
   
-  const stylesSet = new Set<string>();
   const sculptureTypesSet = new Set<string>();
   const roomTypesSet = new Set<string>();
+  const stylesSet = new Set<string>();
   
   (data || []).forEach(asset => {
-    // Parse styles
-    if (asset.style) {
-      asset.style.split(',').forEach((s: string) => {
-        const trimmed = s.trim();
-        if (trimmed) stylesSet.add(trimmed);
-      });
-    }
-    
-    // Parse tags - first is sculpture type, rest are room types
-    if (asset.tags) {
-      const tags = asset.tags.split(',').map((t: string) => t.trim()).filter(Boolean);
-      if (tags[0]) sculptureTypesSet.add(tags[0]);
-      tags.slice(1).forEach(t => roomTypesSet.add(t));
-    }
+    if (asset.sculpture_type) sculptureTypesSet.add(asset.sculpture_type);
+    if (asset.room) roomTypesSet.add(asset.room);
+    if (asset.style) stylesSet.add(asset.style);
   });
   
   return {
@@ -165,7 +145,7 @@ export const fetchFilterOptions = async (): Promise<{
   };
 };
 
-// Search and filter design assets
+// Search and filter design assets using database queries
 export const searchDesignAssets = async (
   searchQuery: string,
   filters: {
@@ -184,34 +164,32 @@ export const searchDesignAssets = async (
     .select('*')
     .eq('is_active', true);
   
-  // Apply search across title, description, tags
+  // Apply search across title and description
   if (searchQuery) {
-    query = query.or(`title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%,tags.ilike.%${searchQuery}%`);
+    query = query.or(`title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`);
   }
   
-  // Apply style filter
+  // Apply sculpture_type filter (AND with other filters)
+  if (filters.sculptureType.length > 0) {
+    query = query.in('sculpture_type', filters.sculptureType);
+  }
+  
+  // Apply room filter (AND with other filters)
+  if (filters.roomType.length > 0) {
+    query = query.in('room', filters.roomType);
+  }
+  
+  // Apply style filter (AND with other filters)
   if (filters.style.length > 0) {
-    const styleConditions = filters.style.map(s => `style.ilike.%${s}%`).join(',');
-    query = query.or(styleConditions);
+    query = query.in('style', filters.style);
   }
   
-  const { data, error } = await query.order('timestamp', { ascending: false });
+  const { data, error } = await query.order('created_at', { ascending: false });
   
   if (error) {
     console.error('Error searching design assets:', error);
     return [];
   }
   
-  let results = (data || []).map(parseDesignAsset);
-  
-  // Apply client-side filtering for tags-based filters (sculpture type and room)
-  if (filters.sculptureType.length > 0) {
-    results = results.filter(item => filters.sculptureType.includes(item.sculptureType));
-  }
-  
-  if (filters.roomType.length > 0) {
-    results = results.filter(item => item.roomType.some(r => filters.roomType.includes(r)));
-  }
-  
-  return results;
+  return (data || []).map(parseDesignAsset);
 };

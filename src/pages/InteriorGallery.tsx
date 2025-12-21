@@ -172,13 +172,11 @@ const InteriorGallery = () => {
                                             id: item.id,
                                             title: item.title,
                                             sculptureType: item.sculptureType,
-                                            roomType: item.roomType,
+                                            room: item.room,
                                             style: item.style,
-                                            googleDriveId: '',
                                             imageUrl: item.imageUrl,
                                             imageAlt: item.imageAlt,
-                                            price: item.price,
-                                            tags: item.tags
+                                            price: item.price
                                         }} 
                                         useSupabaseUrl={true} 
                                     />
