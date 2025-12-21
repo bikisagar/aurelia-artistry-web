@@ -8,13 +8,12 @@ export interface GalleryItemProps {
         id: string;
         title: string;
         sculptureType: string;
-        roomType: string[];
-        style?: string[];
+        room: string;
+        style?: string;
         googleDriveId?: string;
         imageUrl?: string; // Direct URL from Supabase storage
         imageAlt: string;
         price?: string;
-        tags?: string[];
     };
     useSupabaseUrl?: boolean;
 }
@@ -56,7 +55,7 @@ const GalleryItem = ({ item, useSupabaseUrl = false }: GalleryItemProps) => {
                         {item.title}
                     </h3>
                     <p className="text-sm text-muted-foreground line-clamp-1">
-                        {item.roomType.join(', ')}
+                        {item.room}
                     </p>
                 </CardContent>
 
