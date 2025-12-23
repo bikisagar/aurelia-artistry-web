@@ -35,7 +35,12 @@ interface FilterPanelProps {
     labels?: FilterLabels;
 }
 
-// No hardcoded defaults - only database values
+const defaultOptions: FilterOptions = {
+    sculptureType: ["Bronze", "Wood", "Stone", "Brass", "Marble", "Mixed Media", "Metal", "Terracotta"],
+    roomType: ["Living Room", "Entrance", "Hallway", "Office", "Garden", "Meditation Room", "Bedroom", "Dining Room", "Study", "Patio"],
+    style: ["Traditional", "Modern", "Abstract", "Contemporary", "Antique", "Eclectic", "Scandinavian", "Industrial", "Bohemian", "Japanese", "Coastal", "Art Deco", "Mid-Century Modern"]
+};
+
 const defaultLabels: FilterLabels = {
     sculptureType: "Sculpture Type",
     roomType: "Room",
@@ -47,27 +52,26 @@ const FilterPanel = ({
     onFilterChange, 
     onClearFilters, 
     className,
-    filterOptions,
+    filterOptions = defaultOptions,
     labels = defaultLabels
 }: FilterPanelProps) => {
-    // Build categories from database values only - no fallbacks
     const categories = [
         {
             id: "sculptureType" as const,
             label: labels.sculptureType || defaultLabels.sculptureType,
-            options: filterOptions?.sculptureType || []
+            options: filterOptions.sculptureType.length > 0 ? filterOptions.sculptureType : defaultOptions.sculptureType
         },
         {
             id: "roomType" as const,
             label: labels.roomType || defaultLabels.roomType,
-            options: filterOptions?.roomType || []
+            options: filterOptions.roomType.length > 0 ? filterOptions.roomType : defaultOptions.roomType
         },
         {
             id: "style" as const,
             label: labels.style || defaultLabels.style,
-            options: filterOptions?.style || []
+            options: filterOptions.style.length > 0 ? filterOptions.style : defaultOptions.style
         }
-    ].filter(cat => cat.options.length > 0); // Only show categories with options
+    ];
 
     const hasActiveFilters = Object.values(filters).some(arr => arr.length > 0);
 
