@@ -70,43 +70,15 @@ export interface DesignItem {
   price?: string;
 }
 
-// Helper to format database values - handles arrays, JSON strings, or plain strings
-const formatFieldValue = (value: unknown): string => {
-  if (!value) return '';
-  
-  // If it's already a string, check if it's JSON array
-  if (typeof value === 'string') {
-    // Check if it looks like a JSON array
-    if (value.startsWith('[') && value.endsWith(']')) {
-      try {
-        const parsed = JSON.parse(value);
-        if (Array.isArray(parsed)) {
-          return parsed.filter(Boolean).join(', ');
-        }
-      } catch {
-        // Not valid JSON, return as-is
-      }
-    }
-    return value;
-  }
-  
-  // If it's an array, join with commas
-  if (Array.isArray(value)) {
-    return value.filter(Boolean).join(', ');
-  }
-  
-  return String(value);
-};
-
 // Parse database asset to display item
 export const parseDesignAsset = (asset: DesignAsset): DesignItem => {
   return {
     id: asset.id,
     title: asset.title || 'Untitled',
     description: asset.description || '',
-    sculptureType: formatFieldValue(asset.sculpture_type),
-    room: formatFieldValue(asset.room),
-    style: formatFieldValue(asset.style),
+    sculptureType: asset.sculpture_type || '',
+    room: asset.room || '',
+    style: asset.style || '',
     imageUrl: getStorageImageUrl(asset.image_path),
     imageAlt: asset.title || 'Design asset image',
     price: 'Inquire'
@@ -135,35 +107,6 @@ export const fetchDesignAssets = async (): Promise<DesignItem[]> => {
   return (data || []).map(parseDesignAsset);
 };
 
-// Helper to extract unique values from a field (handles arrays and JSON strings)
-const extractUniqueValues = (values: unknown[]): string[] => {
-  const uniqueSet = new Set<string>();
-  
-  values.forEach(value => {
-    if (!value) return;
-    
-    if (typeof value === 'string') {
-      // Check if it's a JSON array string
-      if (value.startsWith('[') && value.endsWith(']')) {
-        try {
-          const parsed = JSON.parse(value);
-          if (Array.isArray(parsed)) {
-            parsed.filter(Boolean).forEach(v => uniqueSet.add(String(v).trim()));
-            return;
-          }
-        } catch {
-          // Not valid JSON
-        }
-      }
-      uniqueSet.add(value.trim());
-    } else if (Array.isArray(value)) {
-      value.filter(Boolean).forEach(v => uniqueSet.add(String(v).trim()));
-    }
-  });
-  
-  return Array.from(uniqueSet).filter(Boolean).sort();
-};
-
 // Fetch distinct filter options from database columns
 export const fetchFilterOptions = async (): Promise<{
   sculptureTypes: string[];
@@ -185,14 +128,20 @@ export const fetchFilterOptions = async (): Promise<{
     return { sculptureTypes: [], roomTypes: [], styles: [] };
   }
   
-  const sculptureTypeValues = (data || []).map(d => d.sculpture_type);
-  const roomValues = (data || []).map(d => d.room);
-  const styleValues = (data || []).map(d => d.style);
+  const sculptureTypesSet = new Set<string>();
+  const roomTypesSet = new Set<string>();
+  const stylesSet = new Set<string>();
+  
+  (data || []).forEach(asset => {
+    if (asset.sculpture_type) sculptureTypesSet.add(asset.sculpture_type);
+    if (asset.room) roomTypesSet.add(asset.room);
+    if (asset.style) stylesSet.add(asset.style);
+  });
   
   return {
-    sculptureTypes: extractUniqueValues(sculptureTypeValues),
-    roomTypes: extractUniqueValues(roomValues),
-    styles: extractUniqueValues(styleValues)
+    sculptureTypes: Array.from(sculptureTypesSet).sort(),
+    roomTypes: Array.from(roomTypesSet).sort(),
+    styles: Array.from(stylesSet).sort()
   };
 };
 
