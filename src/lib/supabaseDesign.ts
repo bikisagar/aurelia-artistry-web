@@ -44,15 +44,15 @@ export const getStorageImageUrl = (imagePath: string): string => {
   return `${supabaseUrl}/storage/v1/object/public/${bucketName}/${imagePath}`;
 };
 
-// Types for design assets - matching actual database columns (note: some columns use PascalCase)
+// Types for design assets - matching exact database column names
 export interface DesignAsset {
   id: string;
   image_path: string;
   title: string | null;
   description: string | null;
   sculpture_type: string | null;
-  Room: string | null;  // PascalCase in database
-  Style: string | null; // PascalCase in database
+  Room: string | null;  // PascalCase in database (quoted column)
+  style: string | null; // lowercase in database
   is_active: boolean;
   created_at: string | null;
 }
@@ -105,8 +105,8 @@ export const parseDesignAsset = (asset: DesignAsset): DesignItem => {
     title: asset.title || 'Untitled',
     description: asset.description || '',
     sculptureType: formatFieldValue(asset.sculpture_type),
-    room: formatFieldValue(asset.Room),       // PascalCase column
-    style: formatFieldValue(asset.Style),     // PascalCase column
+    room: formatFieldValue(asset.Room),       // PascalCase column in database
+    style: formatFieldValue(asset.style),     // lowercase column in database
     imageUrl: getStorageImageUrl(asset.image_path),
     imageAlt: asset.title || 'Design asset image',
     price: 'Inquire'
@@ -175,10 +175,10 @@ export const fetchFilterOptions = async (): Promise<{
     return { sculptureTypes: [], roomTypes: [], styles: [] };
   }
   
-  // Note: Room and Style use PascalCase in the database
+  // Exact column names from schema: sculpture_type, "Room" (quoted), style
   const { data, error } = await client
     .from('design_assets')
-    .select('sculpture_type, Room, Style')
+    .select('sculpture_type, Room, style')
     .eq('is_active', true);
   
   if (error) {
@@ -188,7 +188,7 @@ export const fetchFilterOptions = async (): Promise<{
   
   const sculptureTypeValues = (data || []).map(d => d.sculpture_type);
   const roomValues = (data || []).map(d => d.Room);
-  const styleValues = (data || []).map(d => d.Style);
+  const styleValues = (data || []).map(d => d.style);
   
   return {
     sculptureTypes: extractUniqueValues(sculptureTypeValues),
@@ -226,14 +226,14 @@ export const searchDesignAssets = async (
     query = query.in('sculpture_type', filters.sculptureType);
   }
   
-  // Apply Room filter - note PascalCase column name
+  // Apply Room filter - "Room" is PascalCase in database
   if (filters.roomType.length > 0) {
     query = query.in('Room', filters.roomType);
   }
   
-  // Apply Style filter - note PascalCase column name
+  // Apply style filter - lowercase in database
   if (filters.style.length > 0) {
-    query = query.in('Style', filters.style);
+    query = query.in('style', filters.style);
   }
   
   const { data, error } = await query.order('created_at', { ascending: false });
