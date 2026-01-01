@@ -44,15 +44,15 @@ export const getStorageImageUrl = (imagePath: string): string => {
   return `${supabaseUrl}/storage/v1/object/public/${bucketName}/${imagePath}`;
 };
 
-// Types for design assets - matching actual database columns
+// Types for design assets - matching actual database columns (note: some columns use PascalCase)
 export interface DesignAsset {
   id: string;
   image_path: string;
   title: string | null;
   description: string | null;
   sculpture_type: string | null;
-  room: string | null;
-  style: string | null;
+  Room: string | null;  // PascalCase in database
+  Style: string | null; // PascalCase in database
   is_active: boolean;
   created_at: string | null;
 }
@@ -105,8 +105,8 @@ export const parseDesignAsset = (asset: DesignAsset): DesignItem => {
     title: asset.title || 'Untitled',
     description: asset.description || '',
     sculptureType: formatFieldValue(asset.sculpture_type),
-    room: formatFieldValue(asset.room),
-    style: formatFieldValue(asset.style),
+    room: formatFieldValue(asset.Room),       // PascalCase column
+    style: formatFieldValue(asset.Style),     // PascalCase column
     imageUrl: getStorageImageUrl(asset.image_path),
     imageAlt: asset.title || 'Design asset image',
     price: 'Inquire'
@@ -175,9 +175,10 @@ export const fetchFilterOptions = async (): Promise<{
     return { sculptureTypes: [], roomTypes: [], styles: [] };
   }
   
+  // Note: Room and Style use PascalCase in the database
   const { data, error } = await client
     .from('design_assets')
-    .select('sculpture_type, room, style')
+    .select('sculpture_type, Room, Style')
     .eq('is_active', true);
   
   if (error) {
@@ -186,8 +187,8 @@ export const fetchFilterOptions = async (): Promise<{
   }
   
   const sculptureTypeValues = (data || []).map(d => d.sculpture_type);
-  const roomValues = (data || []).map(d => d.room);
-  const styleValues = (data || []).map(d => d.style);
+  const roomValues = (data || []).map(d => d.Room);
+  const styleValues = (data || []).map(d => d.Style);
   
   return {
     sculptureTypes: extractUniqueValues(sculptureTypeValues),
@@ -225,14 +226,14 @@ export const searchDesignAssets = async (
     query = query.in('sculpture_type', filters.sculptureType);
   }
   
-  // Apply room filter (AND with other filters)
+  // Apply Room filter - note PascalCase column name
   if (filters.roomType.length > 0) {
-    query = query.in('room', filters.roomType);
+    query = query.in('Room', filters.roomType);
   }
   
-  // Apply style filter (AND with other filters)
+  // Apply Style filter - note PascalCase column name
   if (filters.style.length > 0) {
-    query = query.in('style', filters.style);
+    query = query.in('Style', filters.style);
   }
   
   const { data, error } = await query.order('created_at', { ascending: false });
