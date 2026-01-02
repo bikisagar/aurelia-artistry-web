@@ -137,11 +137,11 @@ const GalleryDetail = () => {
                         {/* Left Column: Image */}
                         <div className="relative">
                             <div className="sticky top-32">
-                                <div className="aspect-[4/3] w-full bg-gray-100 overflow-hidden shadow-lg">
+                                <div className="w-full bg-gray-100 overflow-hidden shadow-lg flex items-center justify-center">
                                     <img
                                         src={item.imageUrl}
                                         alt={item.imageAlt}
-                                        className="w-full h-full object-cover"
+                                        className="w-full h-auto object-contain max-h-[70vh]"
                                         onError={(e) => {
                                             (e.target as HTMLImageElement).src = 'https://placehold.co/600x400?text=Image+Unavailable';
                                         }}

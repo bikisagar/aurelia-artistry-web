@@ -62,13 +62,13 @@ const Gallery = () => {
                 className={`luxury-card group cursor-pointer stagger-fade`}
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className="relative overflow-hidden aspect-[4/3]">
+                <div className="relative overflow-hidden min-h-[250px] flex items-center justify-center">
                   {/* Placeholder Image */}
-                  <div className="w-full h-full bg-gradient-to-br from-luxury-charcoal/10 to-luxury-gold/20">
+                  <div className="w-full bg-gradient-to-br from-luxury-charcoal/10 to-luxury-gold/20 flex items-center justify-center">
                     <img 
                       src={imageMap[index]} 
                       alt={category.alt}
-                      className="w-full h-full object-cover opacity-30"
+                      className="w-full h-auto object-contain opacity-30"
                     />
                   </div>
                   

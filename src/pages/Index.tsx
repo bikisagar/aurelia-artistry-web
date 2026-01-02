@@ -88,13 +88,13 @@ const Index = () => {
                 </div>
               </div>
               <div className="animate-on-scroll order-1 lg:order-2">
-                <div className="relative">
+                <div className="relative flex items-center justify-center bg-luxury-cream/50 luxury-card overflow-hidden">
                   <img 
                     src={galleryInterior} 
                     alt={content.home.introduction.alt}
-                    className="w-full h-64 sm:h-80 lg:h-96 object-cover luxury-card"
+                    className="w-full h-auto object-contain"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-luxury-charcoal/20 to-transparent"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-luxury-charcoal/20 to-transparent pointer-events-none"></div>
                 </div>
               </div>
             </div>

@@ -27,12 +27,12 @@ const GalleryItem = ({ item, useSupabaseUrl = false }: GalleryItemProps) => {
     return (
         <Link to={`/collection/${item.id}`} className="block h-full group">
             <Card className="h-full border-none shadow-md hover:shadow-xl transition-shadow duration-300 rounded-none overflow-hidden bg-white">
-                <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
+                <div className="relative w-full overflow-hidden bg-gray-100 flex items-center justify-center min-h-[200px]">
                     <img
                         src={imageSrc}
                         alt={item.imageAlt}
                         loading="lazy"
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        className="w-full h-auto max-h-[400px] object-contain transition-transform duration-700 group-hover:scale-105"
                         onError={(e) => {
                             (e.target as HTMLImageElement).src = 'https://placehold.co/600x400?text=Image+Unavailable';
                         }}
