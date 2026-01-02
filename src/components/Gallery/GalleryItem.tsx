@@ -26,13 +26,14 @@ const GalleryItem = ({ item, useSupabaseUrl = false }: GalleryItemProps) => {
 
     return (
         <Link to={`/collection/${item.id}`} className="block h-full group">
-            <Card className="h-full border-none shadow-md hover:shadow-xl transition-shadow duration-300 rounded-none overflow-hidden bg-white">
-                <div className="relative w-full overflow-hidden bg-gray-100 flex items-center justify-center min-h-[200px]">
+            <Card className="h-full border-none shadow-md hover:shadow-xl transition-shadow duration-300 rounded-none overflow-hidden bg-white flex flex-col">
+                {/* Fixed-height image container for uniform grid */}
+                <div className="relative w-full h-[280px] sm:h-[320px] overflow-hidden bg-gray-100 flex items-center justify-center">
                     <img
                         src={imageSrc}
                         alt={item.imageAlt}
                         loading="lazy"
-                        className="w-full h-auto max-h-[400px] object-contain transition-transform duration-700 group-hover:scale-105"
+                        className="max-w-full max-h-full object-contain transition-transform duration-700 group-hover:scale-105"
                         onError={(e) => {
                             (e.target as HTMLImageElement).src = 'https://placehold.co/600x400?text=Image+Unavailable';
                         }}
@@ -47,20 +48,23 @@ const GalleryItem = ({ item, useSupabaseUrl = false }: GalleryItemProps) => {
                     </div>
                 </div>
 
-                <CardContent className="p-6">
+                {/* Fixed-height text content for baseline alignment */}
+                <CardContent className="p-6 flex-1 flex flex-col">
                     <h3 className="heading-md text-xl mb-2 line-clamp-1 group-hover:text-luxury-gold transition-colors">
                         {item.title}
                     </h3>
-                    {item.sculptureType && (
-                        <p className="text-xs font-medium text-luxury-gold uppercase tracking-wider mb-1">
-                            {item.sculptureType}
-                        </p>
-                    )}
-                    {item.room && (
-                        <p className="text-sm text-muted-foreground line-clamp-1">
-                            {item.room}
-                        </p>
-                    )}
+                    <div className="mt-auto">
+                        {item.sculptureType && (
+                            <p className="text-xs font-medium text-luxury-gold uppercase tracking-wider mb-1">
+                                {item.sculptureType}
+                            </p>
+                        )}
+                        {item.room && (
+                            <p className="text-sm text-muted-foreground line-clamp-1">
+                                {item.room}
+                            </p>
+                        )}
+                    </div>
                 </CardContent>
 
                 {item.price && (

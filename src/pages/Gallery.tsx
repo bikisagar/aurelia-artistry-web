@@ -62,15 +62,14 @@ const Gallery = () => {
                 className={`luxury-card group cursor-pointer stagger-fade`}
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className="relative overflow-hidden min-h-[250px] flex items-center justify-center">
+                {/* Fixed-height container for uniform grid */}
+                <div className="relative h-[280px] sm:h-[320px] overflow-hidden flex items-center justify-center bg-gradient-to-br from-luxury-charcoal/10 to-luxury-gold/20">
                   {/* Placeholder Image */}
-                  <div className="w-full bg-gradient-to-br from-luxury-charcoal/10 to-luxury-gold/20 flex items-center justify-center">
-                    <img 
-                      src={imageMap[index]} 
-                      alt={category.alt}
-                      className="w-full h-auto object-contain opacity-30"
-                    />
-                  </div>
+                  <img 
+                    src={imageMap[index]} 
+                    alt={category.alt}
+                    className="max-w-full max-h-full object-contain opacity-30"
+                  />
                   
                   {/* Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-luxury-charcoal/90 via-luxury-charcoal/50 to-transparent flex items-end">
