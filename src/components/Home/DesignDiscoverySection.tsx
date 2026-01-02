@@ -59,18 +59,19 @@ const DesignDiscoverySection = () => {
                       to={`/collection/${item.id}`}
                       className="block group relative overflow-hidden rounded-sm"
                     >
-                                      <div className="w-full overflow-hidden bg-luxury-charcoal/10 flex items-center justify-center min-h-[200px]">
-                                        <img
-                                          src={item.imageUrl}
-                                          alt={item.imageAlt || item.title}
-                                          loading="lazy"
-                                          className="w-full h-auto max-h-[300px] object-contain transition-transform duration-700 group-hover:scale-105"
-                                          onError={(e) => {
-                                            (e.target as HTMLImageElement).src =
-                                              'https://placehold.co/600x400?text=Design+Preview';
-                                          }}
-                                        />
-                                      </div>
+                      {/* Fixed-height image container for uniform carousel */}
+                      <div className="w-full h-[280px] sm:h-[320px] overflow-hidden bg-luxury-charcoal/10 flex items-center justify-center">
+                        <img
+                          src={item.imageUrl}
+                          alt={item.imageAlt || item.title}
+                          loading="lazy"
+                          className="max-w-full max-h-full object-contain transition-transform duration-700 group-hover:scale-105"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src =
+                              'https://placehold.co/600x400?text=Design+Preview';
+                          }}
+                        />
+                      </div>
 
                       {/* Overlay with title */}
                       <div className="absolute inset-0 bg-gradient-to-t from-luxury-charcoal/80 via-transparent to-transparent flex items-end p-6">
