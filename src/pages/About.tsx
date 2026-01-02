@@ -36,11 +36,11 @@ const About = () => {
             <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
               {/* Founder Image */}
               <div className="w-full max-w-sm lg:w-2/5 fade-in">
-                <div className="aspect-[4/5] overflow-hidden rounded-none shadow-[var(--shadow-luxury)]">
+                <div className="overflow-hidden rounded-none shadow-[var(--shadow-luxury)] flex items-center justify-center bg-luxury-cream">
                   <img 
                     src={founderPhoto}
                     alt={content.about.founder.alt}
-                    className="w-full h-full object-cover"
+                    className="w-full h-auto object-contain"
                   />
                 </div>
               </div>
@@ -98,14 +98,14 @@ const About = () => {
 
                   {/* Image */}
                   <div className="w-full max-w-md lg:w-2/5">
-                    <div className="aspect-[5/4] overflow-hidden rounded-none shadow-[var(--shadow-luxury)]">
+                    <div className="overflow-hidden rounded-none shadow-[var(--shadow-luxury)] flex items-center justify-center bg-luxury-cream">
                       <img 
                         src={index === 0 ? workshopPhoto : 
                              index === 1 ? curatedCollection :
                              index === 2 ? authenticationProcess : 
                              workshopPhoto}
                         alt={item.alt}
-                        className="w-full h-full object-cover"
+                        className="w-full h-auto object-contain"
                       />
                     </div>
                   </div>
