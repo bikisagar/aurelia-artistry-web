@@ -197,7 +197,48 @@ export const fetchFilterOptions = async (): Promise<{
   };
 };
 
-// Search and filter design assets using database queries
+// Helper to normalize a string for comparison (lowercase, trimmed)
+const normalizeForComparison = (value: unknown): string => {
+  if (!value) return '';
+  return String(value).trim().toLowerCase();
+};
+
+// Helper to check if a database field value matches any of the selected filter values
+// Handles plain strings, JSON arrays, and comma-separated values
+const fieldMatchesFilter = (fieldValue: unknown, selectedValues: string[]): boolean => {
+  if (selectedValues.length === 0) return true;
+  if (!fieldValue) return false;
+  
+  // Normalize selected filter values
+  const normalizedFilters = selectedValues.map(v => v.trim().toLowerCase());
+  
+  // Parse the field value to get all actual values
+  let actualValues: string[] = [];
+  
+  if (typeof fieldValue === 'string') {
+    // Check if it's a JSON array
+    if (fieldValue.startsWith('[') && fieldValue.endsWith(']')) {
+      try {
+        const parsed = JSON.parse(fieldValue);
+        if (Array.isArray(parsed)) {
+          actualValues = parsed.filter(Boolean).map(v => String(v).trim().toLowerCase());
+        }
+      } catch {
+        // Not valid JSON, treat as plain string
+        actualValues = [fieldValue.trim().toLowerCase()];
+      }
+    } else {
+      actualValues = [fieldValue.trim().toLowerCase()];
+    }
+  } else if (Array.isArray(fieldValue)) {
+    actualValues = fieldValue.filter(Boolean).map(v => String(v).trim().toLowerCase());
+  }
+  
+  // Check if any actual value matches any selected filter
+  return actualValues.some(actual => normalizedFilters.includes(actual));
+};
+
+// Search and filter design assets - fetch all then filter client-side for accuracy
 export const searchDesignAssets = async (
   searchQuery: string,
   filters: {
@@ -211,29 +252,18 @@ export const searchDesignAssets = async (
     return [];
   }
   
+  // Build base query
   let query = client
     .from('design_assets')
     .select('*')
     .eq('is_active', true);
   
-  // Apply search across title and description
+  // Apply search at database level (this is safe with ilike)
   if (searchQuery) {
-    query = query.or(`title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`);
-  }
-  
-  // Apply sculpture_type filter (AND with other filters)
-  if (filters.sculptureType.length > 0) {
-    query = query.in('sculpture_type', filters.sculptureType);
-  }
-  
-  // Apply Room filter - "Room" is PascalCase in database
-  if (filters.roomType.length > 0) {
-    query = query.in('Room', filters.roomType);
-  }
-  
-  // Apply style filter - lowercase in database
-  if (filters.style.length > 0) {
-    query = query.in('style', filters.style);
+    const searchTerm = searchQuery.trim();
+    if (searchTerm) {
+      query = query.or(`title.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`);
+    }
   }
   
   const { data, error } = await query.order('created_at', { ascending: false });
@@ -243,5 +273,25 @@ export const searchDesignAssets = async (
     return [];
   }
   
-  return (data || []).map(parseDesignAsset);
+  if (!data) return [];
+  
+  // Apply filters client-side with normalized comparison
+  const hasFilters = filters.sculptureType.length > 0 || 
+                     filters.roomType.length > 0 || 
+                     filters.style.length > 0;
+  
+  let filteredData = data;
+  
+  if (hasFilters) {
+    filteredData = data.filter(asset => {
+      // All active filters must match (AND logic)
+      const matchesSculptureType = fieldMatchesFilter(asset.sculpture_type, filters.sculptureType);
+      const matchesRoom = fieldMatchesFilter(asset.Room, filters.roomType);
+      const matchesStyle = fieldMatchesFilter(asset.style, filters.style);
+      
+      return matchesSculptureType && matchesRoom && matchesStyle;
+    });
+  }
+  
+  return filteredData.map(parseDesignAsset);
 };
