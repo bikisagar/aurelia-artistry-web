@@ -67,11 +67,11 @@ const GalleryItem = ({ item, useSupabaseUrl = false }: GalleryItemProps) => {
                     </div>
                 </CardContent>
 
-                {item.price && (
-                    <CardFooter className="px-6 pb-6 pt-0">
-                        <p className="font-serif text-lg text-luxury-charcoal">{item.price}</p>
-                    </CardFooter>
-                )}
+                <CardFooter className="px-6 pb-6 pt-0">
+                    <span className="text-sm font-medium text-luxury-gold hover:text-luxury-charcoal transition-colors cursor-pointer">
+                        Inquire
+                    </span>
+                </CardFooter>
             </Card>
         </Link>
     );
