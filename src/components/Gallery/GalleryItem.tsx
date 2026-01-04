@@ -2,42 +2,33 @@ import { Link } from 'react-router-dom';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { getImageUrl } from '@/lib/googleDrive';
 import { Eye } from 'lucide-react';
-
 export interface GalleryItemProps {
-    item: {
-        id: string;
-        title: string;
-        sculptureType: string;
-        room: string;
-        style?: string;
-        googleDriveId?: string;
-        imageUrl?: string; // Direct URL from Supabase storage
-        imageAlt: string;
-        price?: string;
-    };
-    useSupabaseUrl?: boolean;
+  item: {
+    id: string;
+    title: string;
+    sculptureType: string;
+    room: string;
+    style?: string;
+    googleDriveId?: string;
+    imageUrl?: string; // Direct URL from Supabase storage
+    imageAlt: string;
+    price?: string;
+  };
+  useSupabaseUrl?: boolean;
 }
-
-const GalleryItem = ({ item, useSupabaseUrl = false }: GalleryItemProps) => {
-    // Use direct imageUrl if Supabase mode, otherwise use Google Drive
-    const imageSrc = useSupabaseUrl && item.imageUrl 
-        ? item.imageUrl 
-        : getImageUrl(item.googleDriveId || '', 400);
-
-    return (
-        <Link to={`/collection/${item.id}`} className="block h-full group">
+const GalleryItem = ({
+  item,
+  useSupabaseUrl = false
+}: GalleryItemProps) => {
+  // Use direct imageUrl if Supabase mode, otherwise use Google Drive
+  const imageSrc = useSupabaseUrl && item.imageUrl ? item.imageUrl : getImageUrl(item.googleDriveId || '', 400);
+  return <Link to={`/collection/${item.id}`} className="block h-full group">
             <Card className="h-full border-none shadow-md hover:shadow-xl transition-shadow duration-300 rounded-none overflow-hidden bg-white flex flex-col">
                 {/* Fixed-height image container for uniform grid */}
                 <div className="relative w-full h-[280px] sm:h-[320px] overflow-hidden bg-gray-100 flex items-center justify-center">
-                    <img
-                        src={imageSrc}
-                        alt={item.imageAlt}
-                        loading="lazy"
-                        className="max-w-full max-h-full object-contain transition-transform duration-700 group-hover:scale-105"
-                        onError={(e) => {
-                            (e.target as HTMLImageElement).src = 'https://placehold.co/600x400?text=Image+Unavailable';
-                        }}
-                    />
+                    <img src={imageSrc} alt={item.imageAlt} loading="lazy" className="max-w-full max-h-full object-contain transition-transform duration-700 group-hover:scale-105" onError={e => {
+          (e.target as HTMLImageElement).src = 'https://placehold.co/600x400?text=Image+Unavailable';
+        }} />
 
                     {/* Overlay */}
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
@@ -54,27 +45,21 @@ const GalleryItem = ({ item, useSupabaseUrl = false }: GalleryItemProps) => {
                         {item.title}
                     </h3>
                     <div className="mt-auto">
-                        {item.sculptureType && (
-                            <p className="text-xs font-medium text-luxury-gold uppercase tracking-wider mb-1">
+                        {item.sculptureType && <p className="text-xs font-medium text-luxury-gold uppercase tracking-wider mb-1">
                                 {item.sculptureType}
-                            </p>
-                        )}
-                        {item.room && (
-                            <p className="text-sm text-muted-foreground line-clamp-1">
+                            </p>}
+                        {item.room && <p className="text-sm text-muted-foreground line-clamp-1">
                                 {item.room}
-                            </p>
-                        )}
+                            </p>}
                     </div>
                 </CardContent>
 
                 <CardFooter className="px-6 pb-6 pt-0">
                     <span className="text-sm font-medium text-luxury-gold hover:text-luxury-charcoal transition-colors cursor-pointer">
-                        Inquire
+                        ​Check the design  
                     </span>
                 </CardFooter>
             </Card>
-        </Link>
-    );
+        </Link>;
 };
-
 export default GalleryItem;
