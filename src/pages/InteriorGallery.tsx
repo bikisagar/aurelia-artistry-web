@@ -16,9 +16,10 @@ const ITEMS_PER_PAGE = 12;
 const InteriorGallery = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [filters, setFilters] = useState<FilterState>({
-        sculptureType: [],
-        roomType: [],
-        style: []
+        designContext: [],
+        sculpturalForm: [],
+        interiorArea: [],
+        placementType: []
     });
     const [currentPage, setCurrentPage] = useState(1);
     const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
@@ -62,15 +63,16 @@ const InteriorGallery = () => {
     };
 
     const clearFilters = () => {
-        setFilters({ sculptureType: [], roomType: [], style: [] });
+        setFilters({ designContext: [], sculpturalForm: [], interiorArea: [], placementType: [] });
         setSearchQuery('');
     };
 
     // Check if any filters are active
     const hasActiveFilters = searchQuery || 
-        filters.sculptureType.length > 0 || 
-        filters.roomType.length > 0 || 
-        filters.style.length > 0;
+        filters.designContext.length > 0 || 
+        filters.sculpturalForm.length > 0 || 
+        filters.interiorArea.length > 0 ||
+        filters.placementType.length > 0;
 
     return (
         <div className="min-h-screen bg-background font-sans text-foreground">
@@ -91,7 +93,7 @@ const InteriorGallery = () => {
                 {error && (
                     <div className="text-center py-12 mb-8 bg-destructive/10 rounded-sm border border-destructive/20">
                         <p className="text-destructive">{error}</p>
-                        <Button onClick={() => search('', { sculptureType: [], roomType: [], style: [] })} variant="outline" className="mt-4">
+                        <Button onClick={() => search('', { designContext: [], sculpturalForm: [], interiorArea: [], placementType: [] })} variant="outline" className="mt-4">
                             Try Again
                         </Button>
                     </div>
@@ -116,9 +118,10 @@ const InteriorGallery = () => {
                                         onFilterChange={handleFilterChange}
                                         onClearFilters={clearFilters}
                                         filterOptions={{
-                                            sculptureType: filterOptions.sculptureTypes,
-                                            roomType: filterOptions.roomTypes,
-                                            style: filterOptions.styles
+                                            designContext: filterOptions.designContexts,
+                                            sculpturalForm: filterOptions.sculpturalForms,
+                                            interiorArea: filterOptions.interiorAreas,
+                                            placementType: filterOptions.placementTypes
                                         }}
                                         labels={designContent?.filters?.categories}
                                     />
@@ -149,9 +152,10 @@ const InteriorGallery = () => {
                             onFilterChange={handleFilterChange}
                             onClearFilters={clearFilters}
                             filterOptions={{
-                                sculptureType: filterOptions.sculptureTypes,
-                                roomType: filterOptions.roomTypes,
-                                style: filterOptions.styles
+                                designContext: filterOptions.designContexts,
+                                sculpturalForm: filterOptions.sculpturalForms,
+                                interiorArea: filterOptions.interiorAreas,
+                                placementType: filterOptions.placementTypes
                             }}
                             labels={designContent?.filters?.categories}
                         />
@@ -171,9 +175,10 @@ const InteriorGallery = () => {
                                         item={{
                                             id: item.id,
                                             title: item.title,
-                                            sculptureType: item.sculptureType,
-                                            room: item.room,
-                                            style: item.style,
+                                            designContext: item.designContext,
+                                            sculpturalForm: item.sculpturalForm,
+                                            interiorArea: item.interiorArea,
+                                            placementType: item.placementType,
                                             imageUrl: item.imageUrl,
                                             imageAlt: item.imageAlt,
                                             price: item.price

@@ -44,16 +44,18 @@ export const getStorageImageUrl = (imagePath: string): string => {
   return `${supabaseUrl}/storage/v1/object/public/${bucketName}/${imagePath}`;
 };
 
-// Types for design assets - matching exact database column names
+// Types for design assets - matching new database column names
 export interface DesignAsset {
   id: string;
   image_path: string;
   title: string | null;
   description: string | null;
-  sculpture_type: string | null;
-  Room: string | null;  // PascalCase in database (quoted column)
-  style: string | null; // lowercase in database
+  design_context: string | null;
+  sculptural_form: string | null;
+  interior_area: string | null;
+  placement_type: string | null;
   is_active: boolean;
+  is_sculpture_available: boolean | null;
   created_at: string | null;
 }
 
@@ -62,9 +64,10 @@ export interface DesignItem {
   id: string;
   title: string;
   description: string;
-  sculptureType: string;
-  room: string;
-  style: string;
+  designContext: string;
+  sculpturalForm: string;
+  interiorArea: string;
+  placementType: string;
   imageUrl: string;
   imageAlt: string;
   price?: string;
@@ -104,9 +107,10 @@ export const parseDesignAsset = (asset: DesignAsset): DesignItem => {
     id: asset.id,
     title: asset.title || 'Untitled',
     description: asset.description || '',
-    sculptureType: formatFieldValue(asset.sculpture_type),
-    room: formatFieldValue(asset.Room),       // PascalCase column in database
-    style: formatFieldValue(asset.style),     // lowercase column in database
+    designContext: formatFieldValue(asset.design_context),
+    sculpturalForm: formatFieldValue(asset.sculptural_form),
+    interiorArea: formatFieldValue(asset.interior_area),
+    placementType: formatFieldValue(asset.placement_type),
     imageUrl: getStorageImageUrl(asset.image_path),
     imageAlt: asset.title || 'Design asset image',
     price: 'Inquire'
@@ -166,41 +170,38 @@ const extractUniqueValues = (values: unknown[]): string[] => {
 
 // Fetch distinct filter options from database columns
 export const fetchFilterOptions = async (): Promise<{
-  sculptureTypes: string[];
-  roomTypes: string[];
-  styles: string[];
+  designContexts: string[];
+  sculpturalForms: string[];
+  interiorAreas: string[];
+  placementTypes: string[];
 }> => {
   const client = getSupabaseClient();
   if (!client) {
-    return { sculptureTypes: [], roomTypes: [], styles: [] };
+    return { designContexts: [], sculpturalForms: [], interiorAreas: [], placementTypes: [] };
   }
   
-  // Exact column names from schema: sculpture_type, "Room" (quoted), style
+  // New column names from schema
   const { data, error } = await client
     .from('design_assets')
-    .select('sculpture_type, Room, style')
+    .select('design_context, sculptural_form, interior_area, placement_type')
     .eq('is_active', true);
   
   if (error) {
     console.error('Error fetching filter options:', error);
-    return { sculptureTypes: [], roomTypes: [], styles: [] };
+    return { designContexts: [], sculpturalForms: [], interiorAreas: [], placementTypes: [] };
   }
   
-  const sculptureTypeValues = (data || []).map(d => d.sculpture_type);
-  const roomValues = (data || []).map(d => d.Room);
-  const styleValues = (data || []).map(d => d.style);
+  const designContextValues = (data || []).map(d => d.design_context);
+  const sculpturalFormValues = (data || []).map(d => d.sculptural_form);
+  const interiorAreaValues = (data || []).map(d => d.interior_area);
+  const placementTypeValues = (data || []).map(d => d.placement_type);
   
   return {
-    sculptureTypes: extractUniqueValues(sculptureTypeValues),
-    roomTypes: extractUniqueValues(roomValues),
-    styles: extractUniqueValues(styleValues)
+    designContexts: extractUniqueValues(designContextValues),
+    sculpturalForms: extractUniqueValues(sculpturalFormValues),
+    interiorAreas: extractUniqueValues(interiorAreaValues),
+    placementTypes: extractUniqueValues(placementTypeValues)
   };
-};
-
-// Helper to normalize a string for comparison (lowercase, trimmed)
-const normalizeForComparison = (value: unknown): string => {
-  if (!value) return '';
-  return String(value).trim().toLowerCase();
 };
 
 // Helper to check if a database field value matches any of the selected filter values
@@ -242,9 +243,10 @@ const fieldMatchesFilter = (fieldValue: unknown, selectedValues: string[]): bool
 export const searchDesignAssets = async (
   searchQuery: string,
   filters: {
-    sculptureType: string[];
-    roomType: string[];
-    style: string[];
+    designContext: string[];
+    sculpturalForm: string[];
+    interiorArea: string[];
+    placementType: string[];
   }
 ): Promise<DesignItem[]> => {
   const client = getSupabaseClient();
@@ -276,20 +278,22 @@ export const searchDesignAssets = async (
   if (!data) return [];
   
   // Apply filters client-side with normalized comparison
-  const hasFilters = filters.sculptureType.length > 0 || 
-                     filters.roomType.length > 0 || 
-                     filters.style.length > 0;
+  const hasFilters = filters.designContext.length > 0 || 
+                     filters.sculpturalForm.length > 0 || 
+                     filters.interiorArea.length > 0 ||
+                     filters.placementType.length > 0;
   
   let filteredData = data;
   
   if (hasFilters) {
     filteredData = data.filter(asset => {
       // All active filters must match (AND logic)
-      const matchesSculptureType = fieldMatchesFilter(asset.sculpture_type, filters.sculptureType);
-      const matchesRoom = fieldMatchesFilter(asset.Room, filters.roomType);
-      const matchesStyle = fieldMatchesFilter(asset.style, filters.style);
+      const matchesDesignContext = fieldMatchesFilter(asset.design_context, filters.designContext);
+      const matchesSculpturalForm = fieldMatchesFilter(asset.sculptural_form, filters.sculpturalForm);
+      const matchesInteriorArea = fieldMatchesFilter(asset.interior_area, filters.interiorArea);
+      const matchesPlacementType = fieldMatchesFilter(asset.placement_type, filters.placementType);
       
-      return matchesSculptureType && matchesRoom && matchesStyle;
+      return matchesDesignContext && matchesSculpturalForm && matchesInteriorArea && matchesPlacementType;
     });
   }
   

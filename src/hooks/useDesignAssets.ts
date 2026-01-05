@@ -8,9 +8,10 @@ import {
 import { FilterState } from '@/components/Gallery/FilterPanel';
 
 interface FilterOptions {
-  sculptureTypes: string[];
-  roomTypes: string[];
-  styles: string[];
+  designContexts: string[];
+  sculpturalForms: string[];
+  interiorAreas: string[];
+  placementTypes: string[];
 }
 
 interface UseDesignAssetsReturn {
@@ -25,9 +26,10 @@ interface UseDesignAssetsReturn {
 export const useDesignAssets = (): UseDesignAssetsReturn => {
   const [items, setItems] = useState<DesignItem[]>([]);
   const [filterOptions, setFilterOptions] = useState<FilterOptions>({
-    sculptureTypes: [],
-    roomTypes: [],
-    styles: []
+    designContexts: [],
+    sculpturalForms: [],
+    interiorAreas: [],
+    placementTypes: []
   });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
