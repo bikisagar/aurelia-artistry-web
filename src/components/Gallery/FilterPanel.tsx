@@ -9,21 +9,24 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
 export interface FilterState {
-    sculptureType: string[];
-    roomType: string[];
-    style: string[];
+    designContext: string[];
+    sculpturalForm: string[];
+    interiorArea: string[];
+    placementType: string[];
 }
 
 interface FilterOptions {
-    sculptureType: string[];
-    roomType: string[];
-    style: string[];
+    designContext: string[];
+    sculpturalForm: string[];
+    interiorArea: string[];
+    placementType: string[];
 }
 
 interface FilterLabels {
-    sculptureType?: string;
-    roomType?: string;
-    style?: string;
+    designContext?: string;
+    sculpturalForm?: string;
+    interiorArea?: string;
+    placementType?: string;
 }
 
 interface FilterPanelProps {
@@ -35,11 +38,12 @@ interface FilterPanelProps {
     labels?: FilterLabels;
 }
 
-// No hardcoded defaults - only database values
+// Default labels for filter categories
 const defaultLabels: FilterLabels = {
-    sculptureType: "Sculpture Type",
-    roomType: "Room",
-    style: "Style"
+    designContext: "Design Context",
+    sculpturalForm: "Sculptural Form",
+    interiorArea: "Interior Area",
+    placementType: "Placement Type"
 };
 
 const FilterPanel = ({ 
@@ -53,19 +57,24 @@ const FilterPanel = ({
     // Build categories from database values only - no fallbacks
     const categories = [
         {
-            id: "sculptureType" as const,
-            label: labels.sculptureType || defaultLabels.sculptureType,
-            options: filterOptions?.sculptureType || []
+            id: "designContext" as const,
+            label: labels.designContext || defaultLabels.designContext,
+            options: filterOptions?.designContext || []
         },
         {
-            id: "roomType" as const,
-            label: labels.roomType || defaultLabels.roomType,
-            options: filterOptions?.roomType || []
+            id: "sculpturalForm" as const,
+            label: labels.sculpturalForm || defaultLabels.sculpturalForm,
+            options: filterOptions?.sculpturalForm || []
         },
         {
-            id: "style" as const,
-            label: labels.style || defaultLabels.style,
-            options: filterOptions?.style || []
+            id: "interiorArea" as const,
+            label: labels.interiorArea || defaultLabels.interiorArea,
+            options: filterOptions?.interiorArea || []
+        },
+        {
+            id: "placementType" as const,
+            label: labels.placementType || defaultLabels.placementType,
+            options: filterOptions?.placementType || []
         }
     ].filter(cat => cat.options.length > 0); // Only show categories with options
 
@@ -87,7 +96,7 @@ const FilterPanel = ({
                 )}
             </div>
 
-            <Accordion type="multiple" defaultValue={["sculptureType", "roomType"]} className="w-full">
+            <Accordion type="multiple" defaultValue={["designContext", "sculpturalForm"]} className="w-full">
                 {categories.map((category) => (
                     <AccordionItem key={category.id} value={category.id} className="border-b-luxury-charcoal/10">
                         <AccordionTrigger className="text-sm font-medium hover:text-luxury-gold hover:no-underline py-4">
