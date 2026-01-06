@@ -71,6 +71,7 @@ export interface DesignItem {
   imageUrl: string;
   imageAlt: string;
   price?: string;
+  isSculptureAvailable: boolean;
 }
 
 // Helper to format database values - handles arrays, JSON strings, or plain strings
@@ -113,7 +114,8 @@ export const parseDesignAsset = (asset: DesignAsset): DesignItem => {
     placementType: formatFieldValue(asset.placement_type),
     imageUrl: getStorageImageUrl(asset.image_path),
     imageAlt: asset.title || 'Design asset image',
-    price: 'Inquire'
+    price: 'Inquire',
+    isSculptureAvailable: asset.is_sculpture_available ?? false
   };
 };
 
