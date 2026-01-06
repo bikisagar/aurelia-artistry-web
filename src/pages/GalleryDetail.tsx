@@ -1,17 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown';
 import Header from '@/components/Layout/Header';
 import Footer from '@/components/Layout/Footer';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Share2, Mail, Loader2 } from 'lucide-react';
 import GalleryItem from '@/components/Gallery/GalleryItem';
-import { getSupabaseClient, getStorageImageUrl, DesignAsset, parseDesignAsset, DesignItem } from '@/lib/supabaseDesign';
+import { getSupabaseClient, DesignAsset, parseDesignAsset, DesignItem } from '@/lib/supabaseDesign';
 
 const GalleryDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [item, setItem] = useState<DesignItem | null>(null);
-  const [relatedItems, setRelatedItems] = useState<DesignItem[]>([]);
+  const [similarItems, setSimilarItems] = useState<DesignItem[]>([]);
+  const [otherItems, setOtherItems] = useState<DesignItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -48,24 +50,34 @@ const GalleryDetail = () => {
         const parsedItem = parseDesignAsset(data as DesignAsset);
         setItem(parsedItem);
 
-        // Fetch related items by sculptural form or design context
-        const { data: relatedData } = await client
+        // Fetch all active items for similarity matching
+        const { data: allData } = await client
           .from('design_assets')
           .select('*')
           .eq('is_active', true)
           .neq('id', id)
-          .limit(4);
+          .order('created_at', { ascending: false });
 
-        if (relatedData) {
-          // Filter related items by matching sculptural form or design context
-          const parsedRelated = (relatedData as DesignAsset[])
-            .map(parseDesignAsset)
-            .filter(r => 
-              r.sculpturalForm === parsedItem.sculpturalForm || 
-              r.designContext === parsedItem.designContext
-            )
+        if (allData) {
+          const allParsed = (allData as DesignAsset[]).map(parseDesignAsset);
+          
+          // Similar items: match any of the 4 attributes
+          const similar = allParsed.filter(r => 
+            (parsedItem.placementType && r.placementType === parsedItem.placementType) ||
+            (parsedItem.designContext && r.designContext === parsedItem.designContext) ||
+            (parsedItem.sculpturalForm && r.sculpturalForm === parsedItem.sculpturalForm) ||
+            (parsedItem.interiorArea && r.interiorArea === parsedItem.interiorArea)
+          ).slice(0, 4);
+          
+          setSimilarItems(similar);
+          
+          // Other items: not in similar list
+          const similarIds = new Set(similar.map(s => s.id));
+          const others = allParsed
+            .filter(r => !similarIds.has(r.id))
             .slice(0, 4);
-          setRelatedItems(parsedRelated);
+          
+          setOtherItems(others);
         }
       } catch (err) {
         console.error('Error:', err);
@@ -86,8 +98,8 @@ const GalleryDetail = () => {
     return (
       <div className="min-h-screen bg-background font-sans">
         <Header />
-        <main className="pt-32 pb-16 flex items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-luxury-gold" />
+        <main className="pt-32 pb-16 flex items-center justify-center min-h-[60vh]">
+          <Loader2 className="h-10 w-10 animate-spin text-luxury-gold" />
         </main>
         <Footer />
       </div>
@@ -102,7 +114,7 @@ const GalleryDetail = () => {
           <div className="container mx-auto px-6 text-center">
             <h1 className="heading-xl text-luxury-charcoal mb-4">Item Not Found</h1>
             <p className="text-muted-foreground mb-8">{error || 'The item you are looking for does not exist.'}</p>
-            <Button onClick={() => navigate('/collection')}>
+            <Button onClick={() => navigate('/collection')} className="btn-primary">
               Return to Collection
             </Button>
           </div>
@@ -112,115 +124,220 @@ const GalleryDetail = () => {
     );
   }
 
+  const hasMetadata = item.designContext || item.sculpturalForm || item.interiorArea || item.placementType;
+
   return (
     <div className="min-h-screen bg-background font-sans">
       <Header />
 
-      <main className="pt-32 pb-16">
+      <main className="pt-32 pb-20">
         <div className="container mx-auto px-6">
           {/* Breadcrumb / Back */}
-          <div className="mb-8">
-            <Link to="/collection" className="inline-flex items-center text-sm text-muted-foreground hover:text-luxury-gold transition-colors">
+          <div className="mb-10">
+            <Link 
+              to="/collection" 
+              className="inline-flex items-center text-sm text-muted-foreground hover:text-luxury-gold transition-colors duration-300"
+            >
               <ArrowLeft size={16} className="mr-2" />
-              Back to Design 
+              Back to Collection
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 xl:gap-20">
-            {/* Left Column: Image */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 xl:gap-24">
+            {/* Left Column: Premium Image Display */}
             <div className="relative">
               <div className="sticky top-32">
-                <div className="w-full bg-gray-100 overflow-hidden shadow-lg flex items-center justify-center">
+                <div className="relative overflow-hidden bg-luxury-cream/30 shadow-[var(--shadow-luxury)]">
                   <img 
                     src={item.imageUrl} 
                     alt={item.imageAlt} 
-                    className="w-full h-auto object-contain max-h-[70vh]" 
+                    className="w-full h-auto object-contain max-h-[75vh] transition-transform duration-700 hover:scale-[1.02]" 
                     onError={e => {
                       (e.target as HTMLImageElement).src = 'https://placehold.co/600x400?text=Image+Unavailable';
                     }} 
                   />
+                  {/* Elegant corner accents */}
+                  <div className="absolute top-4 left-4 w-8 h-8 border-t-2 border-l-2 border-luxury-gold/40" />
+                  <div className="absolute bottom-4 right-4 w-8 h-8 border-b-2 border-r-2 border-luxury-gold/40" />
                 </div>
               </div>
             </div>
 
-            <div className="flex flex-col justify-center">
-              <h1 className="heading-xl text-4xl mb-4 text-luxury-charcoal">
+            {/* Right Column: Details */}
+            <div className="flex flex-col justify-start lg:pt-8">
+              {/* Title */}
+              <h1 className="heading-lg text-luxury-charcoal mb-8 fade-in">
                 {item.title}
               </h1>
 
-              <div className="text-2xl font-serif text-luxury-charcoal/80 mb-8">
-                {item.price || 'Inquire'}
-              </div>
-
+              {/* Description as Markdown */}
               {item.description && (
-                <div className="prose prose-lg text-muted-foreground mb-8 leading-relaxed">
-                  <p>{item.description}</p>
+                <div className="prose prose-lg prose-stone max-w-none mb-10 text-muted-foreground leading-relaxed fade-in">
+                  <ReactMarkdown
+                    components={{
+                      p: ({ children }) => <p className="mb-4 last:mb-0">{children}</p>,
+                      strong: ({ children }) => <strong className="font-semibold text-luxury-charcoal">{children}</strong>,
+                      em: ({ children }) => <em className="italic">{children}</em>,
+                      ul: ({ children }) => <ul className="list-disc pl-5 mb-4 space-y-1">{children}</ul>,
+                      ol: ({ children }) => <ol className="list-decimal pl-5 mb-4 space-y-1">{children}</ol>,
+                      li: ({ children }) => <li className="text-muted-foreground">{children}</li>,
+                      h1: ({ children }) => <h2 className="heading-md text-luxury-charcoal mt-6 mb-3">{children}</h2>,
+                      h2: ({ children }) => <h3 className="text-xl font-semibold text-luxury-charcoal mt-5 mb-2">{children}</h3>,
+                      h3: ({ children }) => <h4 className="text-lg font-medium text-luxury-charcoal mt-4 mb-2">{children}</h4>,
+                      blockquote: ({ children }) => (
+                        <blockquote className="border-l-4 border-luxury-gold/50 pl-4 italic text-muted-foreground my-4">
+                          {children}
+                        </blockquote>
+                      ),
+                    }}
+                  >
+                    {item.description}
+                  </ReactMarkdown>
                 </div>
               )}
 
-              {/* Metadata section - only show fields with values */}
-              <div className="grid grid-cols-2 gap-6 mb-10 text-sm border-y border-border py-8">
-                {item.designContext && (
-                  <div>
-                    <span className="block text-muted-foreground mb-1">Design Context</span>
-                    <span className="font-medium text-luxury-charcoal">{item.designContext}</span>
+              {/* Metadata Grid */}
+              {hasMetadata && (
+                <div className="border-y border-luxury-gold/20 py-8 mb-10 fade-in">
+                  <div className="grid grid-cols-2 gap-x-8 gap-y-6">
+                    {item.designContext && (
+                      <div className="group">
+                        <span className="block text-xs uppercase tracking-widest text-luxury-gold mb-2 font-medium">
+                          Design Context
+                        </span>
+                        <span className="text-luxury-charcoal font-medium">
+                          {item.designContext}
+                        </span>
+                      </div>
+                    )}
+                    {item.sculpturalForm && (
+                      <div className="group">
+                        <span className="block text-xs uppercase tracking-widest text-luxury-gold mb-2 font-medium">
+                          Sculptural Form
+                        </span>
+                        <span className="text-luxury-charcoal font-medium">
+                          {item.sculpturalForm}
+                        </span>
+                      </div>
+                    )}
+                    {item.interiorArea && (
+                      <div className="group">
+                        <span className="block text-xs uppercase tracking-widest text-luxury-gold mb-2 font-medium">
+                          Interior Area
+                        </span>
+                        <span className="text-luxury-charcoal font-medium">
+                          {item.interiorArea}
+                        </span>
+                      </div>
+                    )}
+                    {item.placementType && (
+                      <div className="group">
+                        <span className="block text-xs uppercase tracking-widest text-luxury-gold mb-2 font-medium">
+                          Placement Type
+                        </span>
+                        <span className="text-luxury-charcoal font-medium">
+                          {item.placementType}
+                        </span>
+                      </div>
+                    )}
                   </div>
-                )}
-                {item.sculpturalForm && (
-                  <div>
-                    <span className="block text-muted-foreground mb-1">Sculptural Form</span>
-                    <span className="font-medium text-luxury-charcoal">{item.sculpturalForm}</span>
-                  </div>
-                )}
-                {item.interiorArea && (
-                  <div>
-                    <span className="block text-muted-foreground mb-1">Interior Area</span>
-                    <span className="font-medium text-luxury-charcoal">{item.interiorArea}</span>
-                  </div>
-                )}
-                {item.placementType && (
-                  <div>
-                    <span className="block text-muted-foreground mb-1">Placement Type</span>
-                    <span className="font-medium text-luxury-charcoal">{item.placementType}</span>
-                  </div>
-                )}
-              </div>
+                </div>
+              )}
 
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button className="flex-1 h-12 text-base" onClick={() => navigate('/contact')}>
-                  <Mail className="mr-2 h-4 w-4" />
-                  Inquire About This Piece
-                </Button>
-                <Button variant="outline" className="h-12 px-6" onClick={handleShare}>
-                  <Share2 className="h-4 w-4" />
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4 fade-in">
+                {item.isSculptureAvailable ? (
+                  <Button 
+                    className="flex-1 h-14 text-sm uppercase tracking-widest font-medium bg-gradient-to-r from-luxury-gold to-luxury-bronze hover:from-luxury-gold-light hover:to-luxury-gold text-white shadow-lg hover:shadow-xl transition-all duration-300" 
+                    onClick={() => navigate('/contact')}
+                  >
+                    <Mail className="mr-3 h-4 w-4" />
+                    Inquire About This Piece
+                  </Button>
+                ) : (
+                  <Button 
+                    className="flex-1 h-14 text-sm uppercase tracking-widest font-medium border-2 border-luxury-gold text-luxury-gold bg-transparent hover:bg-luxury-gold hover:text-white transition-all duration-300" 
+                    variant="outline"
+                    onClick={() => navigate('/contact')}
+                  >
+                    <Mail className="mr-3 h-4 w-4" />
+                    Inquire About Similar Sculpture
+                  </Button>
+                )}
+                <Button 
+                  variant="outline" 
+                  className="h-14 px-6 border-luxury-charcoal/20 hover:border-luxury-gold hover:text-luxury-gold transition-all duration-300" 
+                  onClick={handleShare}
+                >
+                  <Share2 className="h-5 w-5" />
                 </Button>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Recommendations */}
-        {relatedItems.length > 0 && (
-          <section className="mt-32 bg-luxury-cream/20 py-20">
+        {/* Similar Designs Section */}
+        {similarItems.length > 0 && (
+          <section className="mt-32 py-20 bg-gradient-to-b from-luxury-cream/30 to-transparent">
             <div className="container mx-auto px-6">
-              <h2 className="heading-md text-3xl text-center mb-12">You May Also Like</h2>
+              <div className="text-center mb-14">
+                <span className="text-xs uppercase tracking-[0.3em] text-luxury-gold font-medium mb-3 block">
+                  Curated Selection
+                </span>
+                <h2 className="heading-md text-luxury-charcoal">Similar Designs</h2>
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                {relatedItems.map(related => (
-                  <GalleryItem 
-                    key={related.id} 
-                    item={{
-                      id: related.id,
-                      title: related.title,
-                      designContext: related.designContext,
-                      sculpturalForm: related.sculpturalForm,
-                      interiorArea: related.interiorArea,
-                      placementType: related.placementType,
-                      imageUrl: related.imageUrl,
-                      imageAlt: related.imageAlt,
-                      price: related.price
-                    }} 
-                    useSupabaseUrl={true} 
-                  />
+                {similarItems.map((related, index) => (
+                  <div key={related.id} className="fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
+                    <GalleryItem 
+                      item={{
+                        id: related.id,
+                        title: related.title,
+                        designContext: related.designContext,
+                        sculpturalForm: related.sculpturalForm,
+                        interiorArea: related.interiorArea,
+                        placementType: related.placementType,
+                        imageUrl: related.imageUrl,
+                        imageAlt: related.imageAlt,
+                        price: related.price
+                      }} 
+                      useSupabaseUrl={true} 
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Other Designs You May Like */}
+        {otherItems.length > 0 && (
+          <section className="mt-16 py-20">
+            <div className="container mx-auto px-6">
+              <div className="text-center mb-14">
+                <span className="text-xs uppercase tracking-[0.3em] text-luxury-gold font-medium mb-3 block">
+                  Explore More
+                </span>
+                <h2 className="heading-md text-luxury-charcoal">Other Designs You May Like</h2>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                {otherItems.map((other, index) => (
+                  <div key={other.id} className="fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
+                    <GalleryItem 
+                      item={{
+                        id: other.id,
+                        title: other.title,
+                        designContext: other.designContext,
+                        sculpturalForm: other.sculpturalForm,
+                        interiorArea: other.interiorArea,
+                        placementType: other.placementType,
+                        imageUrl: other.imageUrl,
+                        imageAlt: other.imageAlt,
+                        price: other.price
+                      }} 
+                      useSupabaseUrl={true} 
+                    />
+                  </div>
                 ))}
               </div>
             </div>
