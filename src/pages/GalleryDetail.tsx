@@ -6,7 +6,61 @@ import Footer from '@/components/Layout/Footer';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Share2, Mail, Loader2 } from 'lucide-react';
 import GalleryItem from '@/components/Gallery/GalleryItem';
-import { getSupabaseClient, DesignAsset, parseDesignAsset, DesignItem } from '@/lib/supabaseDesign';
+import { getSupabaseClient, DesignAsset, parseDesignAsset, DesignItem, parseArrayStringValues } from '@/lib/supabaseDesign';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+
+// Weights for similarity scoring (higher = more important)
+const SIMILARITY_WEIGHTS = {
+  designContext: 3,    // Highest priority
+  sculpturalForm: 3,   // Highest priority
+  interiorArea: 2,     // Medium priority
+  placementType: 2,    // Medium priority
+};
+
+// Calculate similarity score between two designs
+const calculateSimilarityScore = (
+  current: DesignItem,
+  candidate: DesignItem
+): number => {
+  let score = 0;
+
+  // Parse array values for each category
+  const currentValues = {
+    designContext: parseArrayStringValues(current.designContext),
+    sculpturalForm: parseArrayStringValues(current.sculpturalForm),
+    interiorArea: parseArrayStringValues(current.interiorArea),
+    placementType: parseArrayStringValues(current.placementType),
+  };
+
+  const candidateValues = {
+    designContext: parseArrayStringValues(candidate.designContext),
+    sculpturalForm: parseArrayStringValues(candidate.sculpturalForm),
+    interiorArea: parseArrayStringValues(candidate.interiorArea),
+    placementType: parseArrayStringValues(candidate.placementType),
+  };
+
+  // Count overlapping values in each category and apply weights
+  for (const category of Object.keys(SIMILARITY_WEIGHTS) as (keyof typeof SIMILARITY_WEIGHTS)[]) {
+    const currentVals = currentValues[category];
+    const candidateVals = candidateValues[category];
+    
+    // Count matching values (case-insensitive)
+    const matches = currentVals.filter(cv => 
+      candidateVals.some(candV => cv.toLowerCase() === candV.toLowerCase())
+    ).length;
+    
+    // Apply weight to matches
+    score += matches * SIMILARITY_WEIGHTS[category];
+  }
+
+  return score;
+};
 
 const GalleryDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -61,21 +115,26 @@ const GalleryDetail = () => {
         if (allData) {
           const allParsed = (allData as DesignAsset[]).map(parseDesignAsset);
           
-          // Similar items: match any of the 4 attributes
-          const similar = allParsed.filter(r => 
-            (parsedItem.placementType && r.placementType === parsedItem.placementType) ||
-            (parsedItem.designContext && r.designContext === parsedItem.designContext) ||
-            (parsedItem.sculpturalForm && r.sculpturalForm === parsedItem.sculpturalForm) ||
-            (parsedItem.interiorArea && r.interiorArea === parsedItem.interiorArea)
-          ).slice(0, 4);
+          // Calculate similarity scores for all items
+          const scoredItems = allParsed.map(item => ({
+            item,
+            score: calculateSimilarityScore(parsedItem, item)
+          }));
+          
+          // Filter items with score > 0 (at least one matching value) and sort by score
+          const similar = scoredItems
+            .filter(({ score }) => score > 0)
+            .sort((a, b) => b.score - a.score)
+            .slice(0, 8) // Get more for carousel
+            .map(({ item }) => item);
           
           setSimilarItems(similar);
           
-          // Other items: not in similar list
+          // Other items: not in similar list, ordered by recency
           const similarIds = new Set(similar.map(s => s.id));
           const others = allParsed
             .filter(r => !similarIds.has(r.id))
-            .slice(0, 4);
+            .slice(0, 8);
           
           setOtherItems(others);
         }
@@ -274,7 +333,7 @@ const GalleryDetail = () => {
           </div>
         </div>
 
-        {/* Similar Designs Section */}
+        {/* Similar Designs Section - Carousel */}
         {similarItems.length > 0 && (
           <section className="mt-6 py-8 bg-gradient-to-b from-luxury-cream/30 to-transparent">
             <div className="container mx-auto px-6">
@@ -284,26 +343,45 @@ const GalleryDetail = () => {
                 </span>
                 <h2 className="heading-md text-luxury-charcoal">Similar Designs</h2>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                {similarItems.map((related, index) => (
-                  <div key={related.id} className="fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
-                    <GalleryItem 
-                      item={{
-                        id: related.id,
-                        title: related.title,
-                        designContext: related.designContext,
-                        sculpturalForm: related.sculpturalForm,
-                        interiorArea: related.interiorArea,
-                        placementType: related.placementType,
-                        imageUrl: related.imageUrl,
-                        imageAlt: related.imageAlt,
-                        price: related.price
-                      }} 
-                      useSupabaseUrl={true} 
-                    />
-                  </div>
-                ))}
-              </div>
+              <Carousel
+                opts={{
+                  align: "start",
+                  loop: similarItems.length > 3,
+                }}
+                className="w-full"
+              >
+                <CarouselContent className="-ml-4">
+                  {similarItems.map((related, index) => (
+                    <CarouselItem 
+                      key={related.id} 
+                      className="pl-4 basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4"
+                    >
+                      <div className="fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
+                        <GalleryItem 
+                          item={{
+                            id: related.id,
+                            title: related.title,
+                            designContext: related.designContext,
+                            sculpturalForm: related.sculpturalForm,
+                            interiorArea: related.interiorArea,
+                            placementType: related.placementType,
+                            imageUrl: related.imageUrl,
+                            imageAlt: related.imageAlt,
+                            price: related.price
+                          }} 
+                          useSupabaseUrl={true} 
+                        />
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                {similarItems.length > 3 && (
+                  <>
+                    <CarouselPrevious className="hidden md:flex -left-4 bg-white/90 border-luxury-gold/30 hover:bg-luxury-gold hover:text-white hover:border-luxury-gold transition-all duration-300" />
+                    <CarouselNext className="hidden md:flex -right-4 bg-white/90 border-luxury-gold/30 hover:bg-luxury-gold hover:text-white hover:border-luxury-gold transition-all duration-300" />
+                  </>
+                )}
+              </Carousel>
             </div>
           </section>
         )}

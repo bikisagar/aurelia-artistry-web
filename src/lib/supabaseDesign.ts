@@ -75,7 +75,8 @@ export interface DesignItem {
 }
 
 // Helper to parse array-like strings (handles ['value1', 'value2'] format from database)
-const parseArrayString = (value: string): string[] | null => {
+// Returns array of parsed values or null if not array format
+export const parseArrayString = (value: string): string[] | null => {
   if (!value.startsWith('[') || !value.endsWith(']')) return null;
   
   // Try JSON parse first (double quotes)
@@ -100,6 +101,24 @@ const parseArrayString = (value: string): string[] | null => {
   
   // Fallback: split by comma for unquoted values
   return inner.split(',').map(v => v.trim().replace(/^['"]|['"]$/g, '')).filter(Boolean);
+};
+
+// Helper to parse field value and always return an array of values
+// Useful for similarity comparisons
+export const parseArrayStringValues = (value: unknown): string[] => {
+  if (!value) return [];
+  
+  if (typeof value === 'string') {
+    const parsed = parseArrayString(value);
+    if (parsed) return parsed;
+    return [value.trim()].filter(Boolean);
+  }
+  
+  if (Array.isArray(value)) {
+    return value.filter(Boolean).map(v => String(v).trim());
+  }
+  
+  return [];
 };
 
 // Helper to format database values - handles arrays, JSON strings, or plain strings
