@@ -386,7 +386,7 @@ const GalleryDetail = () => {
           </section>
         )}
 
-        {/* Other Designs You May Like */}
+        {/* Other Designs You May Like - Carousel */}
         {otherItems.length > 0 && (
           <section className="mt-6 py-8">
             <div className="container mx-auto px-6">
@@ -396,26 +396,45 @@ const GalleryDetail = () => {
                 </span>
                 <h2 className="heading-md text-luxury-charcoal">Other Designs You May Like</h2>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                {otherItems.map((other, index) => (
-                  <div key={other.id} className="fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
-                    <GalleryItem 
-                      item={{
-                        id: other.id,
-                        title: other.title,
-                        designContext: other.designContext,
-                        sculpturalForm: other.sculpturalForm,
-                        interiorArea: other.interiorArea,
-                        placementType: other.placementType,
-                        imageUrl: other.imageUrl,
-                        imageAlt: other.imageAlt,
-                        price: other.price
-                      }} 
-                      useSupabaseUrl={true} 
-                    />
-                  </div>
-                ))}
-              </div>
+              <Carousel
+                opts={{
+                  align: "start",
+                  loop: otherItems.length > 3,
+                }}
+                className="w-full"
+              >
+                <CarouselContent className="-ml-4">
+                  {otherItems.map((other, index) => (
+                    <CarouselItem 
+                      key={other.id} 
+                      className="pl-4 basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4"
+                    >
+                      <div className="fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
+                        <GalleryItem 
+                          item={{
+                            id: other.id,
+                            title: other.title,
+                            designContext: other.designContext,
+                            sculpturalForm: other.sculpturalForm,
+                            interiorArea: other.interiorArea,
+                            placementType: other.placementType,
+                            imageUrl: other.imageUrl,
+                            imageAlt: other.imageAlt,
+                            price: other.price
+                          }} 
+                          useSupabaseUrl={true} 
+                        />
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                {otherItems.length > 3 && (
+                  <>
+                    <CarouselPrevious className="hidden md:flex -left-4 bg-white/90 border-luxury-gold/30 hover:bg-luxury-gold hover:text-white hover:border-luxury-gold transition-all duration-300" />
+                    <CarouselNext className="hidden md:flex -right-4 bg-white/90 border-luxury-gold/30 hover:bg-luxury-gold hover:text-white hover:border-luxury-gold transition-all duration-300" />
+                  </>
+                )}
+              </Carousel>
             </div>
           </section>
         )}
