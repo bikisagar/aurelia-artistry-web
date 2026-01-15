@@ -17,32 +17,32 @@ import {
 
 // Weights for similarity scoring (higher = more important)
 const SIMILARITY_WEIGHTS = {
-  designContext: 3,    // Highest priority
-  sculpturalForm: 3,   // Highest priority
-  interiorArea: 2,     // Medium priority
-  placementType: 2,    // Medium priority
+  design_context: 3,    // Highest priority
+  sculptural_form: 3,   // Highest priority
+  interior_area: 2,     // Medium priority
+  placement_type: 2,    // Medium priority
 };
 
-// Calculate similarity score between two designs
+// Calculate similarity score between two raw design assets
 const calculateSimilarityScore = (
-  current: DesignItem,
-  candidate: DesignItem
+  current: DesignAsset,
+  candidate: DesignAsset
 ): number => {
   let score = 0;
 
-  // Parse array values for each category
+  // Parse array values from raw database fields for each category
   const currentValues = {
-    designContext: parseArrayStringValues(current.designContext),
-    sculpturalForm: parseArrayStringValues(current.sculpturalForm),
-    interiorArea: parseArrayStringValues(current.interiorArea),
-    placementType: parseArrayStringValues(current.placementType),
+    design_context: parseArrayStringValues(current.design_context),
+    sculptural_form: parseArrayStringValues(current.sculptural_form),
+    interior_area: parseArrayStringValues(current.interior_area),
+    placement_type: parseArrayStringValues(current.placement_type),
   };
 
   const candidateValues = {
-    designContext: parseArrayStringValues(candidate.designContext),
-    sculpturalForm: parseArrayStringValues(candidate.sculpturalForm),
-    interiorArea: parseArrayStringValues(candidate.interiorArea),
-    placementType: parseArrayStringValues(candidate.placementType),
+    design_context: parseArrayStringValues(candidate.design_context),
+    sculptural_form: parseArrayStringValues(candidate.sculptural_form),
+    interior_area: parseArrayStringValues(candidate.interior_area),
+    placement_type: parseArrayStringValues(candidate.placement_type),
   };
 
   // Count overlapping values in each category and apply weights
@@ -101,7 +101,9 @@ const GalleryDetail = () => {
           navigate('/collection');
           return;
         }
-        const parsedItem = parseDesignAsset(data as DesignAsset);
+        
+        const rawCurrentItem = data as DesignAsset;
+        const parsedItem = parseDesignAsset(rawCurrentItem);
         setItem(parsedItem);
 
         // Fetch all active items for similarity matching
@@ -113,28 +115,30 @@ const GalleryDetail = () => {
           .order('created_at', { ascending: false });
 
         if (allData) {
-          const allParsed = (allData as DesignAsset[]).map(parseDesignAsset);
+          const allRaw = allData as DesignAsset[];
           
-          // Calculate similarity scores for all items
-          const scoredItems = allParsed.map(item => ({
-            item,
-            score: calculateSimilarityScore(parsedItem, item)
+          // Calculate similarity scores using raw database values
+          const scoredItems = allRaw.map(rawItem => ({
+            rawItem,
+            parsedItem: parseDesignAsset(rawItem),
+            score: calculateSimilarityScore(rawCurrentItem, rawItem)
           }));
           
           // Filter items with score > 0 (at least one matching value) and sort by score
           const similar = scoredItems
             .filter(({ score }) => score > 0)
             .sort((a, b) => b.score - a.score)
-            .slice(0, 8) // Get more for carousel
-            .map(({ item }) => item);
+            .slice(0, 8)
+            .map(({ parsedItem }) => parsedItem);
           
           setSimilarItems(similar);
           
           // Other items: not in similar list, ordered by recency
           const similarIds = new Set(similar.map(s => s.id));
-          const others = allParsed
-            .filter(r => !similarIds.has(r.id))
-            .slice(0, 8);
+          const others = scoredItems
+            .filter(({ parsedItem }) => !similarIds.has(parsedItem.id))
+            .slice(0, 8)
+            .map(({ parsedItem }) => parsedItem);
           
           setOtherItems(others);
         }
