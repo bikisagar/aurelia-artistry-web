@@ -156,9 +156,7 @@ const GalleryDetail = () => {
                       (e.target as HTMLImageElement).src = 'https://placehold.co/600x400?text=Image+Unavailable';
                     }} 
                   />
-                  {/* Elegant corner accents */}
-                  <div className="absolute top-4 left-4 w-8 h-8 border-t-2 border-l-2 border-luxury-gold/40" />
-                  <div className="absolute bottom-4 right-4 w-8 h-8 border-b-2 border-r-2 border-luxury-gold/40" />
+                  
                 </div>
               </div>
             </div>
@@ -278,7 +276,7 @@ const GalleryDetail = () => {
 
         {/* Similar Designs Section */}
         {similarItems.length > 0 && (
-          <section className="mt-32 py-20 bg-gradient-to-b from-luxury-cream/30 to-transparent">
+          <section className="mt-6 py-8 bg-gradient-to-b from-luxury-cream/30 to-transparent">
             <div className="container mx-auto px-6">
               <div className="text-center mb-14">
                 <span className="text-xs uppercase tracking-[0.3em] text-luxury-gold font-medium mb-3 block">
@@ -312,7 +310,7 @@ const GalleryDetail = () => {
 
         {/* Other Designs You May Like */}
         {otherItems.length > 0 && (
-          <section className="mt-16 py-20">
+          <section className="mt-6 py-8">
             <div className="container mx-auto px-6">
               <div className="text-center mb-14">
                 <span className="text-xs uppercase tracking-[0.3em] text-luxury-gold font-medium mb-3 block">
