@@ -74,22 +74,43 @@ export interface DesignItem {
   isSculptureAvailable: boolean;
 }
 
+// Helper to parse array-like strings (handles ['value1', 'value2'] format from database)
+const parseArrayString = (value: string): string[] | null => {
+  if (!value.startsWith('[') || !value.endsWith(']')) return null;
+  
+  // Try JSON parse first (double quotes)
+  try {
+    const parsed = JSON.parse(value);
+    if (Array.isArray(parsed)) {
+      return parsed.filter(Boolean).map(v => String(v).trim());
+    }
+  } catch {
+    // Not valid JSON, try parsing single-quoted format
+  }
+  
+  // Parse single-quoted array format: ['value1', 'value2']
+  const inner = value.slice(1, -1).trim();
+  if (!inner) return [];
+  
+  // Match values inside single quotes
+  const matches = inner.match(/'([^']+)'/g);
+  if (matches) {
+    return matches.map(m => m.slice(1, -1).trim()).filter(Boolean);
+  }
+  
+  // Fallback: split by comma for unquoted values
+  return inner.split(',').map(v => v.trim().replace(/^['"]|['"]$/g, '')).filter(Boolean);
+};
+
 // Helper to format database values - handles arrays, JSON strings, or plain strings
-const formatFieldValue = (value: unknown): string => {
+export const formatFieldValue = (value: unknown): string => {
   if (!value) return '';
   
-  // If it's already a string, check if it's JSON array
+  // If it's already a string, check if it's an array format
   if (typeof value === 'string') {
-    // Check if it looks like a JSON array
-    if (value.startsWith('[') && value.endsWith(']')) {
-      try {
-        const parsed = JSON.parse(value);
-        if (Array.isArray(parsed)) {
-          return parsed.filter(Boolean).join(', ');
-        }
-      } catch {
-        // Not valid JSON, return as-is
-      }
+    const parsed = parseArrayString(value);
+    if (parsed) {
+      return parsed.join(', ');
     }
     return value;
   }
@@ -149,17 +170,11 @@ const extractUniqueValues = (values: unknown[]): string[] => {
     if (!value) return;
     
     if (typeof value === 'string') {
-      // Check if it's a JSON array string
-      if (value.startsWith('[') && value.endsWith(']')) {
-        try {
-          const parsed = JSON.parse(value);
-          if (Array.isArray(parsed)) {
-            parsed.filter(Boolean).forEach(v => uniqueSet.add(String(v).trim()));
-            return;
-          }
-        } catch {
-          // Not valid JSON
-        }
+      // Check if it's an array format
+      const parsed = parseArrayString(value);
+      if (parsed) {
+        parsed.forEach(v => uniqueSet.add(v));
+        return;
       }
       uniqueSet.add(value.trim());
     } else if (Array.isArray(value)) {
@@ -207,7 +222,7 @@ export const fetchFilterOptions = async (): Promise<{
 };
 
 // Helper to check if a database field value matches any of the selected filter values
-// Handles plain strings, JSON arrays, and comma-separated values
+// Handles plain strings, JSON arrays, single-quoted arrays, and comma-separated values
 const fieldMatchesFilter = (fieldValue: unknown, selectedValues: string[]): boolean => {
   if (selectedValues.length === 0) return true;
   if (!fieldValue) return false;
@@ -219,17 +234,10 @@ const fieldMatchesFilter = (fieldValue: unknown, selectedValues: string[]): bool
   let actualValues: string[] = [];
   
   if (typeof fieldValue === 'string') {
-    // Check if it's a JSON array
-    if (fieldValue.startsWith('[') && fieldValue.endsWith(']')) {
-      try {
-        const parsed = JSON.parse(fieldValue);
-        if (Array.isArray(parsed)) {
-          actualValues = parsed.filter(Boolean).map(v => String(v).trim().toLowerCase());
-        }
-      } catch {
-        // Not valid JSON, treat as plain string
-        actualValues = [fieldValue.trim().toLowerCase()];
-      }
+    // Check if it's an array format
+    const parsed = parseArrayString(fieldValue);
+    if (parsed) {
+      actualValues = parsed.map(v => v.toLowerCase());
     } else {
       actualValues = [fieldValue.trim().toLowerCase()];
     }
