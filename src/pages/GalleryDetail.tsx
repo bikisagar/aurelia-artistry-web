@@ -206,11 +206,11 @@ const GalleryDetail = () => {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 xl:gap-24">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 xl:gap-20">
             {/* Left Column: Premium Image Display */}
             <div className="relative">
               <div className="sticky top-32">
-                <div className="relative overflow-hidden bg-luxury-cream/30 shadow-[var(--shadow-luxury)]">
+                <div className="relative overflow-hidden bg-gradient-to-br from-luxury-cream/50 to-white border border-luxury-charcoal/5 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.15)]">
                   <img 
                     src={item.imageUrl} 
                     alt={item.imageAlt} 
@@ -219,7 +219,6 @@ const GalleryDetail = () => {
                       (e.target as HTMLImageElement).src = 'https://placehold.co/600x400?text=Image+Unavailable';
                     }} 
                   />
-                  
                 </div>
               </div>
             </div>
@@ -259,44 +258,48 @@ const GalleryDetail = () => {
 
               {/* Metadata Grid */}
               {hasMetadata && (
-                <div className="border-y border-luxury-gold/20 py-8 mb-10 fade-in">
-                  <div className="grid grid-cols-2 gap-x-8 gap-y-6">
+                <div className="border-t border-b border-luxury-charcoal/10 py-8 mb-10 fade-in bg-gradient-to-r from-luxury-cream/20 to-transparent -mx-2 px-2">
+                  <div className="grid grid-cols-2 gap-x-10 gap-y-7">
                     {item.designContext && (
                       <div className="group">
-                        <span className="block text-xs uppercase tracking-widest text-luxury-gold mb-2 font-medium">
+                        <span className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-luxury-gold mb-2 font-semibold">
+                          <span className="w-3 h-px bg-luxury-gold"></span>
                           Design Context
                         </span>
-                        <span className="text-luxury-charcoal font-medium">
+                        <span className="text-luxury-charcoal font-medium text-[15px]">
                           {item.designContext}
                         </span>
                       </div>
                     )}
                     {item.sculpturalForm && (
                       <div className="group">
-                        <span className="block text-xs uppercase tracking-widest text-luxury-gold mb-2 font-medium">
+                        <span className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-luxury-gold mb-2 font-semibold">
+                          <span className="w-3 h-px bg-luxury-gold"></span>
                           Sculptural Form
                         </span>
-                        <span className="text-luxury-charcoal font-medium">
+                        <span className="text-luxury-charcoal font-medium text-[15px]">
                           {item.sculpturalForm}
                         </span>
                       </div>
                     )}
                     {item.interiorArea && (
                       <div className="group">
-                        <span className="block text-xs uppercase tracking-widest text-luxury-gold mb-2 font-medium">
+                        <span className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-luxury-gold mb-2 font-semibold">
+                          <span className="w-3 h-px bg-luxury-gold"></span>
                           Interior Area
                         </span>
-                        <span className="text-luxury-charcoal font-medium">
+                        <span className="text-luxury-charcoal font-medium text-[15px]">
                           {item.interiorArea}
                         </span>
                       </div>
                     )}
                     {item.placementType && (
                       <div className="group">
-                        <span className="block text-xs uppercase tracking-widest text-luxury-gold mb-2 font-medium">
+                        <span className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-luxury-gold mb-2 font-semibold">
+                          <span className="w-3 h-px bg-luxury-gold"></span>
                           Placement Type
                         </span>
-                        <span className="text-luxury-charcoal font-medium">
+                        <span className="text-luxury-charcoal font-medium text-[15px]">
                           {item.placementType}
                         </span>
                       </div>
@@ -309,7 +312,7 @@ const GalleryDetail = () => {
               <div className="flex flex-col gap-4 fade-in">
                 {item.isSculptureAvailable && (
                   <Button 
-                    className="w-full h-14 text-sm uppercase tracking-widest font-medium bg-luxury-charcoal hover:bg-luxury-charcoal/90 text-white shadow-lg hover:shadow-xl transition-all duration-300" 
+                    className="w-full h-14 text-[11px] uppercase tracking-[0.25em] font-semibold bg-luxury-charcoal hover:bg-luxury-charcoal/90 text-white shadow-[0_4px_14px_rgba(0,0,0,0.15)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.2)] transition-all duration-300" 
                     onClick={() => navigate('/contact')}
                   >
                     This Sculpture
@@ -318,7 +321,7 @@ const GalleryDetail = () => {
                 <div className="flex flex-col sm:flex-row gap-4">
                   {item.isSculptureAvailable ? (
                     <Button 
-                      className="flex-1 h-14 text-sm uppercase tracking-widest font-medium bg-gradient-to-r from-luxury-gold to-luxury-bronze hover:from-luxury-gold-light hover:to-luxury-gold text-white shadow-lg hover:shadow-xl transition-all duration-300" 
+                      className="flex-1 h-14 text-[11px] uppercase tracking-[0.25em] font-semibold bg-gradient-to-r from-luxury-gold to-luxury-bronze hover:from-luxury-gold-light hover:to-luxury-gold text-white shadow-[0_4px_14px_rgba(0,0,0,0.15)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.2)] transition-all duration-300" 
                       onClick={() => navigate('/contact')}
                     >
                       <Mail className="mr-3 h-4 w-4" />
@@ -326,7 +329,7 @@ const GalleryDetail = () => {
                     </Button>
                   ) : (
                     <Button 
-                      className="flex-1 h-14 text-sm uppercase tracking-widest font-medium border-2 border-luxury-gold text-luxury-gold bg-transparent hover:bg-luxury-gold hover:text-white transition-all duration-300"
+                      className="flex-1 h-14 text-[11px] uppercase tracking-[0.25em] font-semibold border-2 border-luxury-gold text-luxury-gold bg-transparent hover:bg-luxury-gold hover:text-white transition-all duration-300"
                       variant="outline"
                       onClick={() => navigate('/contact')}
                     >
@@ -336,7 +339,7 @@ const GalleryDetail = () => {
                   )}
                   <Button 
                     variant="outline" 
-                    className="h-14 px-6 border-luxury-charcoal/20 hover:border-luxury-gold hover:text-luxury-gold transition-all duration-300" 
+                    className="h-14 w-14 sm:w-auto sm:px-6 border-2 border-luxury-charcoal/10 hover:border-luxury-gold hover:text-luxury-gold transition-all duration-300 flex-shrink-0" 
                     onClick={handleShare}
                   >
                     <Share2 className="h-5 w-5" />
@@ -349,26 +352,30 @@ const GalleryDetail = () => {
 
         {/* Similar Designs Section - Carousel */}
         {similarItems.length > 0 && (
-          <section className="mt-6 py-8 bg-gradient-to-b from-luxury-cream/30 to-transparent">
+          <section className="mt-20 py-16 bg-gradient-to-b from-luxury-cream/40 via-luxury-cream/20 to-transparent">
             <div className="container mx-auto px-6">
-              <div className="text-center mb-14">
-                <span className="text-xs uppercase tracking-[0.3em] text-luxury-gold font-medium mb-3 block">
-                  Curated Selection
-                </span>
+              <div className="text-center mb-12">
+                <div className="flex items-center justify-center gap-4 mb-4">
+                  <span className="w-12 h-px bg-luxury-gold/40"></span>
+                  <span className="text-[11px] uppercase tracking-[0.4em] text-luxury-gold font-semibold">
+                    Curated Selection
+                  </span>
+                  <span className="w-12 h-px bg-luxury-gold/40"></span>
+                </div>
                 <h2 className="heading-md text-luxury-charcoal">Similar Designs</h2>
               </div>
               <Carousel
                 opts={{
                   align: "start",
-                  loop:false,
+                  loop: false,
                 }}
                 className="w-full"
               >
-                <CarouselContent className="-ml-4">
+                <CarouselContent className="-ml-6">
                   {similarItems.map((related, index) => (
                     <CarouselItem 
                       key={related.id} 
-                      className="pl-4 basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4"
+                      className="pl-6 basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4"
                     >
                       <div className="fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
                         <GalleryItem 
@@ -391,8 +398,8 @@ const GalleryDetail = () => {
                 </CarouselContent>
                 {similarItems.length > 3 && (
                   <>
-                    <CarouselPrevious className="hidden md:flex -left-4 bg-white/90 border-luxury-gold/30 hover:bg-luxury-gold hover:text-white hover:border-luxury-gold transition-all duration-300" />
-                    <CarouselNext className="hidden md:flex -right-4 bg-white/90 border-luxury-gold/30 hover:bg-luxury-gold hover:text-white hover:border-luxury-gold transition-all duration-300" />
+                    <CarouselPrevious className="hidden md:flex -left-6 h-12 w-12 bg-white border-2 border-luxury-gold/20 text-luxury-charcoal hover:bg-luxury-gold hover:text-white hover:border-luxury-gold shadow-lg transition-all duration-300" />
+                    <CarouselNext className="hidden md:flex -right-6 h-12 w-12 bg-white border-2 border-luxury-gold/20 text-luxury-charcoal hover:bg-luxury-gold hover:text-white hover:border-luxury-gold shadow-lg transition-all duration-300" />
                   </>
                 )}
               </Carousel>
@@ -402,26 +409,30 @@ const GalleryDetail = () => {
 
         {/* Other Designs You May Like - Carousel */}
         {otherItems.length > 0 && (
-          <section className="mt-6 py-8">
+          <section className="mt-8 py-16 border-t border-luxury-charcoal/5">
             <div className="container mx-auto px-6">
-              <div className="text-center mb-14">
-                <span className="text-xs uppercase tracking-[0.3em] text-luxury-gold font-medium mb-3 block">
-                  Explore More
-                </span>
+              <div className="text-center mb-12">
+                <div className="flex items-center justify-center gap-4 mb-4">
+                  <span className="w-12 h-px bg-luxury-charcoal/20"></span>
+                  <span className="text-[11px] uppercase tracking-[0.4em] text-luxury-charcoal/60 font-semibold">
+                    Explore More
+                  </span>
+                  <span className="w-12 h-px bg-luxury-charcoal/20"></span>
+                </div>
                 <h2 className="heading-md text-luxury-charcoal">Other Designs You May Like</h2>
               </div>
               <Carousel
                 opts={{
                   align: "start",
-                  loop:false ,
+                  loop: false,
                 }}
                 className="w-full"
               >
-                <CarouselContent className="-ml-4">
+                <CarouselContent className="-ml-6">
                   {otherItems.map((other, index) => (
                     <CarouselItem 
                       key={other.id} 
-                      className="pl-4 basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4"
+                      className="pl-6 basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4"
                     >
                       <div className="fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
                         <GalleryItem 
@@ -444,8 +455,8 @@ const GalleryDetail = () => {
                 </CarouselContent>
                 {otherItems.length > 3 && (
                   <>
-                    <CarouselPrevious className="hidden md:flex -left-4 bg-white/90 border-luxury-gold/30 hover:bg-luxury-gold hover:text-white hover:border-luxury-gold transition-all duration-300" />
-                    <CarouselNext className="hidden md:flex -right-4 bg-white/90 border-luxury-gold/30 hover:bg-luxury-gold hover:text-white hover:border-luxury-gold transition-all duration-300" />
+                    <CarouselPrevious className="hidden md:flex -left-6 h-12 w-12 bg-white border-2 border-luxury-charcoal/10 text-luxury-charcoal hover:bg-luxury-charcoal hover:text-white hover:border-luxury-charcoal shadow-lg transition-all duration-300" />
+                    <CarouselNext className="hidden md:flex -right-6 h-12 w-12 bg-white border-2 border-luxury-charcoal/10 text-luxury-charcoal hover:bg-luxury-charcoal hover:text-white hover:border-luxury-charcoal shadow-lg transition-all duration-300" />
                   </>
                 )}
               </Carousel>
