@@ -350,7 +350,7 @@ const GalleryDetail = () => {
               <Carousel
                 opts={{
                   align: "start",
-                  loop: similarItems.length > 3,
+                  loop:false,
                 }}
                 className="w-full"
               >
@@ -403,7 +403,7 @@ const GalleryDetail = () => {
               <Carousel
                 opts={{
                   align: "start",
-                  loop: otherItems.length > 3,
+                  loop:false ,
                 }}
                 className="w-full"
               >
