@@ -306,32 +306,42 @@ const GalleryDetail = () => {
               )}
 
               {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 fade-in">
-                {item.isSculptureAvailable ? (
+              <div className="flex flex-col gap-4 fade-in">
+                {item.isSculptureAvailable && (
                   <Button 
-                    className="flex-1 h-14 text-sm uppercase tracking-widest font-medium bg-gradient-to-r from-luxury-gold to-luxury-bronze hover:from-luxury-gold-light hover:to-luxury-gold text-white shadow-lg hover:shadow-xl transition-all duration-300" 
+                    className="w-full h-14 text-sm uppercase tracking-widest font-medium bg-luxury-charcoal hover:bg-luxury-charcoal/90 text-white shadow-lg hover:shadow-xl transition-all duration-300" 
                     onClick={() => navigate('/contact')}
                   >
-                    <Mail className="mr-3 h-4 w-4" />
-                    Inquire About This Piece
-                  </Button>
-                ) : (
-                  <Button 
-                    className="flex-1 h-14 text-sm uppercase tracking-widest font-medium border-2 border-luxury-gold text-luxury-gold bg-transparent hover:bg-luxury-gold hover:text-white transition-all duration-300" 
-                    variant="outline"
-                    onClick={() => navigate('/contact')}
-                  >
-                    <Mail className="mr-3 h-4 w-4" />
-                    Inquire About Similar Sculpture
+                    This Sculpture
                   </Button>
                 )}
-                <Button 
-                  variant="outline" 
-                  className="h-14 px-6 border-luxury-charcoal/20 hover:border-luxury-gold hover:text-luxury-gold transition-all duration-300" 
-                  onClick={handleShare}
-                >
-                  <Share2 className="h-5 w-5" />
-                </Button>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  {item.isSculptureAvailable ? (
+                    <Button 
+                      className="flex-1 h-14 text-sm uppercase tracking-widest font-medium bg-gradient-to-r from-luxury-gold to-luxury-bronze hover:from-luxury-gold-light hover:to-luxury-gold text-white shadow-lg hover:shadow-xl transition-all duration-300" 
+                      onClick={() => navigate('/contact')}
+                    >
+                      <Mail className="mr-3 h-4 w-4" />
+                      Inquire About This Piece
+                    </Button>
+                  ) : (
+                    <Button 
+                      className="flex-1 h-14 text-sm uppercase tracking-widest font-medium border-2 border-luxury-gold text-luxury-gold bg-transparent hover:bg-luxury-gold hover:text-white transition-all duration-300"
+                      variant="outline"
+                      onClick={() => navigate('/contact')}
+                    >
+                      <Mail className="mr-3 h-4 w-4" />
+                      Inquire About Similar Sculpture
+                    </Button>
+                  )}
+                  <Button 
+                    variant="outline" 
+                    className="h-14 px-6 border-luxury-charcoal/20 hover:border-luxury-gold hover:text-luxury-gold transition-all duration-300" 
+                    onClick={handleShare}
+                  >
+                    <Share2 className="h-5 w-5" />
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
