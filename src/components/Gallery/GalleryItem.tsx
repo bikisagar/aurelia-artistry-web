@@ -28,9 +28,9 @@ const GalleryItem = ({
   
   return (
     <Link to={`/collection/${item.id}`} className="block h-full group">
-      <Card className="h-full border border-luxury-charcoal/5 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] hover:shadow-[0_14px_28px_rgba(0,0,0,0.12),0_10px_10px_rgba(0,0,0,0.08)] transition-all duration-500 rounded-none overflow-hidden bg-white flex flex-col">
+      <Card className="h-[480px] border border-luxury-charcoal/5 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] hover:shadow-[0_14px_28px_rgba(0,0,0,0.12),0_10px_10px_rgba(0,0,0,0.08)] transition-all duration-500 rounded-none overflow-hidden bg-white flex flex-col">
         {/* Fixed-height image container for uniform grid */}
-        <div className="relative w-full h-[280px] sm:h-[320px] overflow-hidden bg-gradient-to-br from-luxury-cream to-white flex items-center justify-center">
+        <div className="relative w-full h-[280px] flex-shrink-0 overflow-hidden bg-gradient-to-br from-luxury-cream to-white flex items-center justify-center">
           <img 
             src={imageSrc} 
             alt={item.imageAlt} 
@@ -50,38 +50,29 @@ const GalleryItem = ({
           </div>
         </div>
 
-        {/* Text content */}
-        <CardContent className="p-6 flex-1 flex flex-col border-t border-luxury-charcoal/5">
-          <h3 className="font-serif text-lg font-semibold mb-3 line-clamp-1 text-luxury-charcoal group-hover:text-luxury-gold transition-colors duration-300">
+        {/* Text content - Fixed height section */}
+        <CardContent className="p-5 flex-1 flex flex-col border-t border-luxury-charcoal/5 min-h-0">
+          <h3 className="font-serif text-base font-semibold mb-2 line-clamp-2 text-luxury-charcoal group-hover:text-luxury-gold transition-colors duration-300 leading-tight">
             {item.title}
           </h3>
-          <div className="mt-auto space-y-2">
-            {item.designContext && (
-              <p className="text-[11px] font-semibold text-luxury-gold uppercase tracking-[0.15em]">
-                {item.designContext}
-              </p>
-            )}
-            {item.sculpturalForm && (
-              <p className="text-sm text-luxury-charcoal/70 line-clamp-1 font-light">
-                {item.sculpturalForm}
-              </p>
-            )}
-            {item.interiorArea && (
-              <p className="text-sm text-luxury-charcoal/60 line-clamp-1 font-light">
-                {item.interiorArea}
-              </p>
-            )}
-            {item.placementType && (
-              <p className="text-xs text-luxury-charcoal/50 line-clamp-1">
-                {item.placementType}
-              </p>
-            )}
+          
+          {/* Metadata - Fixed structure with consistent spacing */}
+          <div className="flex-1 flex flex-col justify-start space-y-1.5 min-h-[72px]">
+            <p className="text-[10px] font-semibold text-luxury-gold uppercase tracking-[0.15em] line-clamp-1 h-4">
+              {item.designContext || '\u00A0'}
+            </p>
+            <p className="text-xs text-luxury-charcoal/70 line-clamp-1 font-light h-4">
+              {item.sculpturalForm || '\u00A0'}
+            </p>
+            <p className="text-xs text-luxury-charcoal/50 line-clamp-1 h-4">
+              {item.interiorArea || item.placementType || '\u00A0'}
+            </p>
           </div>
         </CardContent>
 
-        <CardFooter className="px-6 pb-6 pt-0">
-          <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-luxury-gold group-hover:text-luxury-bronze transition-colors duration-300">
-            <span className="w-6 h-px bg-luxury-gold/50 group-hover:w-8 transition-all duration-300"></span>
+        <CardFooter className="px-5 pb-5 pt-0 flex-shrink-0">
+          <span className="inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-luxury-gold group-hover:text-luxury-bronze transition-colors duration-300">
+            <span className="w-5 h-px bg-luxury-gold/50 group-hover:w-7 transition-all duration-300"></span>
             Inquire
           </span>
         </CardFooter>
