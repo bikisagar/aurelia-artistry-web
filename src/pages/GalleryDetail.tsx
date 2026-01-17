@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import Header from '@/components/Layout/Header';
 import Footer from '@/components/Layout/Footer';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Share2, Mail, Loader2 } from 'lucide-react';
+import { ArrowLeft, Share2, Mail, Loader2, X, ZoomIn, ZoomOut, Maximize2 } from 'lucide-react';
 import GalleryItem from '@/components/Gallery/GalleryItem';
 import { getSupabaseClient, DesignAsset, parseDesignAsset, DesignItem, parseArrayStringValues } from '@/lib/supabaseDesign';
 import {
@@ -14,6 +14,11 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import {
+  Dialog,
+  DialogContent,
+  DialogClose,
+} from "@/components/ui/dialog";
 
 // Weights for similarity scoring (higher = more important)
 const SIMILARITY_WEIGHTS = {
@@ -70,6 +75,14 @@ const GalleryDetail = () => {
   const [otherItems, setOtherItems] = useState<DesignItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  
+  // Lightbox state
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [panPosition, setPanPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const lightboxRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -157,6 +170,83 @@ const GalleryDetail = () => {
     alert("Link copied to clipboard!");
   };
 
+  // Lightbox handlers
+  const openLightbox = () => {
+    setIsLightboxOpen(true);
+    setZoomLevel(1);
+    setPanPosition({ x: 0, y: 0 });
+  };
+
+  const closeLightbox = () => {
+    setIsLightboxOpen(false);
+    setZoomLevel(1);
+    setPanPosition({ x: 0, y: 0 });
+  };
+
+  const handleZoomIn = () => {
+    setZoomLevel(prev => Math.min(prev + 0.5, 4));
+  };
+
+  const handleZoomOut = () => {
+    setZoomLevel(prev => {
+      const newZoom = Math.max(prev - 0.5, 1);
+      if (newZoom === 1) {
+        setPanPosition({ x: 0, y: 0 });
+      }
+      return newZoom;
+    });
+  };
+
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    if (zoomLevel > 1) {
+      setIsDragging(true);
+      setDragStart({ x: e.clientX - panPosition.x, y: e.clientY - panPosition.y });
+    }
+  }, [zoomLevel, panPosition]);
+
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (isDragging && zoomLevel > 1) {
+      const newX = e.clientX - dragStart.x;
+      const newY = e.clientY - dragStart.y;
+      // Limit panning based on zoom level
+      const maxPan = (zoomLevel - 1) * 200;
+      setPanPosition({
+        x: Math.max(-maxPan, Math.min(maxPan, newX)),
+        y: Math.max(-maxPan, Math.min(maxPan, newY))
+      });
+    }
+  }, [isDragging, dragStart, zoomLevel]);
+
+  const handleMouseUp = useCallback(() => {
+    setIsDragging(false);
+  }, []);
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    if (zoomLevel > 1 && e.touches.length === 1) {
+      setIsDragging(true);
+      setDragStart({ 
+        x: e.touches[0].clientX - panPosition.x, 
+        y: e.touches[0].clientY - panPosition.y 
+      });
+    }
+  }, [zoomLevel, panPosition]);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    if (isDragging && zoomLevel > 1 && e.touches.length === 1) {
+      const newX = e.touches[0].clientX - dragStart.x;
+      const newY = e.touches[0].clientY - dragStart.y;
+      const maxPan = (zoomLevel - 1) * 200;
+      setPanPosition({
+        x: Math.max(-maxPan, Math.min(maxPan, newX)),
+        y: Math.max(-maxPan, Math.min(maxPan, newY))
+      });
+    }
+  }, [isDragging, dragStart, zoomLevel]);
+
+  const handleTouchEnd = useCallback(() => {
+    setIsDragging(false);
+  }, []);
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background font-sans">
@@ -210,18 +300,95 @@ const GalleryDetail = () => {
             {/* Left Column: Premium Image Display */}
             <div className="relative">
               <div className="sticky top-32">
-                <div className="relative overflow-hidden bg-gradient-to-br from-luxury-cream/50 to-white border border-luxury-charcoal/5 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.15)]">
+                <div 
+                  className="relative overflow-hidden bg-gradient-to-br from-luxury-cream/50 to-white border border-luxury-charcoal/5 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.15)] cursor-pointer group"
+                  onClick={openLightbox}
+                >
                   <img 
                     src={item.imageUrl} 
                     alt={item.imageAlt} 
-                    className="w-full h-auto object-contain max-h-[75vh] transition-transform duration-700 hover:scale-[1.02]" 
+                    className="w-full h-auto object-contain max-h-[75vh] transition-transform duration-700 group-hover:scale-[1.02]" 
                     onError={e => {
                       (e.target as HTMLImageElement).src = 'https://placehold.co/600x400?text=Image+Unavailable';
                     }} 
                   />
+                  {/* Fullscreen hint overlay */}
+                  <div className="absolute inset-0 bg-luxury-charcoal/0 group-hover:bg-luxury-charcoal/10 transition-all duration-300 flex items-center justify-center">
+                    <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/90 backdrop-blur-sm rounded-full p-3 shadow-lg">
+                      <Maximize2 className="h-6 w-6 text-luxury-charcoal" />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
+
+            {/* Fullscreen Lightbox */}
+            <Dialog open={isLightboxOpen} onOpenChange={setIsLightboxOpen}>
+              <DialogContent className="max-w-[100vw] max-h-[100vh] w-screen h-screen p-0 border-0 bg-luxury-charcoal/95 backdrop-blur-md rounded-none">
+                {/* Close button */}
+                <button
+                  onClick={closeLightbox}
+                  className="absolute top-6 right-6 z-50 p-3 bg-white/10 hover:bg-white/20 rounded-full transition-all duration-300 group"
+                >
+                  <X className="h-6 w-6 text-white group-hover:scale-110 transition-transform" />
+                </button>
+
+                {/* Zoom controls */}
+                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
+                  <button
+                    onClick={handleZoomOut}
+                    disabled={zoomLevel <= 1}
+                    className="p-2 rounded-full hover:bg-white/20 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-300"
+                  >
+                    <ZoomOut className="h-5 w-5 text-white" />
+                  </button>
+                  <span className="text-white text-sm font-medium min-w-[3rem] text-center">
+                    {Math.round(zoomLevel * 100)}%
+                  </span>
+                  <button
+                    onClick={handleZoomIn}
+                    disabled={zoomLevel >= 4}
+                    className="p-2 rounded-full hover:bg-white/20 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-300"
+                  >
+                    <ZoomIn className="h-5 w-5 text-white" />
+                  </button>
+                </div>
+
+                {/* Pan hint */}
+                {zoomLevel > 1 && (
+                  <div className="absolute top-8 left-1/2 -translate-x-1/2 z-50 text-white/60 text-xs font-medium bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
+                    Drag to pan
+                  </div>
+                )}
+
+                {/* Zoomable image container */}
+                <div
+                  ref={lightboxRef}
+                  className="w-full h-full flex items-center justify-center overflow-hidden"
+                  onMouseDown={handleMouseDown}
+                  onMouseMove={handleMouseMove}
+                  onMouseUp={handleMouseUp}
+                  onMouseLeave={handleMouseUp}
+                  onTouchStart={handleTouchStart}
+                  onTouchMove={handleTouchMove}
+                  onTouchEnd={handleTouchEnd}
+                  style={{ cursor: zoomLevel > 1 ? (isDragging ? 'grabbing' : 'grab') : 'default' }}
+                >
+                  <img
+                    src={item.imageUrl}
+                    alt={item.imageAlt}
+                    className="max-w-[90vw] max-h-[85vh] object-contain select-none transition-transform duration-200"
+                    style={{
+                      transform: `scale(${zoomLevel}) translate(${panPosition.x / zoomLevel}px, ${panPosition.y / zoomLevel}px)`,
+                    }}
+                    draggable={false}
+                    onError={e => {
+                      (e.target as HTMLImageElement).src = 'https://placehold.co/600x400?text=Image+Unavailable';
+                    }}
+                  />
+                </div>
+              </DialogContent>
+            </Dialog>
 
             {/* Right Column: Details */}
             <div className="flex flex-col justify-start lg:pt-8">
