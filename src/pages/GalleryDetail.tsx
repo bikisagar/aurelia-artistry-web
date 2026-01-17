@@ -283,88 +283,97 @@ const GalleryDetail = () => {
     <div className="min-h-screen bg-background font-sans">
       <Header />
 
-      <main className="pt-32 pb-20">
-        <div className="container mx-auto px-6">
-          {/* Breadcrumb / Back */}
-          <div className="mb-10">
+      <main className="pt-20 sm:pt-24 md:pt-32 pb-12 sm:pb-16 md:pb-20">
+        <div className="container mx-auto px-4 sm:px-6">
+          {/* Breadcrumb / Back - Mobile optimized */}
+          <div className="mb-6 sm:mb-8 md:mb-10">
             <Link 
               to="/collection" 
-              className="inline-flex items-center text-sm text-muted-foreground hover:text-luxury-gold transition-colors duration-300"
+              className="inline-flex items-center text-xs sm:text-sm text-muted-foreground hover:text-luxury-gold active:text-luxury-gold transition-colors duration-300 touch-manipulation py-2"
             >
-              <ArrowLeft size={16} className="mr-2" />
+              <ArrowLeft size={14} className="mr-1.5 sm:mr-2 sm:w-4 sm:h-4" />
               Back to Collection
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 xl:gap-20">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 xl:gap-20">
             {/* Left Column: Premium Image Display */}
             <div className="relative">
-              <div className="sticky top-32">
+              <div className="lg:sticky lg:top-32">
                 <div 
-                  className="relative overflow-hidden bg-gradient-to-br from-luxury-cream/50 to-white border border-luxury-charcoal/5 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.15)] cursor-pointer group"
+                  className="relative overflow-hidden bg-gradient-to-br from-luxury-cream/50 to-white border border-luxury-charcoal/5 shadow-[0_10px_30px_-8px_rgba(0,0,0,0.1)] sm:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.15)] cursor-pointer group touch-manipulation"
                   onClick={openLightbox}
                 >
                   <img 
                     src={item.imageUrl} 
                     alt={item.imageAlt} 
-                    className="w-full h-auto object-contain max-h-[75vh] transition-transform duration-700 group-hover:scale-[1.02]" 
+                    className="w-full h-auto object-contain max-h-[50vh] sm:max-h-[60vh] md:max-h-[75vh] transition-transform duration-700 group-hover:scale-[1.02]" 
                     onError={e => {
                       (e.target as HTMLImageElement).src = 'https://placehold.co/600x400?text=Image+Unavailable';
                     }} 
                   />
-                  {/* Fullscreen hint overlay */}
+                  {/* Fullscreen hint overlay - always visible on mobile */}
                   <div className="absolute inset-0 bg-luxury-charcoal/0 group-hover:bg-luxury-charcoal/10 transition-all duration-300 flex items-center justify-center">
-                    <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/90 backdrop-blur-sm rounded-full p-3 shadow-lg">
-                      <Maximize2 className="h-6 w-6 text-luxury-charcoal" />
+                    <div className="opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/90 backdrop-blur-sm rounded-full p-2.5 sm:p-3 shadow-lg">
+                      <Maximize2 className="h-5 w-5 sm:h-6 sm:w-6 text-luxury-charcoal" />
                     </div>
+                  </div>
+                  {/* Mobile tap hint */}
+                  <div className="absolute bottom-3 left-1/2 -translate-x-1/2 sm:hidden">
+                    <span className="text-[10px] text-luxury-charcoal/60 bg-white/80 px-3 py-1 rounded-full">
+                      Tap to enlarge
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Fullscreen Lightbox */}
+            {/* Fullscreen Lightbox - Mobile optimized */}
             <Dialog open={isLightboxOpen} onOpenChange={setIsLightboxOpen}>
-              <DialogContent className="max-w-[100vw] max-h-[100vh] w-screen h-screen p-0 border-0 bg-luxury-charcoal/95 backdrop-blur-md rounded-none">
-                {/* Close button */}
+              <DialogContent className="max-w-[100vw] max-h-[100dvh] w-screen h-[100dvh] p-0 border-0 bg-luxury-charcoal/95 backdrop-blur-md rounded-none">
+                {/* Close button - larger touch target on mobile */}
                 <button
                   onClick={closeLightbox}
-                  className="absolute top-6 right-6 z-50 p-3 bg-white/10 hover:bg-white/20 rounded-full transition-all duration-300 group"
+                  className="absolute top-4 right-4 sm:top-6 sm:right-6 z-50 p-2.5 sm:p-3 bg-white/10 hover:bg-white/20 active:bg-white/30 rounded-full transition-all duration-300 group touch-manipulation"
+                  aria-label="Close lightbox"
                 >
-                  <X className="h-6 w-6 text-white group-hover:scale-110 transition-transform" />
+                  <X className="h-5 w-5 sm:h-6 sm:w-6 text-white group-hover:scale-110 transition-transform" />
                 </button>
 
-                {/* Zoom controls */}
-                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
+                {/* Zoom controls - mobile positioned */}
+                <div className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 sm:gap-3 bg-white/10 backdrop-blur-sm rounded-full px-3 sm:px-4 py-1.5 sm:py-2">
                   <button
                     onClick={handleZoomOut}
                     disabled={zoomLevel <= 1}
-                    className="p-2 rounded-full hover:bg-white/20 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-300"
+                    className="p-1.5 sm:p-2 rounded-full hover:bg-white/20 active:bg-white/30 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-300 touch-manipulation"
+                    aria-label="Zoom out"
                   >
-                    <ZoomOut className="h-5 w-5 text-white" />
+                    <ZoomOut className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
                   </button>
-                  <span className="text-white text-sm font-medium min-w-[3rem] text-center">
+                  <span className="text-white text-xs sm:text-sm font-medium min-w-[2.5rem] sm:min-w-[3rem] text-center">
                     {Math.round(zoomLevel * 100)}%
                   </span>
                   <button
                     onClick={handleZoomIn}
                     disabled={zoomLevel >= 4}
-                    className="p-2 rounded-full hover:bg-white/20 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-300"
+                    className="p-1.5 sm:p-2 rounded-full hover:bg-white/20 active:bg-white/30 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-300 touch-manipulation"
+                    aria-label="Zoom in"
                   >
-                    <ZoomIn className="h-5 w-5 text-white" />
+                    <ZoomIn className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
                   </button>
                 </div>
 
-                {/* Pan hint */}
+                {/* Pan hint - responsive */}
                 {zoomLevel > 1 && (
-                  <div className="absolute top-8 left-1/2 -translate-x-1/2 z-50 text-white/60 text-xs font-medium bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
-                    Drag to pan
+                  <div className="absolute top-4 sm:top-8 left-1/2 -translate-x-1/2 z-50 text-white/60 text-[10px] sm:text-xs font-medium bg-white/10 backdrop-blur-sm rounded-full px-3 sm:px-4 py-1.5 sm:py-2">
+                    {window.innerWidth < 640 ? 'Swipe to pan' : 'Drag to pan'}
                   </div>
                 )}
 
-                {/* Zoomable image container */}
+                {/* Zoomable image container - mobile touch optimized */}
                 <div
                   ref={lightboxRef}
-                  className="w-full h-full flex items-center justify-center overflow-hidden"
+                  className="w-full h-full flex items-center justify-center overflow-hidden touch-none"
                   onMouseDown={handleMouseDown}
                   onMouseMove={handleMouseMove}
                   onMouseUp={handleMouseUp}
@@ -377,7 +386,7 @@ const GalleryDetail = () => {
                   <img
                     src={item.imageUrl}
                     alt={item.imageAlt}
-                    className="max-w-[90vw] max-h-[85vh] object-contain select-none transition-transform duration-200"
+                    className="max-w-[95vw] sm:max-w-[90vw] max-h-[80dvh] sm:max-h-[85vh] object-contain select-none transition-transform duration-200"
                     style={{
                       transform: `scale(${zoomLevel}) translate(${panPosition.x / zoomLevel}px, ${panPosition.y / zoomLevel}px)`,
                     }}
@@ -392,27 +401,27 @@ const GalleryDetail = () => {
 
             {/* Right Column: Details */}
             <div className="flex flex-col justify-start lg:pt-8">
-              {/* Title */}
-              <h1 className="heading-lg text-luxury-charcoal mb-8 fade-in">
+              {/* Title - responsive typography */}
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.5rem] font-serif font-bold text-luxury-charcoal mb-4 sm:mb-6 md:mb-8 fade-in leading-tight">
                 {item.title}
               </h1>
 
-              {/* Description as Markdown */}
+              {/* Description as Markdown - responsive */}
               {item.description && (
-                <div className="prose prose-lg prose-stone max-w-none mb-10 text-muted-foreground leading-relaxed fade-in">
+                <div className="prose prose-sm sm:prose-base md:prose-lg prose-stone max-w-none mb-6 sm:mb-8 md:mb-10 text-muted-foreground leading-relaxed fade-in">
                   <ReactMarkdown
                     components={{
-                      p: ({ children }) => <p className="mb-4 last:mb-0">{children}</p>,
+                      p: ({ children }) => <p className="mb-3 sm:mb-4 last:mb-0 text-sm sm:text-base">{children}</p>,
                       strong: ({ children }) => <strong className="font-semibold text-luxury-charcoal">{children}</strong>,
                       em: ({ children }) => <em className="italic">{children}</em>,
-                      ul: ({ children }) => <ul className="list-disc pl-5 mb-4 space-y-1">{children}</ul>,
-                      ol: ({ children }) => <ol className="list-decimal pl-5 mb-4 space-y-1">{children}</ol>,
-                      li: ({ children }) => <li className="text-muted-foreground">{children}</li>,
-                      h1: ({ children }) => <h2 className="heading-md text-luxury-charcoal mt-6 mb-3">{children}</h2>,
-                      h2: ({ children }) => <h3 className="text-xl font-semibold text-luxury-charcoal mt-5 mb-2">{children}</h3>,
-                      h3: ({ children }) => <h4 className="text-lg font-medium text-luxury-charcoal mt-4 mb-2">{children}</h4>,
+                      ul: ({ children }) => <ul className="list-disc pl-4 sm:pl-5 mb-3 sm:mb-4 space-y-1">{children}</ul>,
+                      ol: ({ children }) => <ol className="list-decimal pl-4 sm:pl-5 mb-3 sm:mb-4 space-y-1">{children}</ol>,
+                      li: ({ children }) => <li className="text-muted-foreground text-sm sm:text-base">{children}</li>,
+                      h1: ({ children }) => <h2 className="text-xl sm:text-2xl font-serif font-bold text-luxury-charcoal mt-4 sm:mt-6 mb-2 sm:mb-3">{children}</h2>,
+                      h2: ({ children }) => <h3 className="text-lg sm:text-xl font-semibold text-luxury-charcoal mt-4 sm:mt-5 mb-2">{children}</h3>,
+                      h3: ({ children }) => <h4 className="text-base sm:text-lg font-medium text-luxury-charcoal mt-3 sm:mt-4 mb-2">{children}</h4>,
                       blockquote: ({ children }) => (
-                        <blockquote className="border-l-4 border-luxury-gold/50 pl-4 italic text-muted-foreground my-4">
+                        <blockquote className="border-l-3 sm:border-l-4 border-luxury-gold/50 pl-3 sm:pl-4 italic text-muted-foreground my-3 sm:my-4 text-sm sm:text-base">
                           {children}
                         </blockquote>
                       ),
@@ -423,50 +432,50 @@ const GalleryDetail = () => {
                 </div>
               )}
 
-              {/* Metadata Grid */}
+              {/* Metadata Grid - responsive layout */}
               {hasMetadata && (
-                <div className="border-t border-b border-luxury-charcoal/10 py-8 mb-10 fade-in bg-gradient-to-r from-luxury-cream/20 to-transparent -mx-2 px-2">
-                  <div className="grid grid-cols-2 gap-x-10 gap-y-7">
+                <div className="border-t border-b border-luxury-charcoal/10 py-5 sm:py-6 md:py-8 mb-6 sm:mb-8 md:mb-10 fade-in bg-gradient-to-r from-luxury-cream/20 to-transparent -mx-1 sm:-mx-2 px-1 sm:px-2">
+                  <div className="grid grid-cols-2 gap-x-4 sm:gap-x-6 md:gap-x-10 gap-y-4 sm:gap-y-5 md:gap-y-7">
                     {item.designContext && (
                       <div className="group">
-                        <span className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-luxury-gold mb-2 font-semibold">
-                          <span className="w-3 h-px bg-luxury-gold"></span>
+                        <span className="flex items-center gap-1.5 sm:gap-2 text-[9px] sm:text-[10px] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-luxury-gold mb-1 sm:mb-2 font-semibold">
+                          <span className="w-2 sm:w-3 h-px bg-luxury-gold"></span>
                           Design Context
                         </span>
-                        <span className="text-luxury-charcoal font-medium text-[15px]">
+                        <span className="text-luxury-charcoal font-medium text-[13px] sm:text-[14px] md:text-[15px] leading-snug block">
                           {item.designContext}
                         </span>
                       </div>
                     )}
                     {item.sculpturalForm && (
                       <div className="group">
-                        <span className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-luxury-gold mb-2 font-semibold">
-                          <span className="w-3 h-px bg-luxury-gold"></span>
+                        <span className="flex items-center gap-1.5 sm:gap-2 text-[9px] sm:text-[10px] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-luxury-gold mb-1 sm:mb-2 font-semibold">
+                          <span className="w-2 sm:w-3 h-px bg-luxury-gold"></span>
                           Sculptural Form
                         </span>
-                        <span className="text-luxury-charcoal font-medium text-[15px]">
+                        <span className="text-luxury-charcoal font-medium text-[13px] sm:text-[14px] md:text-[15px] leading-snug block">
                           {item.sculpturalForm}
                         </span>
                       </div>
                     )}
                     {item.interiorArea && (
                       <div className="group">
-                        <span className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-luxury-gold mb-2 font-semibold">
-                          <span className="w-3 h-px bg-luxury-gold"></span>
+                        <span className="flex items-center gap-1.5 sm:gap-2 text-[9px] sm:text-[10px] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-luxury-gold mb-1 sm:mb-2 font-semibold">
+                          <span className="w-2 sm:w-3 h-px bg-luxury-gold"></span>
                           Interior Area
                         </span>
-                        <span className="text-luxury-charcoal font-medium text-[15px]">
+                        <span className="text-luxury-charcoal font-medium text-[13px] sm:text-[14px] md:text-[15px] leading-snug block">
                           {item.interiorArea}
                         </span>
                       </div>
                     )}
                     {item.placementType && (
                       <div className="group">
-                        <span className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-luxury-gold mb-2 font-semibold">
-                          <span className="w-3 h-px bg-luxury-gold"></span>
+                        <span className="flex items-center gap-1.5 sm:gap-2 text-[9px] sm:text-[10px] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-luxury-gold mb-1 sm:mb-2 font-semibold">
+                          <span className="w-2 sm:w-3 h-px bg-luxury-gold"></span>
                           Placement Type
                         </span>
-                        <span className="text-luxury-charcoal font-medium text-[15px]">
+                        <span className="text-luxury-charcoal font-medium text-[13px] sm:text-[14px] md:text-[15px] leading-snug block">
                           {item.placementType}
                         </span>
                       </div>
@@ -475,41 +484,44 @@ const GalleryDetail = () => {
                 </div>
               )}
 
-              {/* Action Buttons */}
-              <div className="flex flex-col gap-4 fade-in">
+              {/* Action Buttons - mobile optimized with larger touch targets */}
+              <div className="flex flex-col gap-3 sm:gap-4 fade-in">
                 {item.isSculptureAvailable && (
                   <Button 
-                    className="w-full h-14 text-[11px] uppercase tracking-[0.25em] font-semibold bg-luxury-charcoal hover:bg-luxury-charcoal/90 text-white shadow-[0_4px_14px_rgba(0,0,0,0.15)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.2)] transition-all duration-300" 
+                    className="w-full h-12 sm:h-14 text-[10px] sm:text-[11px] uppercase tracking-[0.2em] sm:tracking-[0.25em] font-semibold bg-luxury-charcoal hover:bg-luxury-charcoal/90 active:bg-luxury-charcoal/80 text-white shadow-[0_4px_14px_rgba(0,0,0,0.15)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.2)] transition-all duration-300 touch-manipulation" 
                     onClick={() => navigate('/contact')}
                   >
                     This Sculpture
                   </Button>
                 )}
-                <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                   {item.isSculptureAvailable ? (
                     <Button 
-                      className="flex-1 h-14 text-[11px] uppercase tracking-[0.25em] font-semibold bg-gradient-to-r from-luxury-gold to-luxury-bronze hover:from-luxury-gold-light hover:to-luxury-gold text-white shadow-[0_4px_14px_rgba(0,0,0,0.15)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.2)] transition-all duration-300" 
+                      className="flex-1 h-12 sm:h-14 text-[10px] sm:text-[11px] uppercase tracking-[0.2em] sm:tracking-[0.25em] font-semibold bg-gradient-to-r from-luxury-gold to-luxury-bronze hover:from-luxury-gold-light hover:to-luxury-gold active:opacity-90 text-white shadow-[0_4px_14px_rgba(0,0,0,0.15)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.2)] transition-all duration-300 touch-manipulation" 
                       onClick={() => navigate('/contact')}
                     >
-                      <Mail className="mr-3 h-4 w-4" />
-                      Inquire About This Piece
+                      <Mail className="mr-2 sm:mr-3 h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                      <span className="hidden xs:inline">Inquire About This Piece</span>
+                      <span className="xs:hidden">Inquire Now</span>
                     </Button>
                   ) : (
                     <Button 
-                      className="flex-1 h-14 text-[11px] uppercase tracking-[0.25em] font-semibold border-2 border-luxury-gold text-luxury-gold bg-transparent hover:bg-luxury-gold hover:text-white transition-all duration-300"
+                      className="flex-1 h-12 sm:h-14 text-[10px] sm:text-[11px] uppercase tracking-[0.2em] sm:tracking-[0.25em] font-semibold border-2 border-luxury-gold text-luxury-gold bg-transparent hover:bg-luxury-gold hover:text-white active:opacity-90 transition-all duration-300 touch-manipulation"
                       variant="outline"
                       onClick={() => navigate('/contact')}
                     >
-                      <Mail className="mr-3 h-4 w-4" />
-                      Inquire About Similar Sculpture
+                      <Mail className="mr-2 sm:mr-3 h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                      <span className="hidden xs:inline">Inquire About Similar Sculpture</span>
+                      <span className="xs:hidden">Inquire Now</span>
                     </Button>
                   )}
                   <Button 
                     variant="outline" 
-                    className="h-14 w-14 sm:w-auto sm:px-6 border-2 border-luxury-charcoal/10 hover:border-luxury-gold hover:text-luxury-gold transition-all duration-300 flex-shrink-0" 
+                    className="h-12 sm:h-14 w-full sm:w-auto sm:px-6 border-2 border-luxury-charcoal/10 hover:border-luxury-gold hover:text-luxury-gold active:opacity-90 transition-all duration-300 flex-shrink-0 touch-manipulation" 
                     onClick={handleShare}
                   >
-                    <Share2 className="h-5 w-5" />
+                    <Share2 className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-0" />
+                    <span className="sm:hidden text-[10px] uppercase tracking-[0.15em]">Share</span>
                   </Button>
                 </div>
               </div>
@@ -517,32 +529,33 @@ const GalleryDetail = () => {
           </div>
         </div>
 
-        {/* Similar Designs Section - Carousel */}
+        {/* Similar Designs Section - Carousel - Mobile optimized */}
         {similarItems.length > 0 && (
-          <section className="mt-20 py-16 bg-gradient-to-b from-luxury-cream/40 via-luxury-cream/20 to-transparent">
-            <div className="container mx-auto px-6">
-              <div className="text-center mb-12">
-                <div className="flex items-center justify-center gap-4 mb-4">
-                  <span className="w-12 h-px bg-luxury-gold/40"></span>
-                  <span className="text-[11px] uppercase tracking-[0.4em] text-luxury-gold font-semibold">
+          <section className="mt-12 sm:mt-16 md:mt-20 py-10 sm:py-12 md:py-16 bg-gradient-to-b from-luxury-cream/40 via-luxury-cream/20 to-transparent">
+            <div className="container mx-auto px-4 sm:px-6">
+              <div className="text-center mb-8 sm:mb-10 md:mb-12">
+                <div className="flex items-center justify-center gap-3 sm:gap-4 mb-3 sm:mb-4">
+                  <span className="w-8 sm:w-10 md:w-12 h-px bg-luxury-gold/40"></span>
+                  <span className="text-[9px] sm:text-[10px] md:text-[11px] uppercase tracking-[0.3em] sm:tracking-[0.4em] text-luxury-gold font-semibold">
                     Curated Selection
                   </span>
-                  <span className="w-12 h-px bg-luxury-gold/40"></span>
+                  <span className="w-8 sm:w-10 md:w-12 h-px bg-luxury-gold/40"></span>
                 </div>
-                <h2 className="heading-md text-luxury-charcoal">Similar Designs</h2>
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-serif font-bold text-luxury-charcoal">Similar Designs</h2>
               </div>
               <Carousel
                 opts={{
                   align: "start",
                   loop: false,
+                  dragFree: true,
                 }}
                 className="w-full"
               >
-                <CarouselContent className="-ml-6">
+                <CarouselContent className="-ml-3 sm:-ml-4 md:-ml-6">
                   {similarItems.map((related, index) => (
                     <CarouselItem 
                       key={related.id} 
-                      className="pl-6 basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4"
+                      className="pl-3 sm:pl-4 md:pl-6 basis-[85%] xs:basis-[75%] sm:basis-1/2 lg:basis-1/3 xl:basis-1/4"
                     >
                       <div className="fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
                         <GalleryItem 
@@ -565,41 +578,46 @@ const GalleryDetail = () => {
                 </CarouselContent>
                 {similarItems.length > 3 && (
                   <>
-                    <CarouselPrevious className="hidden md:flex -left-6 h-12 w-12 bg-white border-2 border-luxury-gold/20 text-luxury-charcoal hover:bg-luxury-gold hover:text-white hover:border-luxury-gold shadow-lg transition-all duration-300" />
-                    <CarouselNext className="hidden md:flex -right-6 h-12 w-12 bg-white border-2 border-luxury-gold/20 text-luxury-charcoal hover:bg-luxury-gold hover:text-white hover:border-luxury-gold shadow-lg transition-all duration-300" />
+                    <CarouselPrevious className="hidden md:flex -left-4 lg:-left-6 h-10 w-10 lg:h-12 lg:w-12 bg-white border-2 border-luxury-gold/20 text-luxury-charcoal hover:bg-luxury-gold hover:text-white hover:border-luxury-gold shadow-lg transition-all duration-300" />
+                    <CarouselNext className="hidden md:flex -right-4 lg:-right-6 h-10 w-10 lg:h-12 lg:w-12 bg-white border-2 border-luxury-gold/20 text-luxury-charcoal hover:bg-luxury-gold hover:text-white hover:border-luxury-gold shadow-lg transition-all duration-300" />
                   </>
                 )}
               </Carousel>
+              {/* Mobile swipe hint */}
+              <div className="flex justify-center mt-4 sm:hidden">
+                <span className="text-[10px] text-luxury-charcoal/50">Swipe to explore →</span>
+              </div>
             </div>
           </section>
         )}
 
-        {/* Other Designs You May Like - Carousel */}
+        {/* Other Designs You May Like - Carousel - Mobile optimized */}
         {otherItems.length > 0 && (
-          <section className="mt-8 py-16 border-t border-luxury-charcoal/5">
-            <div className="container mx-auto px-6">
-              <div className="text-center mb-12">
-                <div className="flex items-center justify-center gap-4 mb-4">
-                  <span className="w-12 h-px bg-luxury-charcoal/20"></span>
-                  <span className="text-[11px] uppercase tracking-[0.4em] text-luxury-charcoal/60 font-semibold">
+          <section className="mt-6 sm:mt-8 py-10 sm:py-12 md:py-16 border-t border-luxury-charcoal/5">
+            <div className="container mx-auto px-4 sm:px-6">
+              <div className="text-center mb-8 sm:mb-10 md:mb-12">
+                <div className="flex items-center justify-center gap-3 sm:gap-4 mb-3 sm:mb-4">
+                  <span className="w-8 sm:w-10 md:w-12 h-px bg-luxury-charcoal/20"></span>
+                  <span className="text-[9px] sm:text-[10px] md:text-[11px] uppercase tracking-[0.3em] sm:tracking-[0.4em] text-luxury-charcoal/60 font-semibold">
                     Explore More
                   </span>
-                  <span className="w-12 h-px bg-luxury-charcoal/20"></span>
+                  <span className="w-8 sm:w-10 md:w-12 h-px bg-luxury-charcoal/20"></span>
                 </div>
-                <h2 className="heading-md text-luxury-charcoal">Other Designs You May Like</h2>
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-serif font-bold text-luxury-charcoal">Other Designs You May Like</h2>
               </div>
               <Carousel
                 opts={{
                   align: "start",
                   loop: false,
+                  dragFree: true,
                 }}
                 className="w-full"
               >
-                <CarouselContent className="-ml-6">
+                <CarouselContent className="-ml-3 sm:-ml-4 md:-ml-6">
                   {otherItems.map((other, index) => (
                     <CarouselItem 
                       key={other.id} 
-                      className="pl-6 basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4"
+                      className="pl-3 sm:pl-4 md:pl-6 basis-[85%] xs:basis-[75%] sm:basis-1/2 lg:basis-1/3 xl:basis-1/4"
                     >
                       <div className="fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
                         <GalleryItem 
@@ -622,11 +640,15 @@ const GalleryDetail = () => {
                 </CarouselContent>
                 {otherItems.length > 3 && (
                   <>
-                    <CarouselPrevious className="hidden md:flex -left-6 h-12 w-12 bg-white border-2 border-luxury-charcoal/10 text-luxury-charcoal hover:bg-luxury-charcoal hover:text-white hover:border-luxury-charcoal shadow-lg transition-all duration-300" />
-                    <CarouselNext className="hidden md:flex -right-6 h-12 w-12 bg-white border-2 border-luxury-charcoal/10 text-luxury-charcoal hover:bg-luxury-charcoal hover:text-white hover:border-luxury-charcoal shadow-lg transition-all duration-300" />
+                    <CarouselPrevious className="hidden md:flex -left-4 lg:-left-6 h-10 w-10 lg:h-12 lg:w-12 bg-white border-2 border-luxury-charcoal/10 text-luxury-charcoal hover:bg-luxury-charcoal hover:text-white hover:border-luxury-charcoal shadow-lg transition-all duration-300" />
+                    <CarouselNext className="hidden md:flex -right-4 lg:-right-6 h-10 w-10 lg:h-12 lg:w-12 bg-white border-2 border-luxury-charcoal/10 text-luxury-charcoal hover:bg-luxury-charcoal hover:text-white hover:border-luxury-charcoal shadow-lg transition-all duration-300" />
                   </>
                 )}
               </Carousel>
+              {/* Mobile swipe hint */}
+              <div className="flex justify-center mt-4 sm:hidden">
+                <span className="text-[10px] text-luxury-charcoal/50">Swipe to explore →</span>
+              </div>
             </div>
           </section>
         )}
