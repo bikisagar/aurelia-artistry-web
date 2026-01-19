@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, Share2, Mail, Loader2, X, ZoomIn, ZoomOut, Maximize2 } from 'lucide-react';
 import GalleryItem from '@/components/Gallery/GalleryItem';
 import { getSupabaseClient, DesignAsset, parseDesignAsset, DesignItem, parseArrayStringValues } from '@/lib/supabaseDesign';
+import content from '@/data/content.json';
 import {
   Carousel,
   CarouselContent,
@@ -19,6 +20,9 @@ import {
   DialogContent,
   DialogClose,
 } from "@/components/ui/dialog";
+
+// Get gallery detail content from content.json
+const galleryDetailContent = (content as any).galleryDetail;
 
 // Weights for similarity scoring (higher = more important)
 const SIMILARITY_WEIGHTS = {
@@ -265,10 +269,10 @@ const GalleryDetail = () => {
         <Header />
         <main className="pt-32 pb-16">
           <div className="container mx-auto px-6 text-center">
-            <h1 className="heading-xl text-luxury-charcoal mb-4">Item Not Found</h1>
-            <p className="text-muted-foreground mb-8">{error || 'The item you are looking for does not exist.'}</p>
+            <h1 className="heading-xl text-luxury-charcoal mb-4">{galleryDetailContent?.errorTitle || 'Item Not Found'}</h1>
+            <p className="text-muted-foreground mb-8">{error || galleryDetailContent?.errorDescription || 'The item you are looking for does not exist.'}</p>
             <Button onClick={() => navigate('/collection')} className="btn-primary">
-              Return to Collection
+              {galleryDetailContent?.returnButton || 'Return to Collection'}
             </Button>
           </div>
         </main>
@@ -292,7 +296,7 @@ const GalleryDetail = () => {
               className="inline-flex items-center text-xs sm:text-sm text-muted-foreground hover:text-luxury-gold active:text-luxury-gold transition-colors duration-300 touch-manipulation py-2"
             >
               <ArrowLeft size={14} className="mr-1.5 sm:mr-2 sm:w-4 sm:h-4" />
-              Back to Collection
+              {galleryDetailContent?.backToCollection || 'Back to Collection'}
             </Link>
           </div>
 
@@ -309,7 +313,7 @@ const GalleryDetail = () => {
                     alt={item.imageAlt} 
                     className="w-full h-auto object-contain max-h-[50vh] sm:max-h-[60vh] md:max-h-[75vh] transition-transform duration-700 group-hover:scale-[1.02]" 
                     onError={e => {
-                      (e.target as HTMLImageElement).src = 'https://placehold.co/600x400?text=Image+Unavailable';
+                      (e.target as HTMLImageElement).src = galleryDetailContent?.imagePlaceholder || 'https://placehold.co/600x400?text=Image+Unavailable';
                     }} 
                   />
                   {/* Fullscreen hint overlay - always visible on mobile */}
@@ -321,7 +325,7 @@ const GalleryDetail = () => {
                   {/* Mobile tap hint */}
                   <div className="absolute bottom-3 left-1/2 -translate-x-1/2 sm:hidden">
                     <span className="text-[10px] text-luxury-charcoal/60 bg-white/80 px-3 py-1 rounded-full">
-                      Tap to enlarge
+                      {galleryDetailContent?.tapToEnlarge || 'Tap to enlarge'}
                     </span>
                   </div>
                 </div>
@@ -366,7 +370,7 @@ const GalleryDetail = () => {
                 {/* Pan hint - responsive */}
                 {zoomLevel > 1 && (
                   <div className="absolute top-4 sm:top-8 left-1/2 -translate-x-1/2 z-50 text-white/60 text-[10px] sm:text-xs font-medium bg-white/10 backdrop-blur-sm rounded-full px-3 sm:px-4 py-1.5 sm:py-2">
-                    {window.innerWidth < 640 ? 'Swipe to pan' : 'Drag to pan'}
+                    {window.innerWidth < 640 ? (galleryDetailContent?.swipeToPan || 'Swipe to pan') : (galleryDetailContent?.dragToPan || 'Drag to pan')}
                   </div>
                 )}
 
@@ -392,7 +396,7 @@ const GalleryDetail = () => {
                     }}
                     draggable={false}
                     onError={e => {
-                      (e.target as HTMLImageElement).src = 'https://placehold.co/600x400?text=Image+Unavailable';
+                      (e.target as HTMLImageElement).src = galleryDetailContent?.imagePlaceholder || 'https://placehold.co/600x400?text=Image+Unavailable';
                     }}
                   />
                 </div>
@@ -440,7 +444,7 @@ const GalleryDetail = () => {
                       <div className="group">
                         <span className="flex items-center gap-1.5 sm:gap-2 text-[9px] sm:text-[10px] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-luxury-gold mb-1 sm:mb-2 font-semibold">
                           <span className="w-2 sm:w-3 h-px bg-luxury-gold"></span>
-                          Design Context
+                          {galleryDetailContent?.metadata?.designContext || 'Design Context'}
                         </span>
                         <span className="text-luxury-charcoal font-medium text-[13px] sm:text-[14px] md:text-[15px] leading-snug block">
                           {item.designContext}
@@ -451,7 +455,7 @@ const GalleryDetail = () => {
                       <div className="group">
                         <span className="flex items-center gap-1.5 sm:gap-2 text-[9px] sm:text-[10px] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-luxury-gold mb-1 sm:mb-2 font-semibold">
                           <span className="w-2 sm:w-3 h-px bg-luxury-gold"></span>
-                          Sculptural Form
+                          {galleryDetailContent?.metadata?.sculpturalForm || 'Sculptural Form'}
                         </span>
                         <span className="text-luxury-charcoal font-medium text-[13px] sm:text-[14px] md:text-[15px] leading-snug block">
                           {item.sculpturalForm}
@@ -462,7 +466,7 @@ const GalleryDetail = () => {
                       <div className="group">
                         <span className="flex items-center gap-1.5 sm:gap-2 text-[9px] sm:text-[10px] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-luxury-gold mb-1 sm:mb-2 font-semibold">
                           <span className="w-2 sm:w-3 h-px bg-luxury-gold"></span>
-                          Interior Area
+                          {galleryDetailContent?.metadata?.interiorArea || 'Interior Area'}
                         </span>
                         <span className="text-luxury-charcoal font-medium text-[13px] sm:text-[14px] md:text-[15px] leading-snug block">
                           {item.interiorArea}
@@ -473,7 +477,7 @@ const GalleryDetail = () => {
                       <div className="group">
                         <span className="flex items-center gap-1.5 sm:gap-2 text-[9px] sm:text-[10px] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-luxury-gold mb-1 sm:mb-2 font-semibold">
                           <span className="w-2 sm:w-3 h-px bg-luxury-gold"></span>
-                          Placement Type
+                          {galleryDetailContent?.metadata?.placementType || 'Placement Type'}
                         </span>
                         <span className="text-luxury-charcoal font-medium text-[13px] sm:text-[14px] md:text-[15px] leading-snug block">
                           {item.placementType}
@@ -497,7 +501,7 @@ const GalleryDetail = () => {
                       } 
                     })}
                   >
-                    Order This Sculpture
+                    {galleryDetailContent?.buttons?.orderSculpture || 'Order This Sculpture'}
                   </Button>
                 )}
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
@@ -513,8 +517,8 @@ const GalleryDetail = () => {
                       })}
                     >
                       <Mail className="mr-2 sm:mr-3 h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                      <span className="hidden xs:inline">Inquire About This Piece</span>
-                      <span className="xs:hidden">Inquire Now</span>
+                      <span className="hidden xs:inline">{galleryDetailContent?.buttons?.inquireAboutPiece || 'Inquire About This Piece'}</span>
+                      <span className="xs:hidden">{galleryDetailContent?.buttons?.inquireAboutPieceMobile || 'Inquire Now'}</span>
                     </Button>
                   ) : (
                     <Button 
@@ -529,8 +533,8 @@ const GalleryDetail = () => {
                       })}
                     >
                       <Mail className="mr-2 sm:mr-3 h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                      <span className="hidden xs:inline">Inquire About Similar Sculpture</span>
-                      <span className="xs:hidden">Inquire Now</span>
+                      <span className="hidden xs:inline">{galleryDetailContent?.buttons?.inquireAboutSimilar || 'Inquire About Similar Sculpture'}</span>
+                      <span className="xs:hidden">{galleryDetailContent?.buttons?.inquireAboutSimilarMobile || 'Inquire Now'}</span>
                     </Button>
                   )}
                   <Button 
@@ -539,7 +543,7 @@ const GalleryDetail = () => {
                     onClick={handleShare}
                   >
                     <Share2 className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-0" />
-                    <span className="sm:hidden text-[10px] uppercase tracking-[0.15em]">Share</span>
+                    <span className="sm:hidden text-[10px] uppercase tracking-[0.15em]">{galleryDetailContent?.buttons?.share || 'Share'}</span>
                   </Button>
                 </div>
               </div>
@@ -555,11 +559,11 @@ const GalleryDetail = () => {
                 <div className="flex items-center justify-center gap-3 sm:gap-4 mb-3 sm:mb-4">
                   <span className="w-8 sm:w-10 md:w-12 h-px bg-luxury-gold/40"></span>
                   <span className="text-[9px] sm:text-[10px] md:text-[11px] uppercase tracking-[0.3em] sm:tracking-[0.4em] text-luxury-gold font-semibold">
-                    Curated Selection
+                    {galleryDetailContent?.similarDesigns?.badge || 'Curated Selection'}
                   </span>
                   <span className="w-8 sm:w-10 md:w-12 h-px bg-luxury-gold/40"></span>
                 </div>
-                <h2 className="text-xl sm:text-2xl md:text-3xl font-serif font-bold text-luxury-charcoal">Similar Designs</h2>
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-serif font-bold text-luxury-charcoal">{galleryDetailContent?.similarDesigns?.title || 'Similar Designs'}</h2>
               </div>
               <Carousel
                 opts={{
@@ -603,7 +607,7 @@ const GalleryDetail = () => {
               </Carousel>
               {/* Mobile swipe hint */}
               <div className="flex justify-center mt-4 sm:hidden">
-                <span className="text-[10px] text-luxury-charcoal/50">Swipe to explore →</span>
+                <span className="text-[10px] text-luxury-charcoal/50">{galleryDetailContent?.similarDesigns?.swipeHint || 'Swipe to explore →'}</span>
               </div>
             </div>
           </section>
@@ -617,11 +621,11 @@ const GalleryDetail = () => {
                 <div className="flex items-center justify-center gap-3 sm:gap-4 mb-3 sm:mb-4">
                   <span className="w-8 sm:w-10 md:w-12 h-px bg-luxury-charcoal/20"></span>
                   <span className="text-[9px] sm:text-[10px] md:text-[11px] uppercase tracking-[0.3em] sm:tracking-[0.4em] text-luxury-charcoal/60 font-semibold">
-                    Explore More
+                    {galleryDetailContent?.otherDesigns?.badge || 'Explore More'}
                   </span>
                   <span className="w-8 sm:w-10 md:w-12 h-px bg-luxury-charcoal/20"></span>
                 </div>
-                <h2 className="text-xl sm:text-2xl md:text-3xl font-serif font-bold text-luxury-charcoal">Other Designs You May Like</h2>
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-serif font-bold text-luxury-charcoal">{galleryDetailContent?.otherDesigns?.title || 'Other Designs You May Like'}</h2>
               </div>
               <Carousel
                 opts={{
@@ -665,7 +669,7 @@ const GalleryDetail = () => {
               </Carousel>
               {/* Mobile swipe hint */}
               <div className="flex justify-center mt-4 sm:hidden">
-                <span className="text-[10px] text-luxury-charcoal/50">Swipe to explore →</span>
+                <span className="text-[10px] text-luxury-charcoal/50">{galleryDetailContent?.otherDesigns?.swipeHint || 'Swipe to explore →'}</span>
               </div>
             </div>
           </section>

@@ -19,7 +19,7 @@ const Footer = () => {
           {/* Contact Information */}
           <div className="space-y-4 text-center sm:text-left">
             <h4 className="text-base sm:text-lg font-medium text-luxury-gold">
-              Contact Information
+              {content.footer.contactTitle}
             </h4>
             <div className="space-y-2 text-sm">
               <p className="break-words">{content.contact.info.email}</p>
@@ -32,7 +32,7 @@ const Footer = () => {
           {/* Social Links */}
           <div className="space-y-4 text-center sm:text-left sm:col-span-2 lg:col-span-1">
             <h4 className="text-base sm:text-lg font-medium text-luxury-gold">
-              Follow Us
+              {content.footer.socialTitle}
             </h4>
             <div className="flex flex-wrap justify-center sm:justify-start gap-4 sm:flex-col sm:gap-3">
               {content.contact.social.map((social) => (

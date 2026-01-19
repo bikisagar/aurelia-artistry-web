@@ -33,7 +33,9 @@
       "title": "Design Discovery",
       "subtitle": "Visualize Sculptural Elegance in Real Spaces",
       "description": "Explore curated design inspirations where timeless sculptures meet contemporary interiors. Each concept demonstrates how our pieces integrate seamlessly into living spaces, helping you envision the perfect placement and spatial harmony.",
-      "cta": "Check Out All Designs"
+      "cta": "Check Out All Designs",
+      "viewDesign": "View Design",
+      "emptyMessage": "Design inspirations coming soon."
     },
     "exclusivity": {
       "title": "Exclusive Access",
@@ -155,6 +157,8 @@
   "footer": {
     "copyright": "© 2024 Aurelia Tradisia. All rights reserved.",
     "tagline": "Curating Excellence in Indian Sculptural Art",
+    "contactTitle": "Contact Information",
+    "socialTitle": "Follow Us",
     "legal": [
       { "label": "Privacy Policy", "url": "#" },
       { "label": "Terms of Service", "url": "#" }
@@ -163,18 +167,22 @@
   "design": {
     "title": "The Collection",
     "subtitle": "Explore our curated selection of museum-quality Indian sculptures, each piece chosen for its artistic merit and spiritual resonance.",
+    "showingResults": "Showing {{count}} results",
+    "loading": "Loading...",
     "emptyState": {
       "title": "No items found",
       "description": "Try adjusting your search or filters to find what you're looking for.",
+      "noItemsDescription": "No designs are currently available. Check back soon!",
       "clearButton": "Clear all filters"
     },
     "filters": {
       "title": "Filters",
       "clearAll": "Clear all",
       "categories": {
-        "sculptureType": "Sculpture Type",
-        "roomType": "Room",
-        "style": "Style"
+        "designContext": "Design Context",
+        "sculpturalForm": "Sculptural Form",
+        "interiorArea": "Interior Area",
+        "placementType": "Placement Type"
       }
     },
     "supabase": {
@@ -182,5 +190,44 @@
       "anonKey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl0Z29jdXJlam16cGhoc3hqZ3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU1NjU0MzIsImV4cCI6MjA4MTE0MTQzMn0.uFmiPFd3NglOB9wYl5sSU5xkGpxbh9bDVVm19ABYuYw",
       "bucketName": "Images"
     }
+  },
+  "galleryDetail": {
+    "backToCollection": "Back to Collection",
+    "errorTitle": "Item Not Found",
+    "errorDescription": "The item you are looking for does not exist.",
+    "returnButton": "Return to Collection",
+    "tapToEnlarge": "Tap to enlarge",
+    "swipeToPan": "Swipe to pan",
+    "dragToPan": "Drag to pan",
+    "metadata": {
+      "designContext": "Design Context",
+      "sculpturalForm": "Sculptural Form",
+      "interiorArea": "Interior Area",
+      "placementType": "Placement Type"
+    },
+    "buttons": {
+      "orderSculpture": "Order This Sculpture",
+      "inquireAboutPiece": "Inquire About This Piece",
+      "inquireAboutPieceMobile": "Inquire Now",
+      "inquireAboutSimilar": "Inquire About Similar Sculpture",
+      "inquireAboutSimilarMobile": "Inquire Now",
+      "share": "Share"
+    },
+    "similarDesigns": {
+      "badge": "Curated Selection",
+      "title": "Similar Designs",
+      "swipeHint": "Swipe to explore →"
+    },
+    "otherDesigns": {
+      "badge": "Explore More",
+      "title": "Other Designs You May Like",
+      "swipeHint": "Swipe to explore →"
+    },
+    "imagePlaceholder": "https://placehold.co/600x400?text=Image+Unavailable"
+  },
+  "galleryCard": {
+    "viewDetails": "View Details",
+    "inquire": "Inquire",
+    "imagePlaceholder": "https://placehold.co/600x400?text=Image+Unavailable"
   }
 }

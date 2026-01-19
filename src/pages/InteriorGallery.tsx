@@ -126,17 +126,17 @@ const InteriorGallery = () => {
                                         labels={designContent?.filters?.categories}
                                     />
                                 </div>
-                            </SheetContent>
+                        </SheetContent>
                         </Sheet>
 
                         <div className="hidden lg:block text-sm text-muted-foreground">
                             {isLoading ? (
                                 <span className="flex items-center gap-2">
                                     <Loader2 className="h-4 w-4 animate-spin" />
-                                    Loading...
+                                    {designContent?.loading || 'Loading...'}
                                 </span>
                             ) : (
-                                `Showing ${items.length} results`
+                                (designContent?.showingResults || 'Showing {{count}} results').replace('{{count}}', items.length.toString())
                             )}
                         </div>
                     </div>
@@ -195,7 +195,7 @@ const InteriorGallery = () => {
                                 <p className="text-muted-foreground mb-6">
                                     {hasActiveFilters 
                                         ? (designContent?.emptyState?.description || 'Try adjusting your search or filters.')
-                                        : 'No designs are currently available. Check back soon!'
+                                        : (designContent?.emptyState?.noItemsDescription || 'No designs are currently available. Check back soon!')
                                     }
                                 </p>
                                 {hasActiveFilters && (
