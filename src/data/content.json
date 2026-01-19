@@ -131,9 +131,9 @@
         ]
       },
       "defaultMessages": {
-        "orderSculpture": "I am interested in ordering the sculpture: {{title}}. Please provide details on pricing, availability, and delivery options.",
-        "inquireAboutPiece": "I am interested in this design: {{title}}. I would like to know more about the sculpture featured and any similar pieces in your collection.",
-        "inquireAboutSimilar": "I am looking for a sculpture similar to the design: {{title}}. Please let me know if you have comparable pieces available in your collection."
+        "orderSculpture": "I am interested in ordering the sculpture featured in the design: \"{{title}}\"\n\nPlease provide details on pricing, availability, and delivery options.",
+        "inquireAboutPiece": "I am interested in the design: \"{{title}}\"\n\nI would like to know more about the sculpture featured and any similar pieces in your collection.",
+        "inquireAboutSimilar": "I am looking for a sculpture similar to the one shown in the design: \"{{title}}\"\n\nPlease let me know if you have comparable pieces available in your collection."
       },
       "submit": "Send Message",
       "success": "Thank you for your interest. We will contact you within 24 hours to arrange your exclusive viewing.",
