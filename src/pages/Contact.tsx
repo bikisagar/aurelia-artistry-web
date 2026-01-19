@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Mail, Phone, MapPin, Clock } from 'lucide-react';
 import Header from '@/components/Layout/Header';
 import Footer from '@/components/Layout/Footer';
@@ -6,8 +7,17 @@ import { useToast } from '@/hooks/use-toast';
 import content from '@/data/content.json';
 import { submitToGoogleForm } from '@/services/formService';
 
+interface ContactLocationState {
+  reason?: string;
+  messageType?: 'orderSculpture' | 'inquireAboutPiece' | 'inquireAboutSimilar';
+  itemTitle?: string;
+}
+
 const Contact = () => {
   const { toast } = useToast();
+  const location = useLocation();
+  const locationState = location.state as ContactLocationState | null;
+  
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -17,7 +27,26 @@ const Contact = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
+    
+    // Pre-fill form based on navigation state from GalleryDetail
+    if (locationState) {
+      const { reason, messageType, itemTitle } = locationState;
+      
+      let defaultMessage = '';
+      if (messageType && itemTitle) {
+        const defaultMessages = (content.contact.form as any).defaultMessages;
+        if (defaultMessages && defaultMessages[messageType]) {
+          defaultMessage = defaultMessages[messageType].replace('{{title}}', itemTitle);
+        }
+      }
+      
+      setFormData(prev => ({
+        ...prev,
+        reason: reason || '',
+        message: defaultMessage
+      }));
+    }
+  }, [locationState]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
