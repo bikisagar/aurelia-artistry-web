@@ -121,12 +121,19 @@
       "reason": {
         "label": "Reason for Contact",
         "options": [
-          "Schedule Private Viewing",
+          "Order Sculpture",
           "Inquiry About Specific Piece",
+          "Inquiry About Similar Sculpture",
+          "Schedule Private Viewing",
           "Collection Consultation",
           "Authentication Services",
           "General Information"
         ]
+      },
+      "defaultMessages": {
+        "orderSculpture": "I am interested in ordering the sculpture: {{title}}. Please provide details on pricing, availability, and delivery options.",
+        "inquireAboutPiece": "I am interested in this design: {{title}}. I would like to know more about the sculpture featured and any similar pieces in your collection.",
+        "inquireAboutSimilar": "I am looking for a sculpture similar to the design: {{title}}. Please let me know if you have comparable pieces available in your collection."
       },
       "submit": "Send Message",
       "success": "Thank you for your interest. We will contact you within 24 hours to arrange your exclusive viewing.",

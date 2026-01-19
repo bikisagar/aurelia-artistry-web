@@ -489,16 +489,28 @@ const GalleryDetail = () => {
                 {item.isSculptureAvailable && (
                   <Button 
                     className="w-full h-12 sm:h-14 text-[10px] sm:text-[11px] uppercase tracking-[0.2em] sm:tracking-[0.25em] font-semibold bg-luxury-charcoal hover:bg-luxury-charcoal/90 active:bg-luxury-charcoal/80 text-white shadow-[0_4px_14px_rgba(0,0,0,0.15)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.2)] transition-all duration-300 touch-manipulation" 
-                    onClick={() => navigate('/contact')}
+                    onClick={() => navigate('/contact', { 
+                      state: { 
+                        reason: 'Order Sculpture',
+                        messageType: 'orderSculpture',
+                        itemTitle: item.title 
+                      } 
+                    })}
                   >
-                    This Sculpture
+                    Order This Sculpture
                   </Button>
                 )}
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                   {item.isSculptureAvailable ? (
                     <Button 
                       className="flex-1 h-12 sm:h-14 text-[10px] sm:text-[11px] uppercase tracking-[0.2em] sm:tracking-[0.25em] font-semibold bg-gradient-to-r from-luxury-gold to-luxury-bronze hover:from-luxury-gold-light hover:to-luxury-gold active:opacity-90 text-white shadow-[0_4px_14px_rgba(0,0,0,0.15)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.2)] transition-all duration-300 touch-manipulation" 
-                      onClick={() => navigate('/contact')}
+                      onClick={() => navigate('/contact', { 
+                        state: { 
+                          reason: 'Inquiry About Specific Piece',
+                          messageType: 'inquireAboutPiece',
+                          itemTitle: item.title 
+                        } 
+                      })}
                     >
                       <Mail className="mr-2 sm:mr-3 h-3.5 w-3.5 sm:h-4 sm:w-4" />
                       <span className="hidden xs:inline">Inquire About This Piece</span>
@@ -508,7 +520,13 @@ const GalleryDetail = () => {
                     <Button 
                       className="flex-1 h-12 sm:h-14 text-[10px] sm:text-[11px] uppercase tracking-[0.2em] sm:tracking-[0.25em] font-semibold border-2 border-luxury-gold text-luxury-gold bg-transparent hover:bg-luxury-gold hover:text-white active:opacity-90 transition-all duration-300 touch-manipulation"
                       variant="outline"
-                      onClick={() => navigate('/contact')}
+                      onClick={() => navigate('/contact', { 
+                        state: { 
+                          reason: 'Inquiry About Similar Sculpture',
+                          messageType: 'inquireAboutSimilar',
+                          itemTitle: item.title 
+                        } 
+                      })}
                     >
                       <Mail className="mr-2 sm:mr-3 h-3.5 w-3.5 sm:h-4 sm:w-4" />
                       <span className="hidden xs:inline">Inquire About Similar Sculpture</span>
