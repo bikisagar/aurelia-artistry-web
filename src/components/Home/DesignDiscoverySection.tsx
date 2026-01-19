@@ -80,7 +80,7 @@ const DesignDiscoverySection = () => {
                             {item.title}
                           </h3>
                           <p className="text-white/70 text-sm mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            View Design
+                            {designDiscoveryContent.viewDesign}
                           </p>
                         </div>
                       </div>
@@ -94,7 +94,7 @@ const DesignDiscoverySection = () => {
             </Carousel>
           ) : (
             <div className="text-center py-12 text-luxury-charcoal/60">
-              <p>Design inspirations coming soon.</p>
+              <p>{designDiscoveryContent.emptyMessage}</p>
             </div>
           )}
         </div>

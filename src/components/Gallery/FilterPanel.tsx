@@ -7,6 +7,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import content from '@/data/content.json';
 
 export interface FilterState {
     designContext: string[];
@@ -38,12 +39,15 @@ interface FilterPanelProps {
     labels?: FilterLabels;
 }
 
+// Get filter content from content.json
+const filterContent = (content as any).design?.filters;
+
 // Default labels for filter categories
 const defaultLabels: FilterLabels = {
-    designContext: "Design Context",
-    sculpturalForm: "Sculptural Form",
-    interiorArea: "Interior Area",
-    placementType: "Placement Type"
+    designContext: filterContent?.categories?.designContext || "Design Context",
+    sculpturalForm: filterContent?.categories?.sculpturalForm || "Sculptural Form",
+    interiorArea: filterContent?.categories?.interiorArea || "Interior Area",
+    placementType: filterContent?.categories?.placementType || "Placement Type"
 };
 
 const FilterPanel = ({ 
@@ -83,7 +87,7 @@ const FilterPanel = ({
     return (
         <div className={className}>
             <div className="flex items-center justify-between mb-4">
-                <h3 className="font-serif text-lg font-medium text-luxury-charcoal">Filters</h3>
+                <h3 className="font-serif text-lg font-medium text-luxury-charcoal">{filterContent?.title || 'Filters'}</h3>
                 {hasActiveFilters && (
                     <Button
                         variant="ghost"
@@ -91,7 +95,7 @@ const FilterPanel = ({
                         onClick={onClearFilters}
                         className="text-xs text-muted-foreground hover:text-luxury-gold h-auto p-0"
                     >
-                        Clear all
+                        {filterContent?.clearAll || 'Clear all'}
                     </Button>
                 )}
             </div>

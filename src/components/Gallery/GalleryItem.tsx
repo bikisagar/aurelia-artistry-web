@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { getImageUrl } from '@/lib/googleDrive';
 import { Eye } from 'lucide-react';
+import content from '@/data/content.json';
 
 export interface GalleryItemProps {
   item: {
@@ -18,6 +19,8 @@ export interface GalleryItemProps {
   };
   useSupabaseUrl?: boolean;
 }
+
+const galleryCardContent = (content as any).galleryCard;
 
 const GalleryItem = ({
   item,
@@ -37,7 +40,7 @@ const GalleryItem = ({
             loading="lazy" 
             className="max-w-full max-h-full object-contain transition-all duration-700 group-hover:scale-[1.03]" 
             onError={e => {
-              (e.target as HTMLImageElement).src = 'https://placehold.co/600x400?text=Image+Unavailable';
+              (e.target as HTMLImageElement).src = galleryCardContent?.imagePlaceholder || 'https://placehold.co/600x400?text=Image+Unavailable';
             }} 
           />
 
@@ -45,7 +48,7 @@ const GalleryItem = ({
           <div className="absolute inset-0 bg-gradient-to-t from-luxury-charcoal/60 via-luxury-charcoal/20 to-transparent opacity-0 group-hover:opacity-100 active:opacity-100 transition-all duration-500 flex items-end justify-center pb-6 sm:pb-8">
             <div className="bg-white text-luxury-charcoal px-6 sm:px-8 py-2.5 sm:py-3 flex items-center gap-2 sm:gap-3 transform translate-y-6 group-hover:translate-y-0 transition-all duration-500 shadow-lg">
               <Eye size={14} className="text-luxury-gold sm:w-4 sm:h-4" />
-              <span className="font-medium text-xs sm:text-sm uppercase tracking-wider">View Details</span>
+              <span className="font-medium text-xs sm:text-sm uppercase tracking-wider">{galleryCardContent?.viewDetails || 'View Details'}</span>
             </div>
           </div>
         </div>
@@ -73,7 +76,7 @@ const GalleryItem = ({
         <CardFooter className="px-4 sm:px-5 pb-4 sm:pb-5 pt-0 flex-shrink-0">
           <span className="inline-flex items-center gap-1.5 sm:gap-2 text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-luxury-gold group-hover:text-luxury-bronze transition-colors duration-300">
             <span className="w-4 sm:w-5 h-px bg-luxury-gold/50 group-hover:w-6 sm:group-hover:w-7 transition-all duration-300"></span>
-            Inquire
+            {galleryCardContent?.inquire || 'Inquire'}
           </span>
         </CardFooter>
       </Card>
