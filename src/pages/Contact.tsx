@@ -6,32 +6,33 @@ import Footer from '@/components/Layout/Footer';
 import { useToast } from '@/hooks/use-toast';
 import content from '@/data/content.json';
 import { submitToGoogleForm } from '@/services/formService';
-
 interface ContactLocationState {
   reason?: string;
   messageType?: 'orderSculpture' | 'inquireAboutPiece' | 'inquireAboutSimilar';
   itemTitle?: string;
 }
-
 const Contact = () => {
-  const { toast } = useToast();
+  const {
+    toast
+  } = useToast();
   const location = useLocation();
   const locationState = location.state as ContactLocationState | null;
-  
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     reason: '',
     message: ''
   });
-
   useEffect(() => {
     window.scrollTo(0, 0);
-    
+
     // Pre-fill form based on navigation state from GalleryDetail
     if (locationState) {
-      const { reason, messageType, itemTitle } = locationState;
-      
+      const {
+        reason,
+        messageType,
+        itemTitle
+      } = locationState;
       let defaultMessage = '';
       if (messageType && itemTitle) {
         const defaultMessages = (content.contact.form as any).defaultMessages;
@@ -39,7 +40,6 @@ const Contact = () => {
           defaultMessage = defaultMessages[messageType].replace('{{title}}', itemTitle);
         }
       }
-      
       setFormData(prev => ({
         ...prev,
         reason: reason || '',
@@ -47,34 +47,31 @@ const Contact = () => {
       }));
     }
   }, [locationState]);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validate required fields
     if (!formData.name || !formData.email || !formData.reason || !formData.message) {
       toast({
         title: "Error",
         description: "Please fill in all required fields.",
-        variant: "destructive",
+        variant: "destructive"
       });
       return;
     }
-
     try {
       // Show loading state
       toast({
         title: "Sending...",
         description: "Please wait while we process your message."
       });
-
       await submitToGoogleForm(formData);
-      
+
       // Show success message
       toast({
         title: "Success!",
         description: content.contact.form.success,
-        variant: "success",
+        variant: "success"
       });
 
       // Reset form
@@ -89,20 +86,17 @@ const Contact = () => {
       toast({
         title: "Error",
         description: content.contact.form.error,
-        variant: "destructive",
+        variant: "destructive"
       });
     }
   };
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData(prev => ({
       ...prev,
       [e.target.name]: e.target.value
     }));
   };
-
-  return (
-    <div className="min-h-screen">
+  return <div className="min-h-screen">
       <Header />
       
       {/* Hero Section */}
@@ -139,49 +133,25 @@ const Contact = () => {
                     <label htmlFor="name" className="block text-sm font-medium text-luxury-charcoal mb-2">
                       {content.contact.form.name} *
                     </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      required
-                      value={formData.name}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 border border-luxury-charcoal/20 focus:border-luxury-gold focus:ring-2 focus:ring-luxury-gold/20 outline-none transition-all duration-300"
-                    />
+                    <input type="text" id="name" name="name" required value={formData.name} onChange={handleChange} className="w-full px-4 py-3 border border-luxury-charcoal/20 focus:border-luxury-gold focus:ring-2 focus:ring-luxury-gold/20 outline-none transition-all duration-300" />
                   </div>
 
                   <div>
                     <label htmlFor="email" className="block text-sm font-medium text-luxury-charcoal mb-2">
                       {content.contact.form.email} *
                     </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      required
-                      value={formData.email}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 border border-luxury-charcoal/20 focus:border-luxury-gold focus:ring-2 focus:ring-luxury-gold/20 outline-none transition-all duration-300"
-                    />
+                    <input type="email" id="email" name="email" required value={formData.email} onChange={handleChange} className="w-full px-4 py-3 border border-luxury-charcoal/20 focus:border-luxury-gold focus:ring-2 focus:ring-luxury-gold/20 outline-none transition-all duration-300" />
                   </div>
 
                   <div>
                     <label htmlFor="reason" className="block text-sm font-medium text-luxury-charcoal mb-2">
                       {content.contact.form.reason.label}
                     </label>
-                    <select
-                      id="reason"
-                      name="reason"
-                      value={formData.reason}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 border border-luxury-charcoal/20 focus:border-luxury-gold focus:ring-2 focus:ring-luxury-gold/20 outline-none transition-all duration-300"
-                    >
+                    <select id="reason" name="reason" value={formData.reason} onChange={handleChange} className="w-full px-4 py-3 border border-luxury-charcoal/20 focus:border-luxury-gold focus:ring-2 focus:ring-luxury-gold/20 outline-none transition-all duration-300">
                       <option value="">Select a reason...</option>
-                      {content.contact.form.reason.options.map((option) => (
-                        <option key={option} value={option}>
+                      {content.contact.form.reason.options.map(option => <option key={option} value={option}>
                           {option}
-                        </option>
-                      ))}
+                        </option>)}
                     </select>
                   </div>
 
@@ -189,21 +159,10 @@ const Contact = () => {
                     <label htmlFor="message" className="block text-sm font-medium text-luxury-charcoal mb-2">
                       {content.contact.form.message} *
                     </label>
-                    <textarea
-                      id="message"
-                      name="message"
-                      required
-                      rows={6}
-                      value={formData.message}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 border border-luxury-charcoal/20 focus:border-luxury-gold focus:ring-2 focus:ring-luxury-gold/20 outline-none transition-all duration-300 resize-none"
-                    ></textarea>
+                    <textarea id="message" name="message" required rows={6} value={formData.message} onChange={handleChange} className="w-full px-4 py-3 border border-luxury-charcoal/20 focus:border-luxury-gold focus:ring-2 focus:ring-luxury-gold/20 outline-none transition-all duration-300 resize-none"></textarea>
                   </div>
 
-                  <button 
-                    type="submit"
-                    className="btn-primary w-full"
-                  >
+                  <button type="submit" className="btn-primary w-full">
                     {content.contact.form.submit}
                   </button>
                 </form>
@@ -221,10 +180,7 @@ const Contact = () => {
                       <Mail className="w-6 h-6 text-luxury-gold mt-1" />
                       <div>
                         <p className="font-medium text-luxury-charcoal">Email</p>
-                        <a 
-                          href={`mailto:${content.contact.info.email}`}
-                          className="text-luxury-charcoal/80 hover:text-luxury-gold transition-colors duration-300"
-                        >
+                        <a href={`mailto:${content.contact.info.email}`} className="text-luxury-charcoal/80 hover:text-luxury-gold transition-colors duration-300">
                           {content.contact.info.email}
                         </a>
                       </div>
@@ -234,10 +190,7 @@ const Contact = () => {
                       <Phone className="w-6 h-6 text-luxury-gold mt-1" />
                       <div>
                         <p className="font-medium text-luxury-charcoal">Phone</p>
-                        <a 
-                          href={`tel:${content.contact.info.phone}`}
-                          className="text-luxury-charcoal/80 hover:text-luxury-gold transition-colors duration-300"
-                        >
+                        <a href={`tel:${content.contact.info.phone}`} className="text-luxury-charcoal/80 hover:text-luxury-gold transition-colors duration-300">
                           {content.contact.info.phone}
                         </a>
                       </div>
@@ -270,7 +223,7 @@ const Contact = () => {
                   <h3 className="heading-md text-luxury-gold mb-4">
                     Exclusive Experience
                   </h3>
-                  <p className="body-md mb-6">
+                  <p className="body-md mb-6 text-primary-foreground">
                     Our curated collection is available for viewing by appointment only. 
                     We provide a personalized experience tailored to your interests and collecting goals.
                   </p>
@@ -288,8 +241,6 @@ const Contact = () => {
       </section>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Contact;
