@@ -24,51 +24,51 @@ const Header = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-out ${
         isScrolled
-          ? 'bg-white/95 backdrop-blur-md shadow-lg'
-          : 'bg-luxury-charcoal/80 backdrop-blur-sm'
+          ? 'bg-white/98 backdrop-blur-xl shadow-[0_1px_0_0_rgba(0,0,0,0.04),0_4px_20px_-4px_rgba(0,0,0,0.08)]'
+          : 'bg-[hsl(var(--luxury-charcoal)/0.85)] backdrop-blur-md'
       }`}
     >
-      <nav className="container mx-auto px-4 sm:px-6 py-3 sm:py-4">
+      <nav className="container mx-auto px-4 sm:px-6 py-4 sm:py-5">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link
             to="/"
-            className="flex items-center space-x-2 sm:space-x-3 group"
+            className="flex items-center space-x-2.5 sm:space-x-3 group"
             aria-label="Aurelia Tradisia Home"
           >
             <img
               src={logo}
               alt="Aurelia Tradisia Logo"
-              className="h-10 sm:h-12 w-auto transform group-hover:scale-105 transition-transform duration-300"
+              className="h-10 sm:h-11 w-auto transform group-hover:scale-[1.03] transition-transform duration-500 ease-out"
             />
-            <span className={`text-lg sm:text-xl md:text-2xl font-serif font-medium transition-colors ${
-              isScrolled ? 'text-luxury-charcoal' : 'text-luxury-cream'
+            <span className={`text-lg sm:text-xl md:text-[22px] font-serif font-medium transition-colors duration-300 ${
+              isScrolled ? 'text-luxury-charcoal' : 'text-[hsl(var(--luxury-cream))]'
             }`}>
               {content.site.title}
             </span>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-6 lg:space-x-8">
+          <div className="hidden md:flex items-center space-x-1 lg:space-x-2">
             {content.navigation.map((item) => {
               const isActive = location.pathname === item.path || (item.path !== '/' && location.pathname.startsWith(item.path));
               return (
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`relative py-2 px-3 lg:px-4 font-medium tracking-wide uppercase text-xs lg:text-sm transition-colors duration-300 ${
+                  className={`relative py-2.5 px-4 lg:px-5 font-medium tracking-[0.12em] uppercase text-[11px] transition-all duration-300 ${
                     isActive
                       ? 'text-luxury-gold'
                       : isScrolled
-                        ? 'text-luxury-charcoal hover:text-luxury-gold'
-                        : 'text-luxury-cream hover:text-luxury-gold'
+                        ? 'text-[hsl(var(--luxury-charcoal)/0.7)] hover:text-luxury-gold'
+                        : 'text-[hsl(var(--luxury-cream)/0.85)] hover:text-luxury-gold'
                   }`}
                 >
                   {item.label}
                   {isActive && (
-                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-luxury-gold"></span>
+                    <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-[2px] bg-luxury-gold rounded-full"></span>
                   )}
                 </Link>
               );

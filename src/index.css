@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /* Aurelia Tradisia Luxury Design System
-   All colors in HSL format for luxury Indian sculpture gallery
+   Premium gallery-grade aesthetic with refined spacing and hierarchy
 */
 
 @layer base {
@@ -11,27 +11,34 @@
     --background: 0 0% 100%;
     --foreground: 0 0% 8%;
     
-    /* Luxury Brand Colors */
+    /* Luxury Brand Colors - Refined */
     --luxury-gold: 43 74% 40%;
     --luxury-gold-light: 43 74% 50%;
-    --luxury-charcoal: 0 0% 15%;
-    --luxury-charcoal-light: 0 0% 25%;
-    --luxury-cream: 45 25% 97%;
+    --luxury-charcoal: 0 0% 12%;
+    --luxury-charcoal-light: 0 0% 22%;
+    --luxury-cream: 45 30% 97%;
+    --luxury-cream-deep: 42 25% 94%;
     --luxury-bronze: 30 50% 35%;
+    --luxury-warm-white: 40 20% 99%;
     
-    /* Gradients */
+    /* Gradients - Subtle and Elegant */
     --gradient-gold: linear-gradient(135deg, hsl(var(--luxury-gold)), hsl(var(--luxury-bronze)));
-    --gradient-hero: linear-gradient(180deg, hsl(0 0% 8% / 0.7), hsl(0 0% 8% / 0.9));
-    --gradient-overlay: linear-gradient(180deg, transparent, hsl(0 0% 0% / 0.8));
+    --gradient-hero: linear-gradient(180deg, hsl(0 0% 8% / 0.6), hsl(0 0% 8% / 0.85));
+    --gradient-overlay: linear-gradient(180deg, transparent, hsl(0 0% 0% / 0.75));
+    --gradient-card: linear-gradient(180deg, hsl(var(--luxury-cream)), hsl(var(--luxury-warm-white)));
     
-    /* Shadows */
-    --shadow-luxury: 0 25px 50px -12px hsl(0 0% 0% / 0.15);
-    --shadow-gold-glow: 0 0 30px hsl(var(--luxury-gold) / 0.3);
-    --shadow-card: 0 4px 20px hsl(0 0% 0% / 0.08);
+    /* Premium Shadows - Refined Depth */
+    --shadow-luxury: 0 25px 60px -15px hsl(0 0% 0% / 0.12);
+    --shadow-gold-glow: 0 0 40px hsl(var(--luxury-gold) / 0.2);
+    --shadow-card: 0 4px 24px hsl(0 0% 0% / 0.06);
+    --shadow-card-hover: 0 20px 40px -12px hsl(0 0% 0% / 0.15);
+    --shadow-subtle: 0 2px 12px hsl(0 0% 0% / 0.04);
+    --shadow-elevated: 0 12px 32px -8px hsl(0 0% 0% / 0.1);
     
-    /* Animations */
-    --transition-luxury: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Transitions - Smooth and Premium */
+    --transition-luxury: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    --transition-smooth: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    --transition-fast: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
 
     --card: 0 0% 100%;
     --card-foreground: 0 0% 8%;
@@ -45,35 +52,28 @@
     --secondary: var(--luxury-cream);
     --secondary-foreground: var(--luxury-charcoal);
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 40 15% 96%;
+    --muted-foreground: 0 0% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 40 15% 96%;
+    --accent-foreground: 0 0% 12%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 40 10% 90%;
+    --input: 40 10% 90%;
+    --ring: 43 74% 40%;
 
-    --radius: 0.5rem;
+    --radius: 0.25rem;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
@@ -124,71 +124,92 @@
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    letter-spacing: -0.01em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Playfair Display', Georgia, serif;
     font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  /* Refined selection colors */
+  ::selection {
+    background: hsl(var(--luxury-gold) / 0.2);
+    color: hsl(var(--luxury-charcoal));
   }
 }
 
 @layer components {
-  /* Luxury Typography - Improved Mobile Responsiveness */
+  /* Luxury Typography - Premium Hierarchy */
   .heading-xl {
-    @apply text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold leading-tight tracking-tight;
-    font-family: 'Playfair Display', serif;
+    @apply text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-semibold leading-[1.1] tracking-tight;
+    font-family: 'Playfair Display', Georgia, serif;
   }
   
   .heading-lg {
-    @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold leading-tight;
-    font-family: 'Playfair Display', serif;
+    @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold leading-[1.15];
+    font-family: 'Playfair Display', Georgia, serif;
   }
   
   .heading-md {
     @apply text-xl sm:text-2xl md:text-3xl font-medium leading-snug;
-    font-family: 'Playfair Display', serif;
+    font-family: 'Playfair Display', Georgia, serif;
   }
   
   .body-lg {
-    @apply text-base sm:text-lg md:text-xl leading-relaxed font-light;
+    @apply text-base sm:text-lg md:text-xl leading-relaxed font-light tracking-wide;
+    color: hsl(var(--luxury-charcoal) / 0.75);
   }
   
   .body-md {
     @apply text-sm sm:text-base md:text-lg leading-relaxed;
+    color: hsl(var(--luxury-charcoal) / 0.7);
   }
   
-  /* Luxury Components */
+  /* Premium Buttons */
   .btn-primary {
     @apply px-8 py-4 bg-gradient-to-r from-[hsl(var(--luxury-gold))] to-[hsl(var(--luxury-bronze))] 
-           text-white font-medium tracking-wide uppercase text-sm
-           shadow-lg hover:shadow-xl transform hover:-translate-y-0.5
-           transition-all duration-300 ease-in-out;
+           text-white font-medium tracking-widest uppercase text-xs
+           shadow-[0_4px_20px_-4px_hsl(var(--luxury-gold)/0.4)] 
+           hover:shadow-[0_8px_30px_-4px_hsl(var(--luxury-gold)/0.5)] 
+           transform hover:-translate-y-0.5 active:translate-y-0
+           transition-all duration-300 ease-out;
   }
   
   .btn-secondary {
-    @apply px-8 py-4 border-2 border-[hsl(var(--luxury-gold))] 
-           text-[hsl(var(--luxury-gold))] font-medium tracking-wide uppercase text-sm
+    @apply px-8 py-4 border border-[hsl(var(--luxury-gold))] 
+           text-[hsl(var(--luxury-gold))] font-medium tracking-widest uppercase text-xs
            hover:bg-[hsl(var(--luxury-gold))] hover:text-white
-           transition-all duration-300 ease-in-out;
+           transition-all duration-300 ease-out;
   }
   
+  /* Premium Card */
   .luxury-card {
-    @apply bg-white rounded-none shadow-[var(--shadow-card)] 
-           hover:shadow-[var(--shadow-luxury)] transition-all duration-500;
+    @apply bg-white shadow-[var(--shadow-card)] 
+           hover:shadow-[var(--shadow-card-hover)] 
+           transition-all duration-500 ease-out;
   }
   
   .parallax-section {
     @apply bg-fixed bg-center bg-cover bg-no-repeat;
   }
   
+  /* Premium Divider */
+  .luxury-divider {
+    @apply w-16 h-px bg-gradient-to-r from-transparent via-[hsl(var(--luxury-gold)/0.5)] to-transparent mx-auto;
+  }
+  
   /* Animations */
   .fade-in {
-    animation: fadeIn 1s ease-out forwards;
+    animation: fadeIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
   
   .slide-up {
-    animation: slideUp 0.8s ease-out forwards;
+    animation: slideUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
   
   .stagger-fade:nth-child(1) { animation-delay: 0.1s; }
@@ -200,7 +221,7 @@
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -211,7 +232,7 @@
 @keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(50px);
+    transform: translateY(30px);
   }
   to {
     opacity: 1;
