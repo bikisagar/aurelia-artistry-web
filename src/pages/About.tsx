@@ -7,14 +7,11 @@ import founderPhoto from '@/assets/founder-photo.jpg';
 import workshopPhoto from '@/assets/workshop-photo.jpg';
 import curatedCollection from '@/assets/curated-collection.jpg';
 import authenticationProcess from '@/assets/authentication-process.jpg';
-
 const About = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
-  return (
-    <div className="min-h-screen">
+  return <div className="min-h-screen">
       <Header />
       
       {/* Hero Section */}
@@ -37,11 +34,7 @@ const About = () => {
               {/* Founder Image */}
               <div className="w-full max-w-sm lg:w-2/5 fade-in">
                 <div className="overflow-hidden rounded-none shadow-[var(--shadow-luxury)] flex items-center justify-center bg-luxury-cream">
-                  <img 
-                    src={founderPhoto}
-                    alt={content.about.founder.alt}
-                    className="w-full h-auto object-contain"
-                  />
+                  <img src={founderPhoto} alt={content.about.founder.alt} className="w-full h-auto object-contain" />
                 </div>
               </div>
 
@@ -76,14 +69,9 @@ const About = () => {
             </div>
 
             <div className="space-y-12">
-              {content.about.mission.map((item, index) => (
-                <div 
-                  key={item.title}
-                  className={`flex flex-col lg:flex-row items-center gap-8 lg:gap-12 ${
-                    index % 2 === 1 ? 'lg:flex-row-reverse' : ''
-                  } stagger-fade`}
-                  style={{ animationDelay: `${index * 0.2}s` }}
-                >
+              {content.about.mission.map((item, index) => <div key={item.title} className={`flex flex-col lg:flex-row items-center gap-8 lg:gap-12 ${index % 2 === 1 ? 'lg:flex-row-reverse' : ''} stagger-fade`} style={{
+              animationDelay: `${index * 0.2}s`
+            }}>
                   {/* Content */}
                   <div className="flex-1 lg:w-3/5">
                     <div className="text-center lg:text-left">
@@ -99,18 +87,10 @@ const About = () => {
                   {/* Image */}
                   <div className="w-full max-w-md lg:w-2/5">
                     <div className="overflow-hidden rounded-none shadow-[var(--shadow-luxury)] flex items-center justify-center bg-luxury-cream">
-                      <img 
-                        src={index === 0 ? workshopPhoto : 
-                             index === 1 ? curatedCollection :
-                             index === 2 ? authenticationProcess : 
-                             workshopPhoto}
-                        alt={item.alt}
-                        className="w-full h-auto object-contain"
-                      />
+                      <img src={index === 0 ? workshopPhoto : index === 1 ? curatedCollection : index === 2 ? authenticationProcess : workshopPhoto} alt={item.alt} className="w-full h-auto object-contain" />
                     </div>
                   </div>
-                </div>
-              ))}
+                </div>)}
             </div>
           </div>
         </div>
@@ -122,7 +102,7 @@ const About = () => {
           <h2 className="heading-lg text-luxury-gold mb-4">
             Experience Our Legacy
           </h2>
-          <p className="body-lg mb-6 max-w-2xl mx-auto">
+          <p className="body-lg mb-6 max-w-2xl mx-auto text-primary font-serif text-xl">
             Discover how our passion for Indian sculptural art can enhance your collection.
           </p>
           <Link to="/contact" className="btn-primary inline-block">
@@ -132,8 +112,6 @@ const About = () => {
       </section>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default About;
