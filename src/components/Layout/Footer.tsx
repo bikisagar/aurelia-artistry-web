@@ -3,15 +3,15 @@ import content from '@/data/content.json';
 
 const Footer = () => {
   return (
-    <footer className="bg-luxury-charcoal text-luxury-cream">
-      <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
+    <footer className="bg-[hsl(var(--luxury-charcoal))] text-[hsl(var(--luxury-cream))]">
+      <div className="container mx-auto px-4 sm:px-6 py-12 sm:py-16 lg:py-20">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-16">
           {/* Brand Info */}
-          <div className="space-y-4 text-center sm:text-left">
-            <h3 className="text-xl sm:text-2xl font-serif font-medium text-luxury-gold">
+          <div className="space-y-5 text-center sm:text-left">
+            <h3 className="text-xl sm:text-2xl font-serif font-medium text-luxury-gold tracking-tight">
               {content.site.title}
             </h3>
-            <p className="text-sm sm:text-base text-luxury-cream/80 leading-relaxed">
+            <p className="text-sm sm:text-[15px] text-[hsl(var(--luxury-cream)/0.7)] leading-relaxed max-w-xs">
               {content.footer.tagline}
             </p>
           </div>
@@ -55,17 +55,17 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t border-luxury-gold/20 mt-8 pt-8">
+        <div className="border-t border-[hsl(var(--luxury-gold)/0.15)] mt-12 pt-8">
           <div className="flex flex-col items-center space-y-4 sm:flex-row sm:justify-between sm:space-y-0">
-            <p className="text-xs sm:text-sm text-luxury-cream/60 text-center">
+            <p className="text-xs sm:text-[13px] text-[hsl(var(--luxury-cream)/0.5)] text-center tracking-wide">
               {content.footer.copyright}
             </p>
-            <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
+            <div className="flex flex-wrap justify-center gap-5 sm:gap-8">
               {content.footer.legal.map((link) => (
                 <a
                   key={link.label}
                   href={link.url}
-                  className="text-xs sm:text-sm text-luxury-cream/60 hover:text-luxury-gold transition-colors duration-300 min-h-[44px] flex items-center sm:min-h-0"
+                  className="text-xs sm:text-[13px] text-[hsl(var(--luxury-cream)/0.5)] hover:text-luxury-gold transition-colors duration-300 min-h-[44px] flex items-center sm:min-h-0 tracking-wide"
                 >
                   {link.label}
                 </a>
