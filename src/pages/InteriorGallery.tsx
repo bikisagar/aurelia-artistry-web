@@ -10,72 +10,74 @@ import { Button } from '@/components/ui/button';
 import { Filter, Loader2 } from 'lucide-react';
 import { useDesignAssets } from '@/hooks/useDesignAssets';
 import content from '@/data/content.json';
-
 const ITEMS_PER_PAGE = 12;
-
 const InteriorGallery = () => {
-    const [searchQuery, setSearchQuery] = useState('');
-    const [filters, setFilters] = useState<FilterState>({
-        designContext: [],
-        sculpturalForm: [],
-        interiorArea: [],
-        placementType: []
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filters, setFilters] = useState<FilterState>({
+    designContext: [],
+    sculpturalForm: [],
+    interiorArea: [],
+    placementType: []
+  });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+
+  // Get design page content from content.json
+  const designContent = (content as any).design;
+
+  // Use Supabase data hook - single source of truth
+  const {
+    items,
+    filterOptions,
+    isLoading,
+    error,
+    search
+  } = useDesignAssets();
+
+  // Scroll to top on page change
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
     });
-    const [currentPage, setCurrentPage] = useState(1);
-    const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+  }, [currentPage]);
 
-    // Get design page content from content.json
-    const designContent = (content as any).design;
+  // Reset page when filters/search change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, filters]);
 
-    // Use Supabase data hook - single source of truth
-    const { items, filterOptions, isLoading, error, search } = useDesignAssets();
+  // Trigger search when query or filters change
+  useEffect(() => {
+    search(searchQuery, filters);
+  }, [searchQuery, filters, search]);
 
-    // Scroll to top on page change
-    useEffect(() => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, [currentPage]);
+  // Pagination Logic
+  const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE);
+  const currentItems = items.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+  const handleFilterChange = (category: keyof FilterState, value: string) => {
+    setFilters(prev => {
+      const current = prev[category];
+      const updated = current.includes(value) ? current.filter(item => item !== value) : [...current, value];
+      return {
+        ...prev,
+        [category]: updated
+      };
+    });
+  };
+  const clearFilters = () => {
+    setFilters({
+      designContext: [],
+      sculpturalForm: [],
+      interiorArea: [],
+      placementType: []
+    });
+    setSearchQuery('');
+  };
 
-    // Reset page when filters/search change
-    useEffect(() => {
-        setCurrentPage(1);
-    }, [searchQuery, filters]);
-
-    // Trigger search when query or filters change
-    useEffect(() => {
-        search(searchQuery, filters);
-    }, [searchQuery, filters, search]);
-
-    // Pagination Logic
-    const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE);
-    const currentItems = items.slice(
-        (currentPage - 1) * ITEMS_PER_PAGE,
-        currentPage * ITEMS_PER_PAGE
-    );
-
-    const handleFilterChange = (category: keyof FilterState, value: string) => {
-        setFilters(prev => {
-            const current = prev[category];
-            const updated = current.includes(value)
-                ? current.filter(item => item !== value)
-                : [...current, value];
-            return { ...prev, [category]: updated };
-        });
-    };
-
-    const clearFilters = () => {
-        setFilters({ designContext: [], sculpturalForm: [], interiorArea: [], placementType: [] });
-        setSearchQuery('');
-    };
-
-    // Check if any filters are active
-    const hasActiveFilters = searchQuery || 
-        filters.designContext.length > 0 || 
-        filters.sculpturalForm.length > 0 || 
-        filters.interiorArea.length > 0 ||
-        filters.placementType.length > 0;
-
-    return (
-        <div className="min-h-screen bg-background font-sans text-foreground">
+  // Check if any filters are active
+  const hasActiveFilters = searchQuery || filters.designContext.length > 0 || filters.sculpturalForm.length > 0 || filters.interiorArea.length > 0 || filters.placementType.length > 0;
+  return <div className="min-h-screen bg-background font-sans text-foreground">
             <Header />
 
             <main className="container mx-auto px-6 pt-32 pb-16">
@@ -90,17 +92,20 @@ const InteriorGallery = () => {
                 </div>
 
                 {/* Error State */}
-                {error && (
-                    <div className="text-center py-12 mb-8 bg-destructive/10 rounded-sm border border-destructive/20">
+                {error && <div className="text-center py-12 mb-8 bg-destructive/10 rounded-sm border border-destructive/20">
                         <p className="text-destructive">{error}</p>
-                        <Button onClick={() => search('', { designContext: [], sculpturalForm: [], interiorArea: [], placementType: [] })} variant="outline" className="mt-4">
+                        <Button onClick={() => search('', {
+          designContext: [],
+          sculpturalForm: [],
+          interiorArea: [],
+          placementType: []
+        })} variant="outline" className="mt-4">
                             Try Again
                         </Button>
-                    </div>
-                )}
+                    </div>}
 
                 {/* Controls Bar */}
-                <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8 sticky top-20 z-30 bg-background/95 backdrop-blur py-4 border-b border-border/40">
+                <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8 bg-background/95 backdrop-blur py-4 border-b border-border/40\n">
                     <div className="flex items-center gap-4 w-full md:w-auto">
                         {/* Mobile Filter Trigger */}
                         <Sheet open={isMobileFilterOpen} onOpenChange={setIsMobileFilterOpen}>
@@ -113,31 +118,21 @@ const InteriorGallery = () => {
                             <SheetContent side="left" className="w-[300px] sm:w-[400px] overflow-y-auto">
                                 <div className="py-6">
                                     <h2 className="heading-md mb-6">{designContent?.filters?.title || 'Filters'}</h2>
-                                    <FilterPanel
-                                        filters={filters}
-                                        onFilterChange={handleFilterChange}
-                                        onClearFilters={clearFilters}
-                                        filterOptions={{
-                                            designContext: filterOptions.designContexts,
-                                            sculpturalForm: filterOptions.sculpturalForms,
-                                            interiorArea: filterOptions.interiorAreas,
-                                            placementType: filterOptions.placementTypes
-                                        }}
-                                        labels={designContent?.filters?.categories}
-                                    />
+                                    <FilterPanel filters={filters} onFilterChange={handleFilterChange} onClearFilters={clearFilters} filterOptions={{
+                  designContext: filterOptions.designContexts,
+                  sculpturalForm: filterOptions.sculpturalForms,
+                  interiorArea: filterOptions.interiorAreas,
+                  placementType: filterOptions.placementTypes
+                }} labels={designContent?.filters?.categories} />
                                 </div>
                         </SheetContent>
                         </Sheet>
 
                         <div className="hidden lg:block text-sm text-muted-foreground">
-                            {isLoading ? (
-                                <span className="flex items-center gap-2">
+                            {isLoading ? <span className="flex items-center gap-2">
                                     <Loader2 className="h-4 w-4 animate-spin" />
                                     {designContent?.loading || 'Loading...'}
-                                </span>
-                            ) : (
-                                (designContent?.showingResults || 'Showing {{count}} results').replace('{{count}}', items.length.toString())
-                            )}
+                                </span> : (designContent?.showingResults || 'Showing {{count}} results').replace('{{count}}', items.length.toString())}
                         </div>
                     </div>
 
@@ -147,108 +142,78 @@ const InteriorGallery = () => {
                 <div className="flex gap-12 items-start">
                     {/* Desktop Sidebar */}
                     <aside className="hidden lg:block w-64 sticky top-40">
-                        <FilterPanel
-                            filters={filters}
-                            onFilterChange={handleFilterChange}
-                            onClearFilters={clearFilters}
-                            filterOptions={{
-                                designContext: filterOptions.designContexts,
-                                sculpturalForm: filterOptions.sculpturalForms,
-                                interiorArea: filterOptions.interiorAreas,
-                                placementType: filterOptions.placementTypes
-                            }}
-                            labels={designContent?.filters?.categories}
-                        />
+                        <FilterPanel filters={filters} onFilterChange={handleFilterChange} onClearFilters={clearFilters} filterOptions={{
+            designContext: filterOptions.designContexts,
+            sculpturalForm: filterOptions.sculpturalForms,
+            interiorArea: filterOptions.interiorAreas,
+            placementType: filterOptions.placementTypes
+          }} labels={designContent?.filters?.categories} />
                     </aside>
 
                     {/* Gallery Grid */}
                     <div className="flex-1 w-full">
-                        {isLoading ? (
-                            <div className="flex items-center justify-center py-24">
+                        {isLoading ? <div className="flex items-center justify-center py-24">
                                 <Loader2 className="h-8 w-8 animate-spin text-luxury-gold" />
-                            </div>
-                        ) : currentItems.length > 0 ? (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {currentItems.map(item => (
-                                    <GalleryItem 
-                                        key={item.id} 
-                                        item={{
-                                            id: item.id,
-                                            title: item.title,
-                                            designContext: item.designContext,
-                                            sculpturalForm: item.sculpturalForm,
-                                            interiorArea: item.interiorArea,
-                                            placementType: item.placementType,
-                                            imageUrl: item.imageUrl,
-                                            imageAlt: item.imageAlt,
-                                            price: item.price
-                                        }} 
-                                        useSupabaseUrl={true} 
-                                    />
-                                ))}
-                            </div>
-                        ) : (
-                            <div className="text-center py-24 bg-luxury-cream/20 rounded-sm">
+                            </div> : currentItems.length > 0 ? <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {currentItems.map(item => <GalleryItem key={item.id} item={{
+              id: item.id,
+              title: item.title,
+              designContext: item.designContext,
+              sculpturalForm: item.sculpturalForm,
+              interiorArea: item.interiorArea,
+              placementType: item.placementType,
+              imageUrl: item.imageUrl,
+              imageAlt: item.imageAlt,
+              price: item.price
+            }} useSupabaseUrl={true} />)}
+                            </div> : <div className="text-center py-24 bg-luxury-cream/20 rounded-sm">
                                 <h3 className="heading-md text-luxury-charcoal mb-2">
                                     {designContent?.emptyState?.title || 'No designs found'}
                                 </h3>
                                 <p className="text-muted-foreground mb-6">
-                                    {hasActiveFilters 
-                                        ? (designContent?.emptyState?.description || 'Try adjusting your search or filters.')
-                                        : (designContent?.emptyState?.noItemsDescription || 'No designs are currently available. Check back soon!')
-                                    }
+                                    {hasActiveFilters ? designContent?.emptyState?.description || 'Try adjusting your search or filters.' : designContent?.emptyState?.noItemsDescription || 'No designs are currently available. Check back soon!'}
                                 </p>
-                                {hasActiveFilters && (
-                                    <Button onClick={clearFilters} variant="outline">
+                                {hasActiveFilters && <Button onClick={clearFilters} variant="outline">
                                         {designContent?.emptyState?.clearButton || 'Clear all filters'}
-                                    </Button>
-                                )}
-                            </div>
-                        )}
+                                    </Button>}
+                            </div>}
 
                         {/* Pagination */}
-                        {totalPages > 1 && (
-                            <div className="mt-16">
+                        {totalPages > 1 && <div className="mt-16">
                                 <Pagination>
                                     <PaginationContent>
                                         <PaginationItem>
-                                            <PaginationPrevious
-                                                href="#"
-                                                onClick={(e) => { e.preventDefault(); if (currentPage > 1) setCurrentPage(p => p - 1); }}
-                                                className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
-                                            />
+                                            <PaginationPrevious href="#" onClick={e => {
+                    e.preventDefault();
+                    if (currentPage > 1) setCurrentPage(p => p - 1);
+                  }} className={currentPage === 1 ? "pointer-events-none opacity-50" : ""} />
                                         </PaginationItem>
 
-                                        {Array.from({ length: totalPages }).map((_, i) => (
-                                            <PaginationItem key={i}>
-                                                <PaginationLink
-                                                    href="#"
-                                                    isActive={currentPage === i + 1}
-                                                    onClick={(e) => { e.preventDefault(); setCurrentPage(i + 1); }}
-                                                >
+                                        {Array.from({
+                  length: totalPages
+                }).map((_, i) => <PaginationItem key={i}>
+                                                <PaginationLink href="#" isActive={currentPage === i + 1} onClick={e => {
+                    e.preventDefault();
+                    setCurrentPage(i + 1);
+                  }}>
                                                     {i + 1}
                                                 </PaginationLink>
-                                            </PaginationItem>
-                                        ))}
+                                            </PaginationItem>)}
 
                                         <PaginationItem>
-                                            <PaginationNext
-                                                href="#"
-                                                onClick={(e) => { e.preventDefault(); if (currentPage < totalPages) setCurrentPage(p => p + 1); }}
-                                                className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
-                                            />
+                                            <PaginationNext href="#" onClick={e => {
+                    e.preventDefault();
+                    if (currentPage < totalPages) setCurrentPage(p => p + 1);
+                  }} className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""} />
                                         </PaginationItem>
                                     </PaginationContent>
                                 </Pagination>
-                            </div>
-                        )}
+                            </div>}
                     </div>
                 </div>
             </main>
 
             <Footer />
-        </div>
-    );
+        </div>;
 };
-
 export default InteriorGallery;
