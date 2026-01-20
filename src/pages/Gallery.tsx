@@ -28,7 +28,7 @@ const Gallery = () => {
       </section>
 
       {/* Exclusive Notice */}
-      <section className="py-16 bg-luxury-cream">
+      <section className="btn-primary whitespace-nowrap w-full max-w-xs mx-auto md:w-auto md:max-w-none md:mx-0\n">
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto text-center">
             <div className="bg-white luxury-card p-12">
@@ -39,7 +39,7 @@ const Gallery = () => {
               <p className="body-lg text-luxury-charcoal/80 mb-8 leading-relaxed">
                 {content.gallery.notice.description}
               </p>
-              <Link to="/contact" className="btn-primary whitespace-nowrap mt-4 md:mt-0">
+              <Link to="/contact" className="btn-primary block whitespace-nowrap w-full max-w-xs mx-auto md:inline-flex md:w-auto md:max-w-none md:mx-0\n">
                 {content.gallery.notice.cta}
               </Link>
             </div>
