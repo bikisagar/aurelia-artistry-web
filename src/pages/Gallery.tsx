@@ -99,7 +99,7 @@ const Gallery = () => {
           <h2 className="heading-lg text-luxury-gold mb-6">
             Ready to Explore Our Collection?
           </h2>
-          <p className="body-lg mb-8 max-w-2xl mx-auto">
+          <p className="body-lg mb-8 max-w-2xl mx-auto text-primary-foreground">
             Each piece in our collection tells a story of India's rich artistic heritage. 
             Contact us to begin your journey into exceptional art.
           </p>
