@@ -39,7 +39,7 @@ const Gallery = () => {
               <p className="body-lg text-luxury-charcoal/80 mb-8 leading-relaxed">
                 {content.gallery.notice.description}
               </p>
-              <Link to="/contact" className="btn-primary whitespace-nowrap mt-4 md:mt-0">
+              <Link to="/contact" className="btn-primary whitespace-nowrap text-center inline-block w-full sm:w-auto">
                 {content.gallery.notice.cta}
               </Link>
             </div>
