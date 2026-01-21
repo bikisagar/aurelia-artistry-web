@@ -80,13 +80,18 @@ const GalleryDetail = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
-  // Lightbox state
+  // Lightbox state - Professional single-level zoom
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
-  const [zoomLevel, setZoomLevel] = useState(1);
+  const [isZoomed, setIsZoomed] = useState(false);
   const [panPosition, setPanPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const lightboxRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  // Fixed professional zoom level (2.5x provides excellent detail without pixelation)
+  const ZOOM_LEVEL = 2.5;
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -174,81 +179,104 @@ const GalleryDetail = () => {
     alert("Link copied to clipboard!");
   };
 
+  // Calculate constrained pan boundaries to prevent overscroll
+  const getConstrainedPosition = useCallback((newX: number, newY: number): { x: number; y: number } => {
+    if (!imageRef.current || !containerRef.current) return { x: newX, y: newY };
+    
+    const imgRect = imageRef.current.getBoundingClientRect();
+    const containerRect = containerRef.current.getBoundingClientRect();
+    
+    // Calculate the scaled image dimensions
+    const scaledWidth = (imgRect.width / ZOOM_LEVEL) * ZOOM_LEVEL;
+    const scaledHeight = (imgRect.height / ZOOM_LEVEL) * ZOOM_LEVEL;
+    
+    // Calculate maximum pan distances (image edge to container edge)
+    const maxPanX = Math.max(0, (scaledWidth - containerRect.width) / 2);
+    const maxPanY = Math.max(0, (scaledHeight - containerRect.height) / 2);
+    
+    // Constrain to boundaries - image stops at edges
+    return {
+      x: Math.max(-maxPanX, Math.min(maxPanX, newX)),
+      y: Math.max(-maxPanY, Math.min(maxPanY, newY))
+    };
+  }, []);
+
   // Lightbox handlers
   const openLightbox = () => {
     setIsLightboxOpen(true);
-    setZoomLevel(1);
+    setIsZoomed(false);
     setPanPosition({ x: 0, y: 0 });
   };
 
   const closeLightbox = () => {
     setIsLightboxOpen(false);
-    setZoomLevel(1);
+    setIsZoomed(false);
     setPanPosition({ x: 0, y: 0 });
   };
 
-  const handleZoomIn = () => {
-    setZoomLevel(prev => Math.min(prev + 0.5, 4));
-  };
+  // Toggle zoom with single click/tap
+  const toggleZoom = useCallback((e: React.MouseEvent | React.TouchEvent) => {
+    // Don't toggle if we just finished dragging
+    if (isDragging) return;
+    
+    if (isZoomed) {
+      // Zoom out - reset position smoothly
+      setIsZoomed(false);
+      setPanPosition({ x: 0, y: 0 });
+    } else {
+      // Zoom in - center on click point
+      setIsZoomed(true);
+      setPanPosition({ x: 0, y: 0 });
+    }
+  }, [isZoomed, isDragging]);
 
-  const handleZoomOut = () => {
-    setZoomLevel(prev => {
-      const newZoom = Math.max(prev - 0.5, 1);
-      if (newZoom === 1) {
-        setPanPosition({ x: 0, y: 0 });
-      }
-      return newZoom;
-    });
-  };
-
+  // Mouse drag handlers with strict boundary constraints
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    if (zoomLevel > 1) {
+    if (isZoomed) {
+      e.preventDefault();
       setIsDragging(true);
       setDragStart({ x: e.clientX - panPosition.x, y: e.clientY - panPosition.y });
     }
-  }, [zoomLevel, panPosition]);
+  }, [isZoomed, panPosition]);
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    if (isDragging && zoomLevel > 1) {
+    if (isDragging && isZoomed) {
+      e.preventDefault();
       const newX = e.clientX - dragStart.x;
       const newY = e.clientY - dragStart.y;
-      // Limit panning based on zoom level
-      const maxPan = (zoomLevel - 1) * 200;
-      setPanPosition({
-        x: Math.max(-maxPan, Math.min(maxPan, newX)),
-        y: Math.max(-maxPan, Math.min(maxPan, newY))
-      });
+      const constrained = getConstrainedPosition(newX, newY);
+      setPanPosition(constrained);
     }
-  }, [isDragging, dragStart, zoomLevel]);
+  }, [isDragging, dragStart, isZoomed, getConstrainedPosition]);
 
   const handleMouseUp = useCallback(() => {
-    setIsDragging(false);
+    // Small delay to prevent toggle on drag end
+    setTimeout(() => setIsDragging(false), 50);
   }, []);
 
+  // Touch handlers with strict boundary constraints
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    if (zoomLevel > 1 && e.touches.length === 1) {
+    if (isZoomed && e.touches.length === 1) {
       setIsDragging(true);
       setDragStart({ 
         x: e.touches[0].clientX - panPosition.x, 
         y: e.touches[0].clientY - panPosition.y 
       });
     }
-  }, [zoomLevel, panPosition]);
+  }, [isZoomed, panPosition]);
 
   const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    if (isDragging && zoomLevel > 1 && e.touches.length === 1) {
+    if (isDragging && isZoomed && e.touches.length === 1) {
+      e.preventDefault();
       const newX = e.touches[0].clientX - dragStart.x;
       const newY = e.touches[0].clientY - dragStart.y;
-      const maxPan = (zoomLevel - 1) * 200;
-      setPanPosition({
-        x: Math.max(-maxPan, Math.min(maxPan, newX)),
-        y: Math.max(-maxPan, Math.min(maxPan, newY))
-      });
+      const constrained = getConstrainedPosition(newX, newY);
+      setPanPosition(constrained);
     }
-  }, [isDragging, dragStart, zoomLevel]);
+  }, [isDragging, dragStart, isZoomed, getConstrainedPosition]);
 
   const handleTouchEnd = useCallback(() => {
-    setIsDragging(false);
+    setTimeout(() => setIsDragging(false), 50);
   }, []);
 
   if (isLoading) {
@@ -332,10 +360,10 @@ const GalleryDetail = () => {
               </div>
             </div>
 
-            {/* Fullscreen Lightbox - Mobile optimized */}
+            {/* Fullscreen Lightbox - Professional single-level zoom */}
             <Dialog open={isLightboxOpen} onOpenChange={setIsLightboxOpen}>
-              <DialogContent className="max-w-[100vw] max-h-[100dvh] w-screen h-[100dvh] p-0 border-0 bg-luxury-charcoal/95 backdrop-blur-md rounded-none">
-                {/* Close button - larger touch target on mobile */}
+              <DialogContent className="max-w-[100vw] max-h-[100dvh] w-screen h-[100dvh] p-0 border-0 bg-luxury-charcoal/98 backdrop-blur-lg rounded-none">
+                {/* Close button */}
                 <button
                   onClick={closeLightbox}
                   className="absolute top-4 right-4 sm:top-6 sm:right-6 z-50 p-2.5 sm:p-3 bg-white/10 hover:bg-white/20 active:bg-white/30 rounded-full transition-all duration-300 group touch-manipulation"
@@ -344,40 +372,45 @@ const GalleryDetail = () => {
                   <X className="h-5 w-5 sm:h-6 sm:w-6 text-white group-hover:scale-110 transition-transform" />
                 </button>
 
-                {/* Zoom controls - mobile positioned */}
-                <div className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 sm:gap-3 bg-white/10 backdrop-blur-sm rounded-full px-3 sm:px-4 py-1.5 sm:py-2">
+                {/* Zoom toggle button - simplified single control */}
+                <div className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
                   <button
-                    onClick={handleZoomOut}
-                    disabled={zoomLevel <= 1}
-                    className="p-1.5 sm:p-2 rounded-full hover:bg-white/20 active:bg-white/30 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-300 touch-manipulation"
-                    aria-label="Zoom out"
+                    onClick={() => {
+                      if (isZoomed) {
+                        setIsZoomed(false);
+                        setPanPosition({ x: 0, y: 0 });
+                      } else {
+                        setIsZoomed(true);
+                      }
+                    }}
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-white/20 active:bg-white/30 transition-all duration-300 touch-manipulation"
+                    aria-label={isZoomed ? "Zoom out" : "Zoom in"}
                   >
-                    <ZoomOut className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
-                  </button>
-                  <span className="text-white text-xs sm:text-sm font-medium min-w-[2.5rem] sm:min-w-[3rem] text-center">
-                    {Math.round(zoomLevel * 100)}%
-                  </span>
-                  <button
-                    onClick={handleZoomIn}
-                    disabled={zoomLevel >= 4}
-                    className="p-1.5 sm:p-2 rounded-full hover:bg-white/20 active:bg-white/30 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-300 touch-manipulation"
-                    aria-label="Zoom in"
-                  >
-                    <ZoomIn className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
+                    {isZoomed ? (
+                      <>
+                        <ZoomOut className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
+                        <span className="text-white text-xs sm:text-sm font-medium">{galleryDetailContent?.lightbox?.zoomOut || 'Zoom Out'}</span>
+                      </>
+                    ) : (
+                      <>
+                        <ZoomIn className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
+                        <span className="text-white text-xs sm:text-sm font-medium">{galleryDetailContent?.lightbox?.zoomIn || 'Zoom In'}</span>
+                      </>
+                    )}
                   </button>
                 </div>
 
-                {/* Pan hint - responsive */}
-                {zoomLevel > 1 && (
-                  <div className="absolute top-4 sm:top-8 left-1/2 -translate-x-1/2 z-50 text-white/60 text-[10px] sm:text-xs font-medium bg-white/10 backdrop-blur-sm rounded-full px-3 sm:px-4 py-1.5 sm:py-2">
+                {/* Pan hint when zoomed */}
+                {isZoomed && (
+                  <div className="absolute top-4 sm:top-8 left-1/2 -translate-x-1/2 z-50 text-white/70 text-[10px] sm:text-xs font-medium bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 animate-pulse">
                     {window.innerWidth < 640 ? (galleryDetailContent?.swipeToPan || 'Swipe to pan') : (galleryDetailContent?.dragToPan || 'Drag to pan')}
                   </div>
                 )}
 
-                {/* Zoomable image container - mobile touch optimized */}
+                {/* Image container with professional zoom interaction */}
                 <div
-                  ref={lightboxRef}
-                  className="w-full h-full flex items-center justify-center overflow-hidden touch-none"
+                  ref={containerRef}
+                  className="w-full h-full flex items-center justify-center overflow-hidden touch-none select-none"
                   onMouseDown={handleMouseDown}
                   onMouseMove={handleMouseMove}
                   onMouseUp={handleMouseUp}
@@ -385,14 +418,17 @@ const GalleryDetail = () => {
                   onTouchStart={handleTouchStart}
                   onTouchMove={handleTouchMove}
                   onTouchEnd={handleTouchEnd}
-                  style={{ cursor: zoomLevel > 1 ? (isDragging ? 'grabbing' : 'grab') : 'default' }}
+                  onClick={!isDragging ? toggleZoom : undefined}
+                  style={{ cursor: isZoomed ? (isDragging ? 'grabbing' : 'grab') : 'zoom-in' }}
                 >
                   <img
+                    ref={imageRef}
                     src={item.imageUrl}
                     alt={item.imageAlt}
-                    className="max-w-[95vw] sm:max-w-[90vw] max-h-[80dvh] sm:max-h-[85vh] object-contain select-none transition-transform duration-200"
+                    className="max-w-[95vw] sm:max-w-[90vw] max-h-[80dvh] sm:max-h-[85vh] object-contain select-none will-change-transform"
                     style={{
-                      transform: `scale(${zoomLevel}) translate(${panPosition.x / zoomLevel}px, ${panPosition.y / zoomLevel}px)`,
+                      transform: `scale(${isZoomed ? ZOOM_LEVEL : 1}) translate(${panPosition.x / (isZoomed ? ZOOM_LEVEL : 1)}px, ${panPosition.y / (isZoomed ? ZOOM_LEVEL : 1)}px)`,
+                      transition: isDragging ? 'none' : 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
                     }}
                     draggable={false}
                     onError={e => {
