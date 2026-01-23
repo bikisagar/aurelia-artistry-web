@@ -24,7 +24,11 @@ const Contact = () => {
     message: ''
   });
   useEffect(() => {
-    window.scrollTo(0, 0);
+    // Disable browser scroll restoration and scroll to top
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
 
     // Pre-fill form based on navigation state from GalleryDetail
     if (locationState) {
