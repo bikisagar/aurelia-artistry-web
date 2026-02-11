@@ -100,7 +100,7 @@ const InteriorGallery = () => {
           interiorArea: [],
           placementType: []
         })} variant="outline" className="mt-4">
-                            Try Again
+                            {designContent?.tryAgain || 'Try Again'}
                         </Button>
                     </div>}
 

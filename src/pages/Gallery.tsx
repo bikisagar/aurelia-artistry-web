@@ -76,14 +76,14 @@ const Gallery = () => {
                   {/* Exclusive Access Badge */}
                   <div className="absolute top-4 right-4 bg-luxury-gold text-white px-4 py-2 rounded-sm flex items-center space-x-2">
                     <Eye size={16} />
-                    <span className="text-sm font-medium">Private Access</span>
+                    <span className="text-sm font-medium">{content.gallery.badge}</span>
                   </div>
                   
                   {/* Hover Effect */}
                   <div className="absolute inset-0 bg-luxury-gold/0 group-hover:bg-luxury-gold/20 transition-all duration-500 flex items-center justify-center opacity-0 group-hover:opacity-100">
                     <div className="text-center text-white">
                       <Lock className="w-12 h-12 mx-auto mb-2" />
-                      <p className="font-medium">Contact for Access</p>
+                      <p className="font-medium">{content.gallery.hoverText}</p>
                     </div>
                   </div>
                 </div>
@@ -97,14 +97,13 @@ const Gallery = () => {
       <section className="py-16 bg-luxury-charcoal text-luxury-cream">
         <div className="container mx-auto px-6 text-center">
           <h2 className="heading-lg text-luxury-gold mb-6">
-            Ready to Explore Our Collection?
+            {content.gallery.cta.title}
           </h2>
           <p className="body-lg mb-8 max-w-2xl mx-auto text-primary-foreground">
-            Each piece in our collection tells a story of India's rich artistic heritage. 
-            Contact us to begin your journey into exceptional art.
+            {content.gallery.cta.description}
           </p>
           <Link to="/contact" className="btn-primary">
-            Schedule Private Viewing
+            {content.gallery.cta.button}
           </Link>
         </div>
       </section>

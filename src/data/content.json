@@ -27,7 +27,26 @@
       "title": "Where Art Meets Legacy",
       "content": "For over two decades, Aurelia Tradisia has been the premier destination for collectors seeking authentic Indian sculptures. Our curated collection spans ancient traditions to contemporary masters, each piece authenticated and sourced directly from renowned artisans.",
       "image": "@/assets/gallery-interior.jpg",
-      "alt": "Luxurious gallery interior showcasing curated Indian sculptures"
+      "alt": "Luxurious gallery interior showcasing curated Indian sculptures",
+      "cta": "Learn Our Story"
+    },
+    "features": {
+      "title": "Excellence in Every Detail",
+      "description": "Our commitment to authenticity, quality, and service sets us apart in the world of fine art curation.",
+      "items": [
+        {
+          "title": "Curated Excellence",
+          "description": "Each piece is carefully selected for its historical significance and artistic merit by our expert curators."
+        },
+        {
+          "title": "Authenticated Provenance",
+          "description": "Every sculpture comes with complete documentation and certification of its authenticity and origin."
+        },
+        {
+          "title": "Exclusive Access",
+          "description": "Private viewings and personalized consultations ensure a bespoke experience for every collector."
+        }
+      ]
     },
     "designDiscovery": {
       "title": "Design Discovery",
@@ -40,7 +59,8 @@
     "exclusivity": {
       "title": "Exclusive Access",
       "description": "Our collection is available by appointment only. We believe exceptional art deserves exceptional presentation, which is why we maintain an exclusive viewing experience for our discerning clientele.",
-      "note": "Contact us to arrange a private viewing of our current collection."
+      "note": "Contact us to arrange a private viewing of our current collection.",
+      "cta": "Schedule Private Viewing"
     }
   },
   "about": {
@@ -49,11 +69,15 @@
       "description": "Founded by Jyotirmoy Barman, Aurelia Tradisia was born from a simple observation: India's most talented artists often create exceptional sculptures but struggle to reach the recognition and compensation they deserve. Inspired to bridge this gap, we began curating high-quality sculptures — from Indian deities to modern art — to bring local masterpieces to a national and global audience."
     },
     "founder": {
+      "sectionTitle": "Meet Our Founder",
       "name": "Jyotirmoy Barman",
       "title": "Founder & Curator",
       "description": "Jyotirmoy Barman, founder of Aurelia Tradisia, has always been passionate about Indian art. Seeing the incredible craftsmanship of local artists often overlooked, he decided to create a platform that celebrates their talent and brings their work to discerning collectors worldwide.",
       "image": "@/assets/founder-photo.jpg",
       "alt": "Jyotirmoy Barman, founder of Aurelia Tradisia, in his curated gallery space"
+    },
+    "missionSection": {
+      "title": "Our Mission & Journey"
     },
     "mission": [
       {
@@ -74,7 +98,12 @@
         "image": "@/assets/authentication-process.jpg",
         "alt": "Expert examination and authentication of traditional Indian sculpture"
       }
-    ]
+    ],
+    "cta": {
+      "title": "Experience Our Legacy",
+      "description": "Discover how our passion for Indian sculptural art can enhance your collection.",
+      "button": "Contact Our Curators"
+    }
   },
   "gallery": {
     "title": "Private Collection",
@@ -109,12 +138,20 @@
         "placeholder": "/src/assets/contemporary-placeholder.jpg",
         "alt": "Contemporary Indian sculptures - contact for collection access"
       }
-    ]
+    ],
+    "badge": "Private Access",
+    "hoverText": "Contact for Access",
+    "cta": {
+      "title": "Ready to Explore Our Collection?",
+      "description": "Each piece in our collection tells a story of India's rich artistic heritage. Contact us to begin your journey into exceptional art.",
+      "button": "Schedule Private Viewing"
+    }
   },
   "contact": {
     "title": "Contact Us",
     "subtitle": "Begin Your Journey Into Exceptional Art",
     "description": "We invite you to discover our exclusive collection of Indian sculptures. Please contact us to arrange a private viewing or to discuss specific pieces that may interest you.",
+    "formSectionTitle": "Send us a Message",
     "form": {
       "submissionUrl": "https://script.google.com/macros/s/AKfycbw2U-7C8U6MjLezfkKa2PlFmB7YxNMpAeelhxOb8-pGMrUbxmXjh8dxWxn-PW-HMALohQ/exec",
       "name": "Full Name",
@@ -122,6 +159,7 @@
       "message": "Message",
       "reason": {
         "label": "Reason for Contact",
+        "placeholder": "Select a reason...",
         "options": [
           "Order Sculpture",
           "Inquiry About Specific Piece",
@@ -142,10 +180,25 @@
       "error": "We apologize, but there was an error sending your message. Please try again or contact us directly."
     },
     "info": {
+      "title": "Contact Information",
       "email": "connect@aureliatradisia.in",
+      "emailLabel": "Email",
       "phone": "+91 9678718311",
+      "phoneLabel": "Phone",
       "address": "Guwahat- 781020 , Assam , India",
-      "hours": "By Appointment Only"
+      "addressLabel": "Address",
+      "hours": "By Appointment Only",
+      "hoursLabel": "Hours"
+    },
+    "exclusiveCard": {
+      "title": "Exclusive Experience",
+      "description": "Our curated collection is available for viewing by appointment only. We provide a personalized experience tailored to your interests and collecting goals.",
+      "items": [
+        "Private viewing sessions",
+        "Expert consultation",
+        "Authentication services",
+        "Collection advisory"
+      ]
     },
     "social": [
       { "platform": "Instagram", "url": "#", "username": "@Aurelia Tradisia" },
@@ -153,6 +206,11 @@
       { "platform": "LinkedIn", "url": "https://www.linkedin.com/in/aureliatradisia-ab5b66374", "username": "Join Us On LinkedIn" },
       { "platform": "WhatsApp", "url": "https://wa.me/+919678718311", "username": "WhatsApp Us" }
     ]
+  },
+  "notFound": {
+    "code": "404",
+    "message": "Oops! Page not found",
+    "link": "Return to Home"
   },
   "footer": {
     "copyright": "© 2024 Aurelia Tradisia. All rights reserved.",
@@ -169,6 +227,8 @@
     "subtitle": "Explore our curated selection of museum-quality Indian sculptures, each piece chosen for its artistic merit and spiritual resonance.",
     "showingResults": "Showing {{count}} results",
     "loading": "Loading...",
+    "tryAgain": "Try Again",
+    "searchPlaceholder": "Search gallery...",
     "emptyState": {
       "title": "No items found",
       "description": "Try adjusting your search or filters to find what you're looking for.",
@@ -199,6 +259,7 @@
     "tapToEnlarge": "Tap to enlarge",
     "swipeToPan": "Swipe to pan",
     "dragToPan": "Drag to pan",
+    "shareCopied": "Link copied to clipboard!",
     "lightbox": {
       "zoomIn": "Zoom In",
       "zoomOut": "Zoom Out"

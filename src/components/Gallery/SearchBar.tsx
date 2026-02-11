@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Search, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import content from '@/data/content.json';
 
 interface SearchBarProps {
     onSearch: (query: string) => void;
@@ -9,7 +10,9 @@ interface SearchBarProps {
     placeholder?: string;
 }
 
-const SearchBar = ({ onSearch, className, placeholder = "Search gallery..." }: SearchBarProps) => {
+const designContent = (content as any).design;
+
+const SearchBar = ({ onSearch, className, placeholder = designContent?.searchPlaceholder || "Search gallery..." }: SearchBarProps) => {
     const [query, setQuery] = useState('');
 
     useEffect(() => {
