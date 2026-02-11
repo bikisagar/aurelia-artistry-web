@@ -82,7 +82,7 @@ const Index = () => {
                 </p>
                 <div className="text-center lg:text-left">
                   <Link to="/about" className="btn-secondary inline-flex items-center space-x-3">
-                    <span>Learn Our Story</span>
+                    <span>{content.home.introduction.cta}</span>
                     <ArrowRight className="w-4 h-4" />
                   </Link>
                 </div>
@@ -107,11 +107,11 @@ const Index = () => {
         <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center mb-14 sm:mb-20">
             <h2 className="heading-lg text-luxury-charcoal mb-4 sm:mb-5 animate-on-scroll">
-              Excellence in Every Detail
+              {content.home.features.title}
             </h2>
             <div className="luxury-divider my-6"></div>
             <p className="body-lg max-w-3xl mx-auto animate-on-scroll px-2">
-              Our commitment to authenticity, quality, and service sets us apart in the world of fine art curation.
+              {content.home.features.description}
             </p>
           </div>
           
@@ -121,10 +121,10 @@ const Index = () => {
                 <Eye className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
               </div>
               <h3 className="heading-md text-luxury-charcoal mb-4">
-                Curated Excellence
+                {content.home.features.items[0].title}
               </h3>
               <p className="body-md">
-                Each piece is carefully selected for its historical significance and artistic merit by our expert curators.
+                {content.home.features.items[0].description}
               </p>
             </div>
 
@@ -133,10 +133,10 @@ const Index = () => {
                 <Award className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
               </div>
               <h3 className="heading-md text-luxury-charcoal mb-4">
-                Authenticated Provenance
+                {content.home.features.items[1].title}
               </h3>
               <p className="body-md">
-                Every sculpture comes with complete documentation and certification of its authenticity and origin.
+                {content.home.features.items[1].description}
               </p>
             </div>
 
@@ -145,10 +145,10 @@ const Index = () => {
                 <ArrowRight className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
               </div>
               <h3 className="heading-md text-luxury-charcoal mb-4">
-                Exclusive Access
+                {content.home.features.items[2].title}
               </h3>
               <p className="body-md">
-                Private viewings and personalized consultations ensure a bespoke experience for every collector.
+                {content.home.features.items[2].description}
               </p>
             </div>
           </div>
@@ -172,7 +172,7 @@ const Index = () => {
               {content.home.exclusivity.note}
             </p>
             <Link to="/contact" className="btn-primary animate-on-scroll">
-              Schedule Private Viewing
+              {content.home.exclusivity.cta}
             </Link>
           </div>
         </div>

@@ -129,7 +129,7 @@ const Contact = () => {
               {/* Contact Form */}
               <div className="luxury-card p-8">
                 <h2 className="heading-md text-luxury-charcoal mb-8">
-                  Send us a Message
+                  {content.contact.formSectionTitle}
                 </h2>
                 
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -152,7 +152,7 @@ const Contact = () => {
                       {content.contact.form.reason.label}
                     </label>
                     <select id="reason" name="reason" value={formData.reason} onChange={handleChange} className="w-full px-4 py-3 border border-luxury-charcoal/20 focus:border-luxury-gold focus:ring-2 focus:ring-luxury-gold/20 outline-none transition-all duration-300">
-                      <option value="">Select a reason...</option>
+                      <option value="">{content.contact.form.reason.placeholder}</option>
                       {content.contact.form.reason.options.map(option => <option key={option} value={option}>
                           {option}
                         </option>)}
@@ -175,15 +175,15 @@ const Contact = () => {
               {/* Contact Information */}
               <div className="space-y-8">
                 <div className="luxury-card p-8">
-                  <h2 className="heading-md text-luxury-charcoal mb-8">
-                    Contact Information
+                <h2 className="heading-md text-luxury-charcoal mb-8">
+                    {content.contact.info.title}
                   </h2>
                   
                   <div className="space-y-6">
                     <div className="flex items-start space-x-4">
                       <Mail className="w-6 h-6 text-luxury-gold mt-1" />
                       <div>
-                        <p className="font-medium text-luxury-charcoal">Email</p>
+                        <p className="font-medium text-luxury-charcoal">{content.contact.info.emailLabel}</p>
                         <a href={`mailto:${content.contact.info.email}`} className="text-luxury-charcoal/80 hover:text-luxury-gold transition-colors duration-300">
                           {content.contact.info.email}
                         </a>
@@ -193,7 +193,7 @@ const Contact = () => {
                     <div className="flex items-start space-x-4">
                       <Phone className="w-6 h-6 text-luxury-gold mt-1" />
                       <div>
-                        <p className="font-medium text-luxury-charcoal">Phone</p>
+                        <p className="font-medium text-luxury-charcoal">{content.contact.info.phoneLabel}</p>
                         <a href={`tel:${content.contact.info.phone}`} className="text-luxury-charcoal/80 hover:text-luxury-gold transition-colors duration-300">
                           {content.contact.info.phone}
                         </a>
@@ -203,7 +203,7 @@ const Contact = () => {
                     <div className="flex items-start space-x-4">
                       <MapPin className="w-6 h-6 text-luxury-gold mt-1" />
                       <div>
-                        <p className="font-medium text-luxury-charcoal">Address</p>
+                        <p className="font-medium text-luxury-charcoal">{content.contact.info.addressLabel}</p>
                         <p className="text-luxury-charcoal/80">
                           {content.contact.info.address}
                         </p>
@@ -213,7 +213,7 @@ const Contact = () => {
                     <div className="flex items-start space-x-4">
                       <Clock className="w-6 h-6 text-luxury-gold mt-1" />
                       <div>
-                        <p className="font-medium text-luxury-charcoal">Hours</p>
+                        <p className="font-medium text-luxury-charcoal">{content.contact.info.hoursLabel}</p>
                         <p className="text-luxury-charcoal/80">
                           {content.contact.info.hours}
                         </p>
@@ -225,17 +225,15 @@ const Contact = () => {
                 {/* Additional Info Card */}
                 <div className="bg-luxury-charcoal text-luxury-cream p-8">
                   <h3 className="heading-md text-luxury-gold mb-4">
-                    Exclusive Experience
+                    {content.contact.exclusiveCard.title}
                   </h3>
                   <p className="body-md mb-6 text-primary-foreground">
-                    Our curated collection is available for viewing by appointment only. 
-                    We provide a personalized experience tailored to your interests and collecting goals.
+                    {content.contact.exclusiveCard.description}
                   </p>
                   <ul className="space-y-2 text-sm">
-                    <li>• Private viewing sessions</li>
-                    <li>• Expert consultation</li>
-                    <li>• Authentication services</li>
-                    <li>• Collection advisory</li>
+                    {content.contact.exclusiveCard.items.map((item: string) => (
+                      <li key={item}>• {item}</li>
+                    ))}
                   </ul>
                 </div>
               </div>

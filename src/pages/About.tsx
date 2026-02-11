@@ -41,7 +41,7 @@ const About = () => {
               {/* Founder Content */}
               <div className="flex-1 lg:w-3/5 slide-up text-center lg:text-left">
                 <h2 className="heading-lg text-luxury-charcoal mb-4">
-                  Meet Our Founder
+                  {content.about.founder.sectionTitle}
                 </h2>
                 <h3 className="heading-md text-luxury-gold mb-3">
                   {content.about.founder.name}
@@ -64,7 +64,7 @@ const About = () => {
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="heading-lg text-luxury-charcoal mb-4 fade-in">
-                Our Mission & Journey
+                {content.about.missionSection.title}
               </h2>
             </div>
 
@@ -100,13 +100,13 @@ const About = () => {
       <section className="py-12 bg-luxury-charcoal text-luxury-cream">
         <div className="container mx-auto px-6 text-center">
           <h2 className="heading-lg text-luxury-gold mb-4">
-            Experience Our Legacy
+            {content.about.cta.title}
           </h2>
           <p className="body-lg mb-6 max-w-2xl mx-auto text-primary font-serif text-xl">
-            Discover how our passion for Indian sculptural art can enhance your collection.
+            {content.about.cta.description}
           </p>
           <Link to="/contact" className="btn-primary inline-block">
-            Contact Our Curators
+            {content.about.cta.button}
           </Link>
         </div>
       </section>

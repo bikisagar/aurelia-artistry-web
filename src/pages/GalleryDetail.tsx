@@ -176,7 +176,7 @@ const GalleryDetail = () => {
 
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
-    alert("Link copied to clipboard!");
+    alert(galleryDetailContent?.shareCopied || "Link copied to clipboard!");
   };
 
   // Calculate constrained pan boundaries to prevent overscroll
