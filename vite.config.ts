@@ -16,6 +16,10 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  esbuild: {
+    pure: mode === 'production' ? ['console.log', 'console.debug'] : [],
+    drop: mode === 'production' ? ['debugger'] : [],
+  },
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
