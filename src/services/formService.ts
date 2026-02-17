@@ -29,14 +29,6 @@ export const submitToGoogleForm = async (data: FormData): Promise<boolean> => {
     params.append("Reason for Contact", data.reason.trim());
     params.append("Message", data.message.trim());
 
-    console.log('Sending form data to:', FORM_SUBMISSION_URL);
-    console.log('Form fields:', {
-      name: data.name,
-      email: data.email,
-      reason: data.reason,
-      message: data.message
-    });
-
     const response = await fetch(FORM_SUBMISSION_URL, {
       method: 'POST',
       mode: 'no-cors',
@@ -45,8 +37,6 @@ export const submitToGoogleForm = async (data: FormData): Promise<boolean> => {
       },
       body: params.toString()
     });
-
-    console.log('Form submitted successfully');
     return true;
   } catch (error) {
     console.error('Form submission error:', error);
