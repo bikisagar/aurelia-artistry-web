@@ -1,9 +1,9 @@
 {
   "site": {
     "title": "Aurelia Tradisia",
-    "tagline": "Curated Indian Sculptures of Exceptional Merit",
-    "description": "Aurelia Tradisia curates exceptional Indian sculptures in wood, bronze, brass, and marble. Museum-grade craftsmanship for discerning collectors.",
-    "keywords": "Indian sculptures, luxury art, bronze sculptures, wood carvings, marble art, exclusive collection, museum grade",
+    "tagline": "Exceptional Indian Sculptures for Refined Spaces",
+    "description": "Aurelia Tradisia presents a distinguished selection of Indian sculptures in wood, bronze, brass, and marble. Each piece is carefully sourced for collectors, designers, and premium interiors.",
+    "keywords": "Indian sculptures, luxury sculptures, bronze sculpture, wood carving, marble sculpture India, premium art collection, collectible sculptures",
     "logo": "@/assets/logo.png",
     "favicon": "/favicon.ico"
   },
@@ -17,134 +17,134 @@
   "home": {
     "hero": {
       "title": "Aurelia Tradisia",
-      "subtitle": "Curated Indian Sculptures of Exceptional Merit",
-      "description": "We specialize in sourcing and curating museum-quality Indian sculptures, each piece representing centuries of artistic tradition and unparalleled craftsmanship.",
-      "cta": "Contact Us to View Our Collection",
+      "subtitle": "Exceptional Indian Sculptures for Refined Spaces",
+      "description": "Discover a distinguished collection of Indian sculptures selected for their artistic depth, material integrity, and visual impact. Each piece is suited for collectors, luxury interiors, and curated architectural environments.",
+      "cta": "Request Collection Access",
       "background": "@/assets/hero-bg.jpg",
-      "alt": "Elegant Indian sculpture gallery interior with dramatic lighting"
+      "alt": "Premium Indian sculpture displayed in an elegant interior setting"
     },
     "introduction": {
-      "title": "Where Art Meets Legacy",
-      "content": "For over two decades, Aurelia Tradisia has been the premier destination for collectors seeking authentic Indian sculptures. Our curated collection spans ancient traditions to contemporary masters, each piece authenticated and sourced directly from renowned artisans.",
+      "title": "Where Craftsmanship Commands Presence",
+      "content": "Aurelia Tradisia presents a focused selection of Indian sculptures that embody material excellence and refined artistic expression. Our collection spans traditional mastery and contemporary form, offering pieces that elevate residences, hospitality spaces, and executive environments. Every sculpture is carefully evaluated for finish quality, structural balance, and aesthetic presence.",
       "image": "@/assets/gallery-interior.jpg",
-      "alt": "Luxurious gallery interior showcasing curated Indian sculptures",
-      "cta": "Learn Our Story"
+      "alt": "Luxury interior featuring curated Indian sculptures",
+      "cta": "Explore About Aurelia Tradisia"
     },
     "features": {
-      "title": "Excellence in Every Detail",
-      "description": "Our commitment to authenticity, quality, and service sets us apart in the world of fine art curation.",
+      "title": "Defined by Precision and Presence",
+      "description": "Every sculpture in our collection is selected to meet the expectations of serious collectors and premium interior projects.",
       "items": [
         {
-          "title": "Curated Excellence",
-          "description": "Each piece is carefully selected for its historical significance and artistic merit by our expert curators."
+          "title": "Selective Acquisition",
+          "description": "Each sculpture is individually assessed for craftsmanship quality, material authenticity, and visual proportion before inclusion."
         },
         {
-          "title": "Authenticated Provenance",
-          "description": "Every sculpture comes with complete documentation and certification of its authenticity and origin."
+          "title": "Material    Integrity",
+          "description": "We work with enduring materials including solid wood, bronze, brass, and marble to ensure lasting structural and visual value."
         },
         {
-          "title": "Exclusive Access",
-          "description": "Private viewings and personalized consultations ensure a bespoke experience for every collector."
+          "title": "Placement-Focused Approach",
+          "description": "Our collection is chosen with real interior environments in mind, helping designers and collectors achieve strong spatial impact."
         }
       ]
     },
     "designDiscovery": {
       "title": "Design Discovery",
-      "subtitle": "Visualize Sculptural Elegance in Real Spaces",
-      "description": "Explore curated design inspirations where timeless sculptures meet contemporary interiors. Each concept demonstrates how our pieces integrate seamlessly into living spaces, helping you envision the perfect placement and spatial harmony.",
-      "cta": "Check Out All Designs",
-      "viewDesign": "View Design",
-      "emptyMessage": "Design inspirations coming soon."
+      "subtitle": "See Sculptures Within Real Interior Contexts",
+      "description": "Explore carefully developed visual concepts showing how sculptural pieces interact with lighting, scale, and architectural space. These studies help collectors and designers confidently visualize placement before acquisition.",
+      "cta": "View All Design Concepts",
+      "viewDesign": "View Concept",
+      "emptyMessage": "Design concepts will be published shortly."
     },
     "exclusivity": {
-      "title": "Exclusive Access",
-      "description": "Our collection is available by appointment only. We believe exceptional art deserves exceptional presentation, which is why we maintain an exclusive viewing experience for our discerning clientele.",
-      "note": "Contact us to arrange a private viewing of our current collection.",
-      "cta": "Schedule Private Viewing"
+      "title": "Private Access",
+      "description": "Aurelia Tradisia operates through a focused, consultation-led approach. Our collection is shared selectively to maintain quality engagement with collectors, designers, and institutional buyers.",
+      "note": "Contact us to receive the latest available pieces and design concepts.",
+      "cta": "Request Private Access" 
     }
   },
   "about": {
-    "title": "Our Story – Curating India's Finest Sculptures",
+    "title": " Aurelia Tradisia",
     "hero": {
-      "description": "Founded by Jyotirmoy Barman, Aurelia Tradisia was born from a simple observation: India's most talented artists often create exceptional sculptures but struggle to reach the recognition and compensation they deserve. Inspired to bridge this gap, we began curating high-quality sculptures — from Indian deities to modern art — to bring local masterpieces to a national and global audience."
+      "description": "Aurelia Tradisia was established to present exceptional Indian sculptures to collectors, designers, and premium interior projects. Founded by Jyotirmoy Barman, the initiative focuses on identifying works that demonstrate strong craftsmanship, material integrity, and lasting visual presence. Our objective is straightforward: make high-quality Indian sculptural art accessible to serious buyers while maintaining rigorous selection standards."
     },
     "founder": {
-      "sectionTitle": "Meet Our Founder",
+      "sectionTitle": "Founder",
       "name": "Jyotirmoy Barman",
-      "title": "Founder & Curator",
-      "description": "Jyotirmoy Barman, founder of Aurelia Tradisia, has always been passionate about Indian art. Seeing the incredible craftsmanship of local artists often overlooked, he decided to create a platform that celebrates their talent and brings their work to discerning collectors worldwide.",
+      "title": "Founder",
+      "description": "Jyotirmoy Barman founded Aurelia Tradisia after closely observing the depth of skill present among Indian sculptors and the limited structured access many high-quality works had to premium buyers. With a detail-oriented approach, he focuses on evaluating finish quality, proportion, material strength, and overall spatial impact before a piece is considered suitable for presentation through Aurelia Tradisia.",
       "image": "@/assets/founder-photo.jpg",
-      "alt": "Jyotirmoy Barman, founder of Aurelia Tradisia, in his curated gallery space"
+      "alt": "Jyotirmoy Barman, founder of Aurelia Tradisia"
     },
     "missionSection": {
-      "title": "Our Mission & Journey"
+      "title": "Approach & Direction"
     },
     "mission": [
       {
-        "title": "The Inspiration",
-        "description": "India is home to thousands of skilled sculptors producing world-class work. Yet, most artists struggle to reach a wider audience or receive fair compensation. We wanted to change that.",
+        "title": "Why Aurelia Tradisia Exists",
+        "description": "India produces a wide range of sculptural work across traditional and contemporary styles. However, buyers often face inconsistency in quality, finishing standards, and presentation. Aurelia Tradisia was created to introduce a more disciplined selection layer, helping serious collectors and designers access pieces that meet higher visual and material expectations.",
         "image": "@/assets/artisan-workshop.jpg",
-        "alt": "Traditional Indian sculptor at work creating intricate bronze sculpture"
+        "alt": "Indian sculptor working on a detailed sculpture"
       },
       {
-        "title": "The Start of Aurelia Tradisia",
-        "description": "We started Aurelia Tradisia to bridge local artistry with national and global collectors. By curating over a thousand exceptional sculptures across categories — Indian deities, modern art, abstract, and various sizes — we give these masterpieces the platform they deserve.",
+        "title": "Our Selection Process",
+        "description": "Each sculpture is reviewed for craftsmanship precision, surface finish, structural balance, and material authenticity. We prioritize pieces that demonstrate strong presence in real interior environments, whether residential, hospitality, or executive spaces.",
         "image": "@/assets/curated-collection.jpg",
-        "alt": "Carefully curated collection of diverse Indian sculptures in elegant display"
+        "alt": "Carefully evaluated collection of Indian sculptures"
       },
       {
-        "title": "Our Commitment",
-        "description": "Every piece in our collection is carefully selected for craftsmanship, authenticity, and artistic value. We strive to honor the artist, preserve India's cultural heritage, and offer collectors a truly unique experience.",
+        "title": "Our Ongoing Focus",
+        "description": "Aurelia Tradisia continues to refine its collection with an emphasis on quality, spatial relevance, and long-term durability. We aim to support informed acquisition decisions by presenting sculptures that perform well both artistically and within designed environments.",
         "image": "@/assets/authentication-process.jpg",
-        "alt": "Expert examination and authentication of traditional Indian sculpture"
+        "alt": "Close inspection of sculpture craftsmanship and finish"
       }
     ],
     "cta": {
-      "title": "Experience Our Legacy",
-      "description": "Discover how our passion for Indian sculptural art can enhance your collection.",
-      "button": "Contact Our Curators"
+      "title": "Explore the Collection",
+      "description": "For current availability, design concepts, or acquisition enquiries, connect with Aurelia Tradisia directly.",
+      "button": "Contact Aurelia Tradisia"
     }
   },
   "gallery": {
-    "title": "Private Collection",
-    "subtitle": "Exceptional Pieces Await Your Discovery",
+    "title": "Collection Access",
+    "subtitle": "Selected Sculptures for Serious Buyers and Designers",
     "notice": {
-      "title": "Exclusive Viewing",
-      "description": "Our curated sculptures are not displayed publicly. Each piece in our collection has been carefully selected for its historical significance, artistic merit, and exceptional craftsmanship.",
-      "cta": "Contact Us for Private Access"
+      "title": "Private Viewing Model",
+      "description": "Aurelia Tradisia shares its available sculptures through a controlled, enquiry-led process. This allows us to present the most relevant pieces based on your project requirements, spatial context, and material preference.",
+      "cta": "Request Collection Access"
     },
     "categories": [
       {
-        "name": "Ancient Bronzes",
-        "description": "Rare bronze sculptures from classical Indian periods",
+        "name": "Bronze Sculptures",
+        "description": "Carefully finished bronze pieces selected for durability, surface quality, and strong visual presence.",
         "placeholder": "/src/assets/bronze-placeholder.jpg",
-        "alt": "Exclusive bronze sculpture collection - contact for viewing"
+        "alt": "Premium bronze sculpture collection"
       },
       {
-        "name": "Temple Carvings",
-        "description": "Intricately carved wooden and stone pieces",
+        "name": "Wood Carvings",
+        "description": "Hand-finished wooden sculptures showcasing detailed carving work and balanced proportions.",
         "placeholder": "/src/assets/temple-placeholder.jpg",
-        "alt": "Sacred temple carvings - private collection access only"
+        "alt": "Detailed wooden sculpture collection"
       },
       {
-        "name": "Marble Masterpieces",
-        "description": "Exquisite marble sculptures and architectural elements",
+        "name": "Marble Sculptures",
+        "description": "Solid marble works evaluated for finish consistency, structural integrity, and spatial suitability.",
         "placeholder": "/src/assets/marble-placeholder.jpg",
-        "alt": "Rare marble sculptures - exclusive viewing by appointment"
+        "alt": "Premium marble sculpture collection"
       },
       {
-        "name": "Contemporary Works",
-        "description": "Modern interpretations by master artisans",
+        "name": "Contemporary Forms",
+        "description": "Modern sculptural pieces selected for clean geometry and compatibility with contemporary interiors.",
         "placeholder": "/src/assets/contemporary-placeholder.jpg",
-        "alt": "Contemporary Indian sculptures - contact for collection access"
+        "alt": "Contemporary sculpture collection"
       }
     ],
-    "badge": "Private Access",
-    "hoverText": "Contact for Access",
+    "badge": "Access on Request",
+    "hoverText": "Enquire to View",
     "cta": {
-      "title": "Ready to Explore Our Collection?",
-      "description": "Each piece in our collection tells a story of India's rich artistic heritage. Contact us to begin your journey into exceptional art.",
-      "button": "Schedule Private Viewing"
+      "title": "Looking for the Right Piece?",
+      "description": "Share your space requirements, preferred material, or project type. We will present suitable available sculptures accordingly.",
+      "button": "Submit Enquiry"
     }
   },
   "contact": {
@@ -213,7 +213,7 @@
     "link": "Return to Home"
   },
   "footer": {
-    "copyright": "© 2024 Aurelia Tradisia. All rights reserved.",
+    "copyright": "© 2025 Aurelia Tradisia. All rights reserved.",
     "tagline": "Curating Excellence in Indian Sculptural Art",
     "contactTitle": "Contact Information",
     "socialTitle": "Follow Us",
