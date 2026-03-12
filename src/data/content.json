@@ -223,12 +223,12 @@
     ]
   },
   "design": {
-    "title": "The Collection",
-    "subtitle": "Explore our curated selection of museum-quality Indian sculptures, each piece chosen for its artistic merit and spiritual resonance.",
+    "title": "Placement Designs",
+    "subtitle": "A visual exploration of sculptural placement concepts demonstrating how sculptures can be thoughtfully positioned within different environments. Each design highlights spatial composition, balance, and visual harmony to help illustrate how sculptural pieces interact with surrounding architecture and interiors.",
     "showingResults": "Showing {{count}} results",
     "loading": "Loading...",
     "tryAgain": "Try Again",
-    "searchPlaceholder": "Search gallery...",
+    "searchPlaceholder": "Search designs...",
     "emptyState": {
       "title": "No items found",
       "description": "Try adjusting your search or filters to find what you're looking for.",
